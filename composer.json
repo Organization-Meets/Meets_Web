@@ -1,0 +1,15 @@
+{
+    "name": "meets/mvc",
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shausinaguer",
+            "email": "nicolasfelipecarvalho927@gmail.com"
+        }
+    ],
+    "require": {}
+}

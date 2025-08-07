@@ -1,2 +1,43 @@
-teste do php {{name}}
+<div class="feed">
+
+        <!-- Posts do banco de dados -->
+        <?php if (count($eventos) === 0): ?>
+            <p style="text-align:center;">Nenhum evento ainda. Seja o primeiro a postar!</p>
+        <?php else: ?>
+            <?php foreach ($eventos as $evento): ?>
+                <div class="post">
+                    <?php if ($evento['imagem']): ?>
+
+                        <!-- imagem do post -->
+                        <a href="view/Evento.php?id=<?= $evento['id'] ?>">
+                            <div class="post-image">
+                                <img src="<?= htmlspecialchars($evento['imagem']) ?>" alt="Imagem do evento">
+                            </div>
+                        </a>
+                    <?php endif; ?>
+                    <div class="post-content">
+                        <h3>
+                            <a href="view/Evento.php?id=<?= $evento['id'] ?>">
+                                <?= htmlspecialchars($evento['titulo']) ?>
+                            </a>
+                        </h3>
+                        <p><strong>Local:</strong> <?= htmlspecialchars($evento['local']) ?></p>
+                        <p><strong>Categoria:</strong> <?= htmlspecialchars($evento['categoria']) ?></p>
+                        <p><strong>Quando:</strong> <?= date('d/m/Y H:i', strtotime($evento['data_evento'])) ?></p>
+                        <p><?= nl2br(htmlspecialchars($evento['descricao'])) ?></p>
+                        <div class="post-footer">
+                            Publicado em <?= date('d/m/Y H:i', strtotime($evento['data_criacao'])) ?> por:
+                            <u><?= htmlspecialchars($evento['nome']) ?></u>
+                            <?php
+                            $fotoPerfil = !empty($evento['foto']) && file_exists(__DIR__ . '/' . $evento['foto'])
+                                ? BASE_URL . $evento['foto']
+                                : BASE_URL . 'uploads/imgPadrao.png';
+                            ?>
+                            <img src="<?= htmlspecialchars($fotoPerfil) ?>" class="profile-img-mini" alt="Foto perfil">
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
 

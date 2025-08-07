@@ -9,7 +9,7 @@ class page{
     private static function getHeader(){
 
         $darkmode = view::renderJs("darkmode");
-        $vlibras = view::renderView("pages/vlibras");
+        $vlibras = view::renderView("pages/vlibras", []);
         
         return view::renderView('pages/navbar', [
             'css' => 'resources/css/navbar.css',
@@ -17,7 +17,7 @@ class page{
             'link-buscar' => '__DIR__./src/controller/pages/buscar',
             'link-postar' => '__DIR__./src/controller/pages/postar',
             'link-perfil' => '__DIR__./src/controller/pages/perfil',
-            'dark-mode' => $darkmode,
+            'dark-mode' => '<script>'.$darkmode.'</script>',
             'vlibras' => $vlibras
         ]);
 
@@ -29,12 +29,13 @@ class page{
 
     }
 
-    public static function getPage($content){
+    public static function getPage($content, $title){
 
         $header = self::getHeader();
         $footer = self::getFooter();
 
         return view::renderView('pages\page', [
+            'title' => $title,
             'header' =>  $header,
             'content' => $content,
             'footer' => $footer

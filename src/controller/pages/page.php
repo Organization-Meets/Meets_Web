@@ -9,6 +9,7 @@ class page{
     private static function getHeader(){
 
         $darkmode = view::renderJs("darkmode");
+        $vlibras = view::renderView("pages/vlibras");
         
         return view::renderView('pages/navbar', [
             'css' => '__DIR__./resources/css/navbar',
@@ -16,7 +17,8 @@ class page{
             'link-buscar' => '__DIR__./src/controller/pages/buscar',
             'link-postar' => '__DIR__./src/controller/pages/postar',
             'link-perfil' => '__DIR__./src/controller/pages/perfil',
-            'dark-mode' => $darkmode
+            'dark-mode' => $darkmode,
+            'vlibras' => $vlibras
         ]);
 
     }

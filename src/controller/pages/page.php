@@ -12,8 +12,8 @@ class page{
         $vlibras = view::renderView("pages/vlibras");
         
         return view::renderView('pages/navbar', [
-            'css' => '__DIR__./resources/css/navbar',
-            'link-home' => '__DIR__./src/controller/pages/home',
+            'css' => 'resources/css/navbar.css',
+            'link-home' => '/src/controller/pages/home',
             'link-buscar' => '__DIR__./src/controller/pages/buscar',
             'link-postar' => '__DIR__./src/controller/pages/postar',
             'link-perfil' => '__DIR__./src/controller/pages/perfil',

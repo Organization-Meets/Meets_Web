@@ -26,7 +26,7 @@ class view{
     private static function getContentJs($js){
 
         $file = __DIR__."/resources/js/".$js."js";
-        return file_exists($file) ? get_file_contentS($file) : "";
+        return file_exists($file) ? get_file_contents($file) : "";
 
     }
 

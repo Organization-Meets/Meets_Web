@@ -8,7 +8,7 @@ class home extends page{
 
     public static function getHome(){
 
-    $content = view::render('pages/home', [
+    $content = view::renderView('pages/home', [
         'name' => 'nicolas'
     ]);
 

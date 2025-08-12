@@ -18,7 +18,7 @@ class page{
             'link-postar' => '__DIR__./src/controller/pages/postar',
             'link-perfil' => '__DIR__./src/controller/pages/perfil',
             'dark-mode' => '<script>'.$darkmode.'</script>',
-            'vlibras' => $vlibras
+            'vlibras' => $vlibras,
         ]);
 
     }

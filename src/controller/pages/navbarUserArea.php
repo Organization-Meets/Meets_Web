@@ -2,22 +2,15 @@
 
 namespace src\controller\pages;
 
-use src\util\view;
+use src\model\userImage;
 
-class navbarUserArea{
+class navbarUserArea
+{
 
-  public static function getUser(){
+  public static function getUser()
+  {
 
-    $caminhoPadrao = 'imagem/imgPadrao.png'; //caminho da imagem padrao
+    echo userImage::getImage();
 
-    if(isset($_SESSION['usuario']))
-          $foto = $_SESSION['usuario']['foto'] ?? '';
-          
-          $caminhoFoto = $foto && file_exists(__DIR__ . '/../' . $foto) ? $foto : $caminhoPadrao;
-        
-        return htmlspecialchars($caminhoFoto);
-
-    }
-
-
+  }
 }

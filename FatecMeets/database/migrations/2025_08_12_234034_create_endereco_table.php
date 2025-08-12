@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('aluno', function (Blueprint $table) {
-            $table->id();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+        Schema::create('endereco', function (Blueprint $table) {
+            $table->id('id_endereco');
+            $table->string('numero', 10)->nullable();
+            $table->string('cep', 20)->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aluno');
+        Schema::dropIfExists('endereco');
     }
 };

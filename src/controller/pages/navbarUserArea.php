@@ -8,18 +8,16 @@ class navbarUserArea{
 
   public static function getUser(){
 
-    $caminhoPadrao = BASE_URL . 'imagem/imgPadrao.png'; //caminho da imagem padrao
+    $caminhoPadrao = 'imagem/imgPadrao.png'; //caminho da imagem padrao
 
-    if (isset($_SESSION['usuario'])): 
+    if(isset($_SESSION['usuario']))
           $foto = $_SESSION['usuario']['foto'] ?? '';
           
-          $caminhoFoto = $foto && file_exists(__DIR__ . '/../' . $foto)
-            ? BASE_URL . $foto
-            : $caminhoPadrao;
+          $caminhoFoto = $foto && file_exists(__DIR__ . '/../' . $foto) ? $foto : $caminhoPadrao;
         
-        htmlspecialchars($caminhoFoto)
+        return htmlspecialchars($caminhoFoto);
 
-  }
+    }
 
 
 }

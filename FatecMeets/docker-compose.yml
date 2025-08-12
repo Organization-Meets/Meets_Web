@@ -1,41 +1,40 @@
+version: '3.8'
+
 services:
+  app:
+    build: .
+    image: fatecmeets_app
+    container_name: fatecmeets_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    command: php -S 0.0.0.0:8000 -t public
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
   db:
     image: mysql:8.0
-    container_name: mysql
-    restart: always
+    container_name: fatecmeets_db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: delimeter
-    volumes:
-      - db_data:/var/lib/mysql
+      MYSQL_DATABASE: fatecmeets
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
-
+    volumes:
+      - db_data:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
     restart: always
-    ports:
-      - "8080:80"
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
-
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: php-web
-    volumes:
-      - .:/var/www/html
-      - ./vendor:/var/www/html/vendor
-      - ./public:/var/www/html/public
-      - ./view:/var/www/html/view
-      - ./src:/var/www/html/src
-
-      - ./docker/php.ini:/usr/local/etc/php/php.ini
+      PMA_USER: root
+      PMA_PASSWORD: root
     ports:
-      - "8000:80"
+      - "8081:80"
     depends_on:
       - db
 

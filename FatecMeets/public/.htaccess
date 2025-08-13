@@ -1,20 +1,22 @@
 <IfModule mod_rewrite.c>
+    # Se o módulo de negociação estiver habilitado, desabilita MultiViews e Indexes
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
+    # Ativa o mecanismo de reescrita de URLs
     RewriteEngine On
 
-    # Handle Authorization Header
+    # Lida com o cabeçalho de autorização HTTP
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # Redireciona barras finais se não for uma pasta
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # Envia requisições para o controlador principal (index.php) se não for arquivo ou pasta
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]

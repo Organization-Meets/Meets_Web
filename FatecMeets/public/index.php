@@ -3,53 +3,52 @@
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
+// Define o início da execução do Laravel, usado para medir o tempo de carregamento
 define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
-| Check If The Application Is Under Maintenance
+| Verifica Se a Aplicação Está em Manutenção
 |--------------------------------------------------------------------------
 |
-| If the application is in maintenance / demo mode via the "down" command
-| we will load this file so that any pre-rendered content can be shown
-| instead of starting the framework, which could cause an exception.
+| Se a aplicação estiver em modo de manutenção / demonstração via o comando "down",
+| este arquivo será carregado para que qualquer conteúdo pré-renderizado possa ser exibido
+| ao invés de iniciar o framework, o que poderia causar uma exceção.
 |
 */
-
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
-    require $maintenance;
+    require $maintenance; // Carrega o arquivo de manutenção, se existir
 }
 
 /*
 |--------------------------------------------------------------------------
-| Register The Auto Loader
+| Registra o Auto Loader
 |--------------------------------------------------------------------------
 |
-| Composer provides a convenient, automatically generated class loader for
-| this application. We just need to utilize it! We'll simply require it
-| into the script here so we don't need to manually load our classes.
+| O Composer fornece um carregador de classes conveniente e gerado automaticamente para
+| esta aplicação. Só precisamos utilizá-lo! Basta requerer o arquivo aqui para não
+| precisarmos carregar as classes manualmente.
 |
 */
-
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php'; // Carrega o autoloader do Composer
 
 /*
 |--------------------------------------------------------------------------
-| Run The Application
+| Executa a Aplicação
 |--------------------------------------------------------------------------
 |
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
+| Após obter a aplicação, podemos tratar a requisição recebida usando
+| o kernel HTTP da aplicação. Em seguida, enviamos a resposta de volta
+| ao navegador do cliente, permitindo que ele utilize nossa aplicação.
 |
 */
+$app = require_once __DIR__.'/../bootstrap/app.php'; // Inicializa a aplicação Laravel
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-$kernel = $app->make(Kernel::class);
+$kernel = $app->make(Kernel::class); // Cria uma instância do Kernel HTTP
 
 $response = $kernel->handle(
-    $request = Request::capture()
-)->send();
+    $request = Request::capture() // Captura a requisição HTTP
+)->send(); // Envia a resposta ao cliente
 
-$kernel->terminate($request, $response);
+$kernel->terminate($request, $response); // Finaliza a requisição e executa tarefas pós-resposta
+

@@ -2,12 +2,12 @@
 
 /*
 |--------------------------------------------------------------------------
-| Create The Application
+| Crie a Aplicação
 |--------------------------------------------------------------------------
 |
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
+| A primeira coisa que fazemos é criar uma nova instância da aplicação Laravel,
+| que serve como a "cola" para todos os componentes do Laravel, e é o
+| contêiner IoC para o sistema, vinculando todas as várias partes.
 |
 */
 
@@ -17,39 +17,40 @@ $app = new Illuminate\Foundation\Application(
 
 /*
 |--------------------------------------------------------------------------
-| Bind Important Interfaces
+| Vincule Interfaces Importantes
 |--------------------------------------------------------------------------
 |
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
+| Em seguida, precisamos vincular algumas interfaces importantes ao contêiner
+| para que possamos resolvê-las quando necessário. Os kernels servem as
+| requisições recebidas para esta aplicação tanto da web quanto do CLI.
 |
 */
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
-);
+); // Vincula o Kernel HTTP à aplicação como singleton
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
-);
+); // Vincula o Kernel de Console à aplicação como singleton
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
-);
+); // Vincula o manipulador de exceções à aplicação como singleton
 
 /*
 |--------------------------------------------------------------------------
-| Return The Application
+| Retorne a Aplicação
 |--------------------------------------------------------------------------
 |
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
+| Este script retorna a instância da aplicação. A instância é fornecida ao
+| script que a chamou para que possamos separar a construção das instâncias
+| da execução real da aplicação e do envio das respostas.
 |
 */
 
-return $app;
+return $app; // Retorna a instância da aplicação Laravel
+

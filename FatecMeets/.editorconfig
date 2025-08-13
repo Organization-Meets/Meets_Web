@@ -1,18 +1,32 @@
+# Define que este é o arquivo raiz de configuração do EditorConfig
 root = true
 
+# Aplica as configurações abaixo para todos os arquivos
 [*]
+# Define o conjunto de caracteres como UTF-8
 charset = utf-8
+# Define o final de linha como LF (Line Feed)
 end_of_line = lf
+# Define o tamanho da indentação como 4 espaços
 indent_size = 4
+# Define o estilo de indentação como espaços
 indent_style = space
+# Insere uma nova linha ao final do arquivo, se não houver
 insert_final_newline = true
+# Remove espaços em branco ao final das linhas
 trim_trailing_whitespace = true
 
+# Aplica configurações específicas para arquivos Markdown (*.md)
 [*.md]
+# Não remove espaços em branco ao final das linhas em arquivos Markdown
 trim_trailing_whitespace = false
 
+# Aplica configurações específicas para arquivos YAML (*.yml, *.yaml)
 [*.{yml,yaml}]
+# Define o tamanho da indentação como 2 espaços para arquivos YAML
 indent_size = 2
 
+# Aplica configurações específicas para o arquivo docker-compose.yml
 [docker-compose.yml]
+# Define o tamanho da indentação como 4 espaços para o docker-compose.yml
 indent_size = 4

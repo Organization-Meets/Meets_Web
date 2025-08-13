@@ -4,15 +4,17 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Rotas Web
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| Aqui você pode registrar as rotas web para sua aplicação. Essas rotas
+| são carregadas pelo RouteServiceProvider dentro de um grupo que contém
+| o middleware "web". Agora crie algo incrível!
 |
 */
 
+// Define uma rota GET para a URL raiz ('/')
+// Quando um usuário acessa '/', retorna a view 'welcome'
 Route::get('/', function () {
     return view('welcome');
 });

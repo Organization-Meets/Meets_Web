@@ -128,6 +128,6 @@
                 </div>
             </div>
         </div>
-        <a href="{{ url('/cadastrar') }}"><button>Cadastrar</button></a>
+        <a href="{{ url('/usuarios/create') }}"><button>Cadastrar</button></a>
     </body>
 </html>

@@ -4,31 +4,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | View Storage Paths
+    | Caminhos de armazenamento das views
     |--------------------------------------------------------------------------
     |
-    | Most templating systems load templates from disk. Here you may specify
-    | an array of paths that should be checked for your views. Of course
-    | the usual Laravel view path has already been registered for you.
+    | A maioria dos sistemas de template carrega os templates do disco. Aqui você pode
+    | especificar um array de caminhos que devem ser verificados para suas views.
+    | O caminho padrão das views do Laravel já foi registrado para você.
     |
     */
-
     'paths' => [
+        // Define os diretórios onde o Laravel irá procurar pelos arquivos de views.
         resource_path('views'),
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Compiled View Path
+    | Caminho para views compiladas
     |--------------------------------------------------------------------------
     |
-    | This option determines where all the compiled Blade templates will be
-    | stored for your application. Typically, this is within the storage
-    | directory. However, as usual, you are free to change this value.
+    | Esta opção determina onde todos os templates Blade compilados serão armazenados
+    | para sua aplicação. Normalmente, isso fica dentro do diretório storage.
+    | Porém, como de costume, você pode alterar este valor livremente.
     |
     */
-
     'compiled' => env(
+        // Define o caminho onde os arquivos Blade compilados serão salvos.
         'VIEW_COMPILED_PATH',
         realpath(storage_path('framework/views'))
     ),

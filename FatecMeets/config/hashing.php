@@ -4,48 +4,49 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Hash Driver
+    | Driver de Hash Padrão
     |--------------------------------------------------------------------------
     |
-    | This option controls the default hash driver that will be used to hash
-    | passwords for your application. By default, the bcrypt algorithm is
-    | used; however, you remain free to modify this option if you wish.
+    | Esta opção controla o driver de hash padrão que será usado para hashear
+    | senhas na sua aplicação. Por padrão, o algoritmo bcrypt é utilizado;
+    | no entanto, você pode modificar esta opção se desejar.
     |
-    | Supported: "bcrypt", "argon", "argon2id"
+    | Suportados: "bcrypt", "argon", "argon2id"
     |
     */
-
-    'driver' => 'bcrypt',
+    'driver' => 'bcrypt', // Define o algoritmo padrão para hash de senhas.
 
     /*
     |--------------------------------------------------------------------------
-    | Bcrypt Options
+    | Opções do Bcrypt
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the configuration options that should be used when
-    | passwords are hashed using the Bcrypt algorithm. This will allow you
-    | to control the amount of time it takes to hash the given password.
+    | Aqui você pode especificar as opções de configuração que devem ser usadas
+    | quando as senhas forem hasheadas usando o algoritmo Bcrypt. Isso permite
+    | controlar o tempo necessário para hashear a senha fornecida.
     |
     */
-
     'bcrypt' => [
+        // 'rounds' define o número de rodadas do algoritmo bcrypt. Quanto maior, mais seguro e mais lento.
         'rounds' => env('BCRYPT_ROUNDS', 10),
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Argon Options
+    | Opções do Argon
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the configuration options that should be used when
-    | passwords are hashed using the Argon algorithm. These will allow you
-    | to control the amount of time it takes to hash the given password.
+    | Aqui você pode especificar as opções de configuração que devem ser usadas
+    | quando as senhas forem hasheadas usando o algoritmo Argon. Isso permite
+    | controlar o tempo necessário para hashear a senha fornecida.
     |
     */
-
     'argon' => [
+        // 'memory' define a quantidade de memória (em KB) usada pelo algoritmo Argon.
         'memory' => 65536,
+        // 'threads' define o número de threads usadas no processo de hash.
         'threads' => 1,
+        // 'time' define o número de iterações do algoritmo Argon.
         'time' => 4,
     ],
 

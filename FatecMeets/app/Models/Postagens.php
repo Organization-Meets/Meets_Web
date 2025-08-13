@@ -10,4 +10,11 @@ class Postagens extends Model
 {
     use HasFactory;
     // Aqui você pode definir propriedades e métodos relacionados às postagens
+    protected $fillable = [
+        'descricao_postagem',
+        'data_postagem',
+        'titulo_postagem',
+        'id_usuario',
+        'imagem_postagem',
+    ];
 }

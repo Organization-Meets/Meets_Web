@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Intencao extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'id_evento', // ID do evento relacionado
+        'status_intencao', // Status da intenção (ex: pendente, confirmada, cancelada)
+        'id_usuario', // ID do usuário que expressou a intenção
+    ];
 }

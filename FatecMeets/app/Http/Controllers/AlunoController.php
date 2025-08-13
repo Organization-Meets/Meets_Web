@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aluno;
+use App\Models\Usuario; // Importa o modelo Usuario
 use Illuminate\Http\Request;
 
 class AlunoController extends Controller
@@ -23,8 +24,13 @@ class AlunoController extends Controller
     // Salva novo aluno
     public function store(Request $request)
     {
-        $aluno = Aluno::create($request->all());
-        return redirect()->route('alunos.index');
+        $aluno = new Aluno;
+        $aluno->ra_aluno = $request->input('ra_aluno');
+        $aluno->id_usuario = $usuario->id_usuario;
+        $aluno->nome_aluno = $request->input('nome_aluno');
+        $aluno->save();
+
+        return redirect()->route('usuario.perfil');
     }
 
     // Mostra um aluno específico
@@ -45,8 +51,13 @@ class AlunoController extends Controller
     public function update(Request $request, $id)
     {
         $aluno = Aluno::findOrFail($id);
-        $aluno->update($request->all());
-        return redirect()->route('alunos.index');
+        $aluno = new Aluno;
+        $aluno->ra_aluno = $request->input('ra_aluno');
+        $aluno->id_usuario = $usuario->id_usuario;
+        $aluno->nome_aluno = $request->input('nome_aluno');
+        $aluno->save();
+
+        return redirect()->route('usuario.perfil');
     }
 
     // Remove um aluno
@@ -54,6 +65,6 @@ class AlunoController extends Controller
     {
         $aluno = Aluno::findOrFail($id);
         $aluno->delete();
-        return redirect()->route('alunos.index');
+        return redirect()->route('usuario.tipo');
     }
 }

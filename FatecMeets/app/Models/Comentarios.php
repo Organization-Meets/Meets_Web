@@ -9,5 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class Comentarios extends Model
 {
     use HasFactory;
-    // Aqui você pode definir propriedades e métodos relacionados aos comentários
+    protected $fillable = [
+        'data_comentario',
+        'descricao_comentario',
+        'id_usuario',
+    ];
+    protected $hidden = [
+        'id_usuario', // Oculta o ID do usuário associado ao comentário
+    ];
 }

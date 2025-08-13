@@ -7,14 +7,14 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-// Verifica se o ID foi passado
+// Verifica se o ID do evento foi passado
 if (!isset($_GET['id'])) {
     die('Evento não especificado.');
 }
 
 $evento_id = $_GET['id'];
 
-// Consulta do evento
+// Consulta os dados do evento
 $stmt = $pdo->prepare("SELECT e.*, u.nome, u.foto FROM eventos e
                        JOIN users u ON e.usuario_id = u.user_id
                        WHERE e.id = ?");
@@ -24,8 +24,6 @@ $evento = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$evento) {
     die('Evento não encontrado.');
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +40,7 @@ if (!$evento) {
 <?php include '../components/navbar.php'; ?>
 
 <div class="meet-container post-content">
+    <!-- Imagem do evento -->
     <img src="../<?= htmlspecialchars($evento['imagem']) ?>" alt="Imagem do Evento" class="meet-image">
 
     <h1 class="meet-title"><?= htmlspecialchars($evento['titulo']) ?></h1>
@@ -55,16 +54,20 @@ if (!$evento) {
     <p><strong>Quando:</strong> <?= date('d/m/Y H:i', strtotime($evento['data_evento'])) ?></p>
 
     <div class="meet-buttons">
+        <!-- Botão para confirmar presença -->
         <button onclick="confirmarPresenca()">Confirmar Presença</button>
+        <!-- Botão para curtir o post -->
         <button onclick="curtirPost()">Curtir ❤️</button>
     </div>
 </div>
 
 <script>
+    // Função para confirmar presença
     function confirmarPresenca() {
         alert("Presença confirmada com sucesso!");
     }
 
+    // Função para curtir o post
     function curtirPost() {
         alert("Você curtiu este post!");
     }

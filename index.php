@@ -1,7 +1,8 @@
 <?php
+// Inclui configurações do sistema
 require __DIR__ . '/config.php';
 
-// Consulta dos eventos
+// Consulta os eventos do banco de dados
 $stmt = $pdo->query("SELECT e.*, u.nome, u.foto FROM eventos e
                      JOIN users u ON e.usuario_id = u.user_id
                      WHERE e.status = 1
@@ -25,21 +26,21 @@ $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 
-    <!-- Navbar -->
+    <!-- Inclui a barra de navegação -->
     <?php include __DIR__ . '/components/navbar.php'; ?>
 
     <!-- Feed de Posts -->
     <div class="feed">
 
-        <!-- Posts do banco de dados -->
+        <!-- Exibe mensagem se não houver eventos -->
         <?php if (count($eventos) === 0): ?>
             <p style="text-align:center;">Nenhum evento ainda. Seja o primeiro a postar!</p>
         <?php else: ?>
+            <!-- Exibe cada evento do banco de dados -->
             <?php foreach ($eventos as $evento): ?>
                 <div class="post">
                     <?php if ($evento['imagem']): ?>
-
-                        <!-- imagem do post -->
+                        <!-- Imagem do post -->
                         <a href="view/Evento.php?id=<?= $evento['id'] ?>">
                             <div class="post-image">
                                 <img src="<?= htmlspecialchars($evento['imagem']) ?>" alt="Imagem do evento">
@@ -60,6 +61,7 @@ $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             Publicado em <?= date('d/m/Y H:i', strtotime($evento['data_criacao'])) ?> por:
                             <u><?= htmlspecialchars($evento['nome']) ?></u>
                             <?php
+                            // Define foto do perfil do usuário
                             $fotoPerfil = !empty($evento['foto']) && file_exists(__DIR__ . '/' . $evento['foto'])
                                 ? BASE_URL . $evento['foto']
                                 : BASE_URL . 'uploads/imgPadrao.png';
@@ -73,12 +75,13 @@ $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script>
-const menuToggle = document.querySelector('.menu-toggle');
-const navbarLinks = document.querySelector('.navbar-links');
-menuToggle?.addEventListener('click', () => {
-  navbarLinks.classList.toggle('active');
-});
-</script>
+        // Script para alternar menu mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navbarLinks = document.querySelector('.navbar-links');
+        menuToggle?.addEventListener('click', () => {
+            navbarLinks.classList.toggle('active');
+        });
+    </script>
 
 </body>
 

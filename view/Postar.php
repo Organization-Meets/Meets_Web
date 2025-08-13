@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Post - Fatec Meet</title>
     <link rel="stylesheet" href="css/estilo-postar.css">
-    <!-- Adicione Font Awesome para ícones -->
+    <!-- Adiciona Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 
 <?php 
+// Inclui configurações e navbar
 require __DIR__ . '/../config.php'; 
-    require __DIR__ . '/../components/navbar.php';
+require __DIR__ . '/../components/navbar.php';
 
-
+// Verifica se o usuário está logado
 if (!isset($_SESSION['usuario'])) {
     header('Location: ' . BASE_URL . 'view/Login.php');
     exit;
@@ -26,6 +27,7 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <div class="post-form">
             <h2>Criar Novo Post</h2>
+            <!-- Formulário para criar novo evento -->
             <form action="../PHP/upload.php" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="titulo">Título do evento:</label>
@@ -36,7 +38,7 @@ if (!isset($_SESSION['usuario'])) {
                 <div class="form-group">
                     <label for="local">Local do evento:</label>
                     <input type="text" id="local" name="local" placeholder="Local do meet">
-
+                    <!-- Dica de local -->
                     <span class="hint">Ex: Biblioteca, sala maker, quadra ou na grama</span>
                 </div>
 
@@ -57,8 +59,6 @@ if (!isset($_SESSION['usuario'])) {
                     <!-- <span class="hint">Escolha quando o evento vai acontecer</span> -->
                 </div>
 
-
-
                 <div class="form-group">
                     <label for="descricao">Descrição:</label>
                     <textarea id="descricao" name="descricao" rows="4" placeholder="Aqui é um espaço livre para falar mais sobre seu meet! :) "required></textarea>
@@ -68,6 +68,7 @@ if (!isset($_SESSION['usuario'])) {
                 <div class="form-group">
                     <label for="imagem">Selecionar Imagem:</label>
                     <div class="file-upload">
+                        <!-- Área de upload de imagem -->
                         <label for="imagem" class="upload-area" id="uploadLabel" style="display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #aaa; border-radius: 10px; padding: 30px 10px; cursor: pointer; background-size: cover; background-position: center; min-height: 180px; color: #555; text-align: center;">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span class="upload-text">Arraste e solte uma imagem ou clique para selecionar</span>
@@ -85,28 +86,29 @@ if (!isset($_SESSION['usuario'])) {
     </div>
 
     <script>
+        // Script para atualizar visualização da imagem selecionada
         document.getElementById('uploadLabel').addEventListener('click', function(e) {
-    document.getElementById('imagem').click();
-});
+            document.getElementById('imagem').click();
+        });
 
-document.getElementById('imagem').addEventListener('change', function (e) {
-    const fileInfo = document.getElementById('fileInfo');
-    const uploadLabel = document.getElementById('uploadLabel');
-    if (e.target.files && e.target.files[0]) {
-        const fileName = e.target.files[0].name;
-        fileInfo.textContent = fileName;
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            uploadLabel.style.backgroundImage = `url('${event.target.result}')`;
-            uploadLabel.style.color = '#fff';
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    } else {
-        fileInfo.textContent = 'Nenhum arquivo selecionado';
-        uploadLabel.style.backgroundImage = '';
-        uploadLabel.style.color = '#555';
-    }
-});
+        document.getElementById('imagem').addEventListener('change', function (e) {
+            const fileInfo = document.getElementById('fileInfo');
+            const uploadLabel = document.getElementById('uploadLabel');
+            if (e.target.files && e.target.files[0]) {
+                const fileName = e.target.files[0].name;
+                fileInfo.textContent = fileName;
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    uploadLabel.style.backgroundImage = `url('${event.target.result}')`;
+                    uploadLabel.style.color = '#fff';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                fileInfo.textContent = 'Nenhum arquivo selecionado';
+                uploadLabel.style.backgroundImage = '';
+                uploadLabel.style.color = '#555';
+            }
+        });
     </script>
 
 </body>

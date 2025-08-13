@@ -1,4 +1,5 @@
 <?php
+// Inclui configurações do sistema
 require __DIR__ . '/../config.php';
 
 // Verifica se o usuário está logado
@@ -10,7 +11,6 @@ if (!isset($_SESSION['usuario'])) {
 // Dados do usuário logado
 $usuario = $_SESSION['usuario'];
 $foto = !empty($usuario['foto']) ? BASE_URL . $usuario['foto'] : 'https://i.pravatar.cc/150?img=32';
-
 
 ?>
 
@@ -26,10 +26,12 @@ $foto = !empty($usuario['foto']) ? BASE_URL . $usuario['foto'] : 'https://i.prav
 <section class="edit-profile-container">
     <h1>Editar Perfil</h1>
 
+    <!-- Exibe mensagem de sucesso, se houver -->
     <?php if ($mensagem): ?>
         <p class="mensagem-sucesso"><?= htmlspecialchars($mensagem) ?></p>
     <?php endif; ?>
 
+    <!-- Formulário para editar perfil do usuário -->
     <form action="<?= BASE_URL ?>PHP/PerfilEdit.php" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome">Nome completo:</label>

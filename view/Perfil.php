@@ -1,8 +1,7 @@
 <?php
 
-
-require __DIR__ .
-    '/../config.php';
+// Inclui configurações do sistema
+require __DIR__ . '/../config.php';
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['usuario'])) {
@@ -10,11 +9,11 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-// Dados do usuário logado
+// Obtém o ID do usuário logado
 $usuario_id = $_SESSION['usuario']['id'];
 
 try {
-    // Buscar dados completos do usuário
+    // Busca dados completos do usuário
     $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
     $stmt->execute([$usuario_id]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,31 +22,26 @@ try {
         throw new Exception("Usuário não encontrado");
     }
 
+    // Define caminho da foto do usuário
     $fotoUsuario = $usuario['profile_image'] ?? '';
     $caminhoPadrao = BASE_URL . 'uploads/imgPadrao.png';
     $caminhoFoto = (!empty($fotoUsuario) && file_exists(__DIR__ . '/../' . $fotoUsuario))
         ? BASE_URL . $fotoUsuario
         : $caminhoPadrao;
 
-
-
-    // Verifique o nome real do campo no banco:
-//print_r($usuario); // Descomente para debug
-
-    // Buscar estatísticas reais
+    // Estatísticas do perfil
     $stats = [
         'publicacoes' => 0,
         'seguidores' => 0,
         'seguindo' => 0
     ];
 
-    // Contar eventos do usuário
+    // Conta eventos do usuário
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM eventos WHERE usuario_id = ?");
     $stmt->execute([$usuario_id]);
     $stats['publicacoes'] = $stmt->fetchColumn();
 
-
-    // Buscar eventos com informações completas
+    // Busca eventos do usuário
     $stmt = $pdo->prepare("
         SELECT e.*, 
                (SELECT COUNT(*) FROM likes WHERE id = e.id) as likes_count,
@@ -66,12 +60,13 @@ try {
     die($e->getMessage());
 }
 
+// Processa fechamento de post (evento)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST['post_id'])) {
     $postId = intval($_POST['post_id']);
-    // Atualiza o status para 0
+    // Atualiza o status para 0 (evento fechado)
     $stmt = $pdo->prepare("UPDATE eventos SET status = 0 WHERE id = ? AND usuario_id = ?");
     $stmt->execute([$postId, $usuario_id]);
-    // Opcional: redireciona para evitar repost
+    // Redireciona para evitar repost
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
@@ -84,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título do perfil do usuário -->
     <!-- <titulo><?= htmlspecialchars($usuario['nome'] ?? 'Perfil') ?> - Meets</titulo> -->
     <link rel="stylesheet" href="<?= BASE_URL ?>view/css/estilo-perfil.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -91,45 +87,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
 
 <body>
 
-
+    <!-- Inclui navbar -->
     <?php include '../components/navbar.php'; ?>
 
     <section class="profile-container">
         <div class="profile-header">
             <div class="profile-img-container">
-
+                <!-- Foto de perfil do usuário -->
                 <img src="<?= htmlspecialchars($caminhoFoto) ?>" alt="Foto de Perfil" class="profile-img"
                     onerror="this.onerror=null; this.src='<?= $caminhoPadrao ?>'">
-
             </div>
 
             <div class="profile-info">
                 <div class="profile-actions">
                     <h1 class="profile-username"><?= htmlspecialchars($usuario['nome']) ?></h1>
                     <div class="action-buttons">
+                        <!-- Botão para editar perfil -->
                         <a href="<?= BASE_URL ?>view/EditarPerfil.php" class="btn-edit">
                             <button class="edit-btn">Editar perfil</button>
                         </a>
+                        <!-- Botão de configurações -->
                         <button class="settings-btn" aria-label="Configurações">
                             <i class="fas fa-cog"></i>
                         </button>
-
-                         <!-- Botão de idioma -->
-                            <div id="language-menu" class="language-menu" style="display: none;">
-                                <form method="post" action="">
-                                    <select name="lang" onchange="this.form.submit()">
-                                        <option value="pt" <?= ($_SESSION['lang'] ?? 'pt') == 'pt' ? 'selected' : '' ?>>
-                                            Português</option>
-                                        <option value="en" <?= ($_SESSION['lang'] ?? 'pt') == 'en' ? 'selected' : '' ?>>
-                                            English
-                                        </option>
-                                    </select>
-                                </form>
-                            </div>
-
+                        <!-- Botão de idioma -->
+                        <div id="language-menu" class="language-menu" style="display: none;">
+                            <form method="post" action="">
+                                <select name="lang" onchange="this.form.submit()">
+                                    <option value="pt" <?= ($_SESSION['lang'] ?? 'pt') == 'pt' ? 'selected' : '' ?>>
+                                        Português</option>
+                                    <option value="en" <?= ($_SESSION['lang'] ?? 'pt') == 'en' ? 'selected' : '' ?>>
+                                        English
+                                    </option>
+                                </select>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Estatísticas do perfil -->
                 <div class="profile-stats">
                     <div class="stat-item">
                         <span class="stat-count"><?= $stats['publicacoes'] ?></span>
@@ -145,6 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
                     </div>
                 </div>
 
+                <!-- Informações do usuário -->
                 <div class="profile-bio">
                     <h2 class="bio-name"><?= htmlspecialchars($usuario['nome']) ?></h2>
                     <p class="bio-text">@<?= htmlspecialchars($usuario['nickname'] ?? '') ?></p>
@@ -154,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
             </div>
         </div>
 
+        <!-- Abas do perfil -->
         <div class="profile-tabs">
             <div class="tab active">
                 <i class="fas fa-calendar-alt"></i>
@@ -169,9 +167,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
             </div>
         </div>
 
+        <!-- Galeria de eventos do usuário -->
         <div class="gallery">
             <?php foreach ($eventos as $evento): ?>
                 <div class="photo">
+                    <!-- Formulário para fechar evento -->
                     <form method="post" class="close-post-form">
                         <input type="hidden" name="post_id" value="<?= $evento['id'] ?>">
                         <button type="submit" name="close_post" class="close-post-btn" title="Remover post">×</button>
@@ -186,7 +186,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
                         <span><?= date('d/m/Y', strtotime($evento['data_evento'])) ?></span>
                     </div>
                 </div>
-
             <?php endforeach; ?>
 
             <?php if (empty($eventos)): ?>
@@ -202,6 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
     </section>
 
     <script>
+        // Script para mostrar/esconder menu de idioma
         const settingsBtn = document.querySelector(".settings-btn");
         const languageMenu = document.getElementById("language-menu");
 
@@ -210,7 +210,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['close_post'], $_POST[
         });
     </script>
 
-
 </body>
-
 </html>

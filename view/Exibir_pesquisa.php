@@ -1,8 +1,9 @@
 <?php
+    // Inclui configurações e navbar
     require __DIR__ . '/../config.php';
     require __DIR__ . '/../components/navbar.php';
 
-    // puxando a pesquisa de outra página
+    // Executa a pesquisa de eventos
     require __DIR__ . '/../PHP/Realiza_pesquisa.php';
 ?>
 
@@ -17,17 +18,18 @@
 </head>
 <body>
 
-<!-- tela que exibe os resultados de pesquisa (igual ao index) -->
+<!-- Tela que exibe os resultados de pesquisa (igual ao index) -->
 
 <div class="feed">
 
-    <!-- exibição dos posts encontrados pela pesquisa -->
+    <!-- Exibição dos posts encontrados pela pesquisa -->
     <?php if (count($eventos) === 0): ?>
         <p style="text-align:center;">Nenhum evento ainda. Seja o primeiro a postar!</p>
     <?php else: ?>
         <?php foreach ($eventos as $evento): ?>
             <div class="post">
                 <?php if ($evento['imagem']): ?>
+                    <!-- Exibe imagem do evento -->
                     <div class="post-image">
                         <img src="<?= htmlspecialchars('../'.$evento['imagem']) ?>" alt="Imagem do evento">
                     </div>

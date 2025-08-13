@@ -6,15 +6,15 @@
     <title>Buscar Eventos - Fatec Meets</title>
     <link rel="stylesheet" href="css/estilo-busca.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- Inclui a barra de navegação -->
 <?php include '../components/navbar.php'; ?>
 
 <div class="container">
     <h1>Buscar Eventos</h1>
+    <!-- Formulário de busca de eventos -->
     <form action="Exibir_pesquisa.php" method="GET" class="search-form">
         <div class="form-group">
             <label for="tipo">Tipo de Evento:</label>

@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
-    <link rel="stylesheet" href="{{ asset('css/estilo-cadastro.css') }}">
+    <link rel="stylesheet" href="css/estilo-cadastro.css">
 </head>
 <body>
     <div class="container">
         <h2>Cadastro</h2>
 
-        <form action="{{ route('usuarios.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="/usuarios" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="email" name="email" placeholder="E-mail" required>
             <input type="password" name="senha" placeholder="Senha" required>
@@ -21,7 +21,7 @@
             <hr>
         </form>
 
-        <a href="{{ url('/') }}"><button type="button">Voltar</button></a>
+        <a href="../"><button type="button">Voltar</button></a>
     </div>
 </body>
 </html>

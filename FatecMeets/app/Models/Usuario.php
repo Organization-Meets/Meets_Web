@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 class Usuario extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    protected $table = 'usuario'; // Adicionada a propriedade $table para definir o nome da tabela
     protected $fillable = [
         'email',     // E-mail do usuário
         'senha',  // Senha do usuário

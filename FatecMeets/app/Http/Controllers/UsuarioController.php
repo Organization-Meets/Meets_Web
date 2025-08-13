@@ -56,7 +56,7 @@ class UsuarioController extends Controller
         $usuario->email = $request->input('email');
         $usuario->senha = $request->input('senha');
         $usuario->status_conta = 1;
-        $usuario->id_endereco = $request->input('id_endereco'); // Supondo que o ID do endereço seja enviado no request
+        $usuario->id_endereco = $request->input('id_endereco') ?? 0; // Supondo que o ID do endereço seja enviado no request
         $usuario->save();
 
         return redirect()->route('usuario.perfil');
@@ -67,6 +67,6 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
         $usuario->delete();
-        return redirect()->route('usuarios.create');
+        return redirect()->route('usuarios.tipo');
     }
 }

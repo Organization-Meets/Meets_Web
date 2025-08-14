@@ -81,7 +81,7 @@ class UsuarioController extends Controller
     }
 
     public function loginForm(){
-        return view('usuarios.loginForm');
+        return view('usuarios.login');
     }
 
     // Login

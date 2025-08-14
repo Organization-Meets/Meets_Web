@@ -30,7 +30,7 @@
             </p>
         </form>
 
-        <a href="{{ url('index.php') }}"><button type="button">Voltar</button></a>
+        <a href="/"><button type="button">Voltar</button></a>
 
         <!-- teste do Vlibras -->
         <div vw class="enabled">

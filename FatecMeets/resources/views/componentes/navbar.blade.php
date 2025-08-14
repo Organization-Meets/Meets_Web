@@ -37,9 +37,9 @@
             : $caminhoPadrao;
         @endphp
         <img src="{{ $caminhoFoto }}" class="profile-img-mini" alt="Perfil">
-        <a href="usuario/logout"><button class="profile-btn">Logout</button></a>
+        <a href="usuarios/logout/"><button class="profile-btn">Logout</button></a>
       @else
-        <a href="usuarios/login"><button class="profile-btn">Login</button></a>
+        <a href="usuarios/loginForm/"><button class="profile-btn">Login</button></a>
       @endif
     </div>
   </div>

@@ -26,3 +26,6 @@ Route::get('/usuarios/{id}', [UsuarioController::class, 'show'])->name('usuarios
 Route::get('/usuarios/{id}/edit', [UsuarioController::class, 'edit'])->name('usuarios.edit');
 Route::put('/usuarios/{id}', [UsuarioController::class, 'update'])->name('usuarios.update');
 Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
+Route::get('/usuarios/perfil', [UsuarioController::class, 'perfil'])->name('usuarios.perfil');
+Route::get('/usuarios/logout', [UsuarioController::class, 'logout'])->name('usuarios.logout');
+Route::get('/usuarios/login', [UsuarioController::class, 'loginForm'])->name('usuarios.login');

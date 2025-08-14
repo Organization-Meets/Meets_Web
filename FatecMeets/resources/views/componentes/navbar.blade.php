@@ -1,5 +1,5 @@
 {{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/componentes/navbar.blade.php --}}
-<link rel="stylesheet" href="{{ asset('components/navbar.css') }}">
+<link rel="stylesheet" href="css/navbar.css">
 
 <nav class="navbar">
   <div class="navbar-container">
@@ -21,9 +21,9 @@
     <!-- Botões de navegação -->
     <div class="navbar-links">
       <a href="" class="navbar-item">Página inicial</a>
-      <a href="{{ url('view/Busca.php') }}" class="navbar-item">Buscar</a>
-      <a href="{{ url('view/Postar.php') }}" class="navbar-item">Postar</a>
-      <a href="{{ url('view/Perfil.php') }}" class="navbar-item">Perfil</a>
+      <a href="view/busca" class="navbar-item">Buscar</a>
+      <a href="view/postar" class="navbar-item">Postar</a>
+      <a href="view/perfil" class="navbar-item">Perfil</a>
     </div>
 
     <!-- Área do usuário -->
@@ -37,9 +37,9 @@
             : $caminhoPadrao;
         @endphp
         <img src="{{ $caminhoFoto }}" class="profile-img-mini" alt="Perfil">
-        <a href="{{ url('PHP/logout.php') }}"><button class="profile-btn">Logout</button></a>
+        <a href="usuario/logout"><button class="profile-btn">Logout</button></a>
       @else
-        <a href="{{ url('view/Login.php') }}"><button class="profile-btn">Login</button></a>
+        <a href="{{ url('view/Login"><button class="profile-btn">Login</button></a>
       @endif
     </div>
   </div>
@@ -83,3 +83,4 @@ const navbarLinks = document.querySelector('.navbar-links');
 menuToggle?.addEventListener('click', () => {
   navbarLinks.classList.toggle('active');
 });
+</script>

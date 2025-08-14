@@ -18,6 +18,5 @@ use Illuminate\Routing\Controller as BaseController; // Importa o controlador ba
 class Controller extends BaseController
 {
     // Usa os traits para adicionar funcionalidades de autorização, jobs e validação
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-}
 
+}

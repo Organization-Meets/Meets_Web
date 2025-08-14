@@ -69,4 +69,36 @@ class UsuarioController extends Controller
         $usuario->delete();
         return redirect()->route('usuarios.tipo');
     }
+
+    public function perfil(){
+        $usuario = Usuario::find(session('usuario_id'));
+        return view('usuarios.perfil', compact('usuario'));
+    }
+
+    public function logout(){
+        session()->forget('usuario_id');
+        return redirect()->route('login');
+    }
+
+    public function loginForm(){
+        return view('usuarios.login');
+    }
+
+    // Login
+    public function login(Request $request)
+    {
+        $email = $request->input('email');
+        $senha = $request->input('senha');
+
+        $usuario = Usuario::where('email', $email)->where('senha', $senha)->first();
+
+        if ($usuario) {
+            // Autenticação simples, pode ser melhorada com hash de senha
+            // Exemplo: salvar usuário na sessão
+            session(['usuario_id' => $usuario->id]);
+            return redirect()->route('usuario.perfil');
+        } else {
+            return redirect()->back()->withErrors(['login' => 'Email ou senha inválidos']);
+        }
+    }
 }

@@ -35,21 +35,21 @@ class UsuarioController extends Controller
     }
 
     // Mostra um usuario específico
-    public function show($id)
+    public function show($id_usuario)
     {
-        $usuario = Usuario::findOrFail($id);
+        $usuario = Usuario::findOrFail($id_usuario);
         return view('usuarios.show', compact('usuario'));
     }
 
     // Mostra o formulário de edição
-    public function edit($id)
+    public function edit($id_usuario)
     {
-        $usuario = Usuario::findOrFail($id);
+        $usuario = Usuario::findOrFail($id_usuario);
         return view('usuarios.edit', compact('usuario'));
     }
 
     // Atualiza um usuario
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_usuario)
     {
         $usuario = new Usuario;
         $usuario->imagem_usuario=$request->input('imagem_usuario');
@@ -63,9 +63,9 @@ class UsuarioController extends Controller
     }
 
     // Remove um aluno
-    public function destroy($id)
+    public function destroy($id_usuario)
     {
-        $usuario = Usuario::findOrFail($id);
+        $usuario = Usuario::findOrFail($id_usuario);
         $usuario->delete();
         return redirect()->route('usuarios.tipo');
     }
@@ -81,7 +81,7 @@ class UsuarioController extends Controller
     }
 
     public function loginForm(){
-        return view('usuarios.login');
+        return view('usuarios.loginForm');
     }
 
     // Login
@@ -95,8 +95,8 @@ class UsuarioController extends Controller
         if ($usuario) {
             // Autenticação simples, pode ser melhorada com hash de senha
             // Exemplo: salvar usuário na sessão
-            session(['usuario_id' => $usuario->id]);
-            return redirect()->route('usuario.perfil');
+            session(['usuario_id' => $usuario->id_usuario]);
+            return redirect()->route('usuarios.perfil');
         } else {
             return redirect()->back()->withErrors(['login' => 'Email ou senha inválidos']);
         }

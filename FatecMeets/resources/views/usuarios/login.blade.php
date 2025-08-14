@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="css/estilo-cadastro.css">
+    <link rel="stylesheet" href="/css/estilo-cadastro.css">
 </head>
 <body>
 
@@ -26,11 +26,11 @@
             <hr>
             <p style="text-align: center; margin: 15px 0; font-size: 14px;">
                 Não tem uma conta? 
-                <a href="{{ url('view/Cadastro.php') }}" style="color: #28a745;">Cadastre-se aqui</a>
+                <a href="/usuarios/create/" style="color: #28a745;">Cadastre-se aqui</a>
             </p>
         </form>
 
-        <a href="/"><button type="button">Voltar</button></a>
+        <a href="/home/"><button type="button">Voltar</button></a>
 
         <!-- teste do Vlibras -->
         <div vw class="enabled">

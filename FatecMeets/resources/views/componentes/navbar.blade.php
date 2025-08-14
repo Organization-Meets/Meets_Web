@@ -3,7 +3,7 @@
 
 <nav class="navbar">
   <div class="navbar-container">
-    <a href="/" class="navbar-logo">Fatec Meet</a>
+    <a href="/home/" class="navbar-logo">Fatec Meet</a>
 
     <div class="menu-toggle">
       <i class="fas fa-bars"></i>
@@ -39,7 +39,7 @@
         <img src="{{ $caminhoFoto }}" class="profile-img-mini" alt="Perfil">
         <a href="usuarios/logout/"><button class="profile-btn">Logout</button></a>
       @else
-        <a href="usuarios/loginForm/"><button class="profile-btn">Login</button></a>
+        <a href="/usuarios/loginForm/"><button class="profile-btn">Login</button></a>
       @endif
     </div>
   </div>

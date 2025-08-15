@@ -9,7 +9,7 @@
             <div class="profile-actions">
                 <h1 class="profile-username">{{ $usuario->nome ?? 'Usuário' }}</h1>
                 <div class="action-buttons">
-                    <a href="{{ route('usuarios.edit', $usuario->id_usuario) }}" class="btn-edit">
+                    <a href="/usuarios/{{ $usuario->id_usuario }}/edit/" class="btn-edit">
                         <button class="edit-btn">Editar perfil</button>
                     </a>
                     <button class="settings-btn" aria-label="Configurações">

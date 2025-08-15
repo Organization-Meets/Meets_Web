@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\EventoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,9 @@ Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.st
 Route::get('/usuarios/{id_usuario}', [UsuarioController::class, 'show'])
     ->where('id_usuario', '[0-9]+')
     ->name('usuarios.show');
-Route::get('/usuarios/{id}/edit', [UsuarioController::class, 'edit'])->name('usuarios.edit');
-Route::put('/usuarios/{id}', [UsuarioController::class, 'update'])->name('usuarios.update');
-Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
+Route::get('/usuarios/{id_usuario}/edit', [UsuarioController::class, 'edit'])->name('usuarios.edit');
+Route::put('/usuarios/{id_usuario}', [UsuarioController::class, 'update'])->name('usuarios.update');
+Route::delete('/usuarios/{id_usuario}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
 Route::get('/usuarios/perfil', [UsuarioController::class, 'perfil'])->name('usuarios.perfil');
 Route::get('/usuarios/logout', [UsuarioController::class, 'logout'])->name('usuarios.logout');
 Route::get('/usuarios/loginForm', [UsuarioController::class, 'loginForm'])->name('usuarios.loginForm');
@@ -38,7 +39,7 @@ Route::post('/usuarios/login', [UsuarioController::class, 'login'])->name('usuar
 Route::get('/eventos', [EventoController::class, 'index'])->name('eventos.index');
 Route::get('/eventos/create', [EventoController::class, 'create'])->name('eventos.create');
 Route::post('/eventos', [EventoController::class, 'store'])->name('eventos.store');
-Route::get('/eventos/{id}', [EventoController::class, 'show'])->name('eventos.show');
-Route::get('/eventos/{id}/edit', [EventoController::class, 'edit'])->name('eventos.edit');
-Route::put('/eventos/{id}', [EventoController::class, 'update'])->name('eventos.update');
-Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])->name('eventos.destroy');
+Route::get('/eventos/{id_evento}', [EventoController::class, 'show'])->name('eventos.show');
+Route::get('/eventos/{id_evento}/edit', [EventoController::class, 'edit'])->name('eventos.edit');
+Route::put('/eventos/{id_evento}', [EventoController::class, 'update'])->name('eventos.update');
+Route::delete('/eventos/{id_evento}', [EventoController::class, 'destroy'])->name('eventos.destroy');

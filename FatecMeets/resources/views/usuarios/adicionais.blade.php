@@ -19,8 +19,8 @@
             <input type="text" name="nome_professor" placeholder="Nome do Professor" required>
         @endif
 
-        <input type="ddd" name="ddd" placeholder="DDD" required>
-        <input type="number" name="numero" placeholder="Número" required>
+        <input type="number" name="ddd" placeholder="DDD" required>
+        <input type="number" name="numero_telefone" placeholder="Número" required>
 
         <button type="submit">Continuar</button>
     </form>

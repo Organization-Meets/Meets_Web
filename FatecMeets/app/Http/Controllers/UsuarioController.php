@@ -28,6 +28,10 @@ class UsuarioController extends Controller
 
     public function tipo()
     {
+        if (session('usuario_nome')) {
+            $perfil = $this->perfil();
+            return $perfil;
+        }
         return view('usuarios.tipo');
     }
     public function tipoUsuario(Request $request)
@@ -40,25 +44,23 @@ class UsuarioController extends Controller
     {
         $tipo = $request->input('tipo_usuario');
 
-        switch ($tipo) {
-            case 'aluno':
-                $alunoController = new AlunoController();
-                $alunoController->store($request);
-                break;
-            case 'professor':
-                $professorController = new ProfessorController();
-                $professorController->store($request);
-                break;
-            case 'admin':
-                break;
-            default:
-                echo "Tipo de usuário inválido.";
-                break;
+        if ($tipo == 'aluno') {
+            $alunoController = new AlunoController();
+            $aluno = $alunoController->store($request);
+            session(['usuario_nome' => $aluno->nome_aluno]);
+        } elseif ($tipo == 'professor') {
+            $professorController = new ProfessorController();
+            $professor = $professorController->store($request);
+            session(['usuario_nome' => $professor->nome_professor]);
+        } elseif ($tipo == 'admin') {
+            echo "Admin";
+        } else {
+            echo "Tipo de usuário inválido.";
         }
 
         $telefoneController = new TelefoneController();
         $telefone = $telefoneController->store($request);
-        $telefone->save();
+    
 
         $perfil = $this->perfil();
         return $perfil;
@@ -76,7 +78,6 @@ class UsuarioController extends Controller
         $endereco = $enderecoController->store($request);
         $endereco->save();
 
-        // Garante que o id_endereco está preenchido após o save
         $usuario = new Usuario;
         $usuario->imagem_usuario = $request->input('imagem_usuario');
         $usuario->email = $request->input('email');
@@ -143,6 +144,7 @@ class UsuarioController extends Controller
 
     public function logout(){
         session()->forget('usuario_id');
+        session()->forget('usuario_nome');
         $loginForm = $this->loginForm();
         return $loginForm;
     }

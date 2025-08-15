@@ -28,13 +28,13 @@ class TelefoneController extends Controller
         // Validação dos dados do telefone
         $request->validate([
             'ddd' => 'required|string|max:3',
-            'numero' => 'required|string|max:15',
+            'numero_telefone' => 'required|string|max:15',
         ]);
 
         // Atualização do telefone
         $telefone = Telefone::findOrFail($id_telefone);
         $telefone->ddd = $request->input('ddd');
-        $telefone->numero = $request->input('numero');
+        $telefone->numero_telefone = $request->input('numero_telefone');
         $telefone->save();
 
         return $telefone; // Retorna o telefone atualizado

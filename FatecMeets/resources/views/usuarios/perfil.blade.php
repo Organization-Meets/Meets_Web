@@ -7,7 +7,9 @@
         </div>
         <div class="profile-info">
             <div class="profile-actions">
-                <h1 class="profile-username">{{ $usuario->nome ?? 'Usuário' }}</h1>
+                <h1 class="profile-username">
+                    {{ session('usuario_nome') ?? $usuario->nome ?? 'Usuário' }}
+                </h1>
                 <div class="action-buttons">
                     <a href="/usuarios/{{ $usuario->id_usuario }}/edit/" class="btn-edit">
                         <button class="edit-btn">Editar perfil</button>
@@ -32,7 +34,7 @@
                 </div>
             </div>
             <div class="profile-bio">
-                <h2 class="bio-name">{{ $usuario->nome ?? '' }}</h2>
+                <h2 class="bio-name">{{ session('usuario_nome') ?? $usuario->nome ?? '' }}</h2>
                 <p class="bio-text">@ {{ $usuario->nickname ?? '' }}</p>
                 <p class="bio-text">✉️ {{ $usuario->email ?? '' }}</p>
                 <p class="bio-text">📞 {{ $usuario->numero ?? '' }}</p>

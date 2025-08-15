@@ -18,7 +18,7 @@
         <h2>Login</h2>
 
         <form action="" method="POST">
-            <img src="{{ asset('view/imagens/logo.png') }}" alt="Logo" style="width: 100px; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
+            <img src="imagens/logo.png" alt="Logo" style="width: 100px; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
 
             <input type="email" name="email" placeholder="E-mail" required>
             <input type="password" name="senha" placeholder="Senha" required>

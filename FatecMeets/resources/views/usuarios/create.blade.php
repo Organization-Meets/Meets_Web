@@ -15,7 +15,12 @@
             <input type="email" name="email" placeholder="E-mail" required>
             <input type="password" name="senha" placeholder="Senha" required>
             <input type="file" name="imagem_usuario" accept="image/*">
-            <input type="hidden" name="id_endereco" value="">
+            <form action="/enderecos" method="POST">
+                @csrf
+                <input type="text" name="cep" placeholder="CEP" required>
+                <input type="text" name="numero" placeholder="Número" required>
+                <button type="submit">Cadastrar Endereço</button>
+            </form>
             <hr>
             <button type="submit">Cadastrar</button>
             <hr>

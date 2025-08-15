@@ -1,20 +1,6 @@
 {{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/welcome.blade.php --}}
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feed - Fatec Meet</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="/css/navbar.css">
+    @include('componentes.header')
     <link rel="stylesheet" href="/css/estilo-feeds.css">
-    {{-- Adicione outros estilos se necessário --}}
-</head>
-
-<body>
-    {{-- Inclui a barra de navegação --}}
-    @include('componentes.navbar')
 
     <div class="feed">
         {{-- Exibe mensagem se não houver eventos --}}
@@ -57,14 +43,4 @@
             @endforeach
         @endif
     </div>
-
-    <script>
-        // Script para alternar menu mobile
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navbarLinks = document.querySelector('.navbar-links');
-        menuToggle?.addEventListener('click', () => {
-            navbarLinks.classList.toggle('active');
-        });
-    </script>
-</body>
-</html>
+    @include('componentes.footer')

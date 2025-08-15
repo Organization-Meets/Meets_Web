@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Evento extends Model
 {
     use HasFactory;
+    protected $table = 'evento';
+    protected $primaryKey = 'id_evento';
+    public $incrementing = true;
     protected $fillable = [
         'data_inicio_evento',
         'data_final_evento',

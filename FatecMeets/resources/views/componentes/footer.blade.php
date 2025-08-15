@@ -1,6 +1,4 @@
-<?php
-// components/footer.php
-?>
+{{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/componentes/footer.blade.php --}}
   <!-- Menu hamburger toggle -->
   <script>
     const menuToggle = document.querySelector('.menu-toggle');
@@ -15,17 +13,21 @@
   <script>
     // Dark Mode
     const themeSwitch = document.getElementById('theme-switch');
-    if (localStorage.getItem('theme') === 'dark') {
+    if (themeSwitch && localStorage.getItem('theme') === 'dark') {
       document.body.classList.add('dark-mode');
       themeSwitch.checked = true;
     }
-    themeSwitch.addEventListener('change', () => {
-      document.body.classList.toggle('dark-mode', themeSwitch.checked);
-      localStorage.setItem('theme', themeSwitch.checked ? 'dark' : 'light');
-    });
+    if (themeSwitch) {
+      themeSwitch.addEventListener('change', () => {
+        document.body.classList.toggle('dark-mode', themeSwitch.checked);
+        localStorage.setItem('theme', themeSwitch.checked ? 'dark' : 'light');
+      });
+    }
 
     // Vlibras
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
+    if (window.VLibras) {
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    }
   </script>
 </body>
 </html>

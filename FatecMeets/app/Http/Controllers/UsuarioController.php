@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario; // Importa o modelo Usuario
+use App\Models\Endereco; // Importa o modelo Endereco
+use App\Http\Controllers\EnderecoController; // Importa o controlador EnderecoController
+use Illuminate\Support\Facades\Hash; // Importa o Hash para senhas
+use App\Http\Controllers\EventoController; // Importa o controlador EventoController
+use App\Models\Evento; // Importa o modelo Evento
+use App\Http\Controllers\UsuarioController; 
 
 class UsuarioController extends Controller
 {
@@ -20,18 +26,32 @@ class UsuarioController extends Controller
         return view('usuarios.create');
     }
 
+    public function tipo()
+    {
+        return view('usuarios.tipo');
+    }
+
     // Salva novo usuario
     public function store(Request $request)
     {
+        // Cria o endereço primeiro
+        $endereco = new Endereco;
+        $endereco->cep = $request->input('cep');
+        $endereco->numero = $request->input('numero');
+        $endereco->save();
+
+        // Garante que o id_endereco está preenchido após o save
         $usuario = new Usuario;
-        $usuario->imagem_usuario=$request->input('imagem_usuario');
+        $usuario->imagem_usuario = $request->input('imagem_usuario');
         $usuario->email = $request->input('email');
-        $usuario->senha = $request->input('senha');
+        $usuario->senha = Hash::make($request->input('senha'));
         $usuario->status_conta = 1;
-        $usuario->id_endereco = $request->input('id_endereco'); // Supondo que o ID do endereço seja enviado no request
+        $usuario->id_endereco = $endereco->id_endereco; // deve funcionar se o modelo estiver correto
         $usuario->save();
 
-        return redirect()->route('usuario.perfil');
+        // Use redirect('/usuarios/perfil') para garantir o redirecionamento por URL
+        $perfil = $this->perfil();
+        return $perfil;
     }
 
     // Mostra um usuario específico
@@ -54,12 +74,12 @@ class UsuarioController extends Controller
         $usuario = new Usuario;
         $usuario->imagem_usuario=$request->input('imagem_usuario');
         $usuario->email = $request->input('email');
-        $usuario->senha = $request->input('senha');
+        $usuario->senha = Hash::make($request->input('senha'));
         $usuario->status_conta = 1;
         $usuario->id_endereco = $request->input('id_endereco') ?? 0; // Supondo que o ID do endereço seja enviado no request
         $usuario->save();
-
-        return redirect()->route('usuario.perfil');
+        $perfil = $this->perfil();
+        return $perfil;
     }
 
     // Remove um aluno
@@ -67,17 +87,28 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id_usuario);
         $usuario->delete();
-        return redirect()->route('usuarios.tipo');
+        $tipo = $this->tipo();
+        return $tipo;
     }
 
     public function perfil(){
-        $usuario = Usuario::find(session('usuario_id'));
+        $usuarioId = session('usuario_id');
+        if (!$usuarioId) {
+            $loginForm = $this->loginForm();
+            return $loginForm;
+        }
+        $usuario = Usuario::find($usuarioId);
+        if (!$usuario) {
+            $loginForm = $this->loginForm();
+            return $loginForm;
+        }
         return view('usuarios.perfil', compact('usuario'));
     }
 
     public function logout(){
         session()->forget('usuario_id');
-        return redirect()->route('login');
+        $loginForm = $this->loginForm();
+        return $loginForm;
     }
 
     public function loginForm(){
@@ -90,15 +121,17 @@ class UsuarioController extends Controller
         $email = $request->input('email');
         $senha = $request->input('senha');
 
-        $usuario = Usuario::where('email', $email)->where('senha', $senha)->first();
+        $usuario = Usuario::where('email', $email)->first();
 
-        if ($usuario) {
-            // Autenticação simples, pode ser melhorada com hash de senha
-            // Exemplo: salvar usuário na sessão
+        if ($usuario && \Hash::check($senha, $usuario->senha)) {
             session(['usuario_id' => $usuario->id_usuario]);
-            return redirect()->route('usuarios.perfil');
+            $perfil = $this->perfil();
+            return $perfil;
         } else {
             return redirect()->back()->withErrors(['login' => 'Email ou senha inválidos']);
         }
+    }
+    public function eventos() {
+        return $this->hasMany(Evento::class, 'id_usuario', 'id_usuario');
     }
 }

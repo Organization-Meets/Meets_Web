@@ -33,5 +33,12 @@ Route::put('/usuarios/{id}', [UsuarioController::class, 'update'])->name('usuari
 Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
 Route::get('/usuarios/perfil', [UsuarioController::class, 'perfil'])->name('usuarios.perfil');
 Route::get('/usuarios/logout', [UsuarioController::class, 'logout'])->name('usuarios.logout');
-Route::get('/usuarios/login', [UsuarioController::class, 'login'])->name('usuarios.login');
 Route::get('/usuarios/loginForm', [UsuarioController::class, 'loginForm'])->name('usuarios.loginForm');
+Route::post('/usuarios/login', [UsuarioController::class, 'login'])->name('usuarios.login');
+Route::get('/eventos', [EventoController::class, 'index'])->name('eventos.index');
+Route::get('/eventos/create', [EventoController::class, 'create'])->name('eventos.create');
+Route::post('/eventos', [EventoController::class, 'store'])->name('eventos.store');
+Route::get('/eventos/{id}', [EventoController::class, 'show'])->name('eventos.show');
+Route::get('/eventos/{id}/edit', [EventoController::class, 'edit'])->name('eventos.edit');
+Route::put('/eventos/{id}', [EventoController::class, 'update'])->name('eventos.update');
+Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])->name('eventos.destroy');

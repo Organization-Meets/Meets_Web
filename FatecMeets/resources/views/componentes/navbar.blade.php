@@ -1,5 +1,5 @@
 {{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/componentes/navbar.blade.php --}}
-<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="/css/navbar.css">
 
 <nav class="navbar">
   <div class="navbar-container">
@@ -20,24 +20,29 @@
 
     <!-- Botões de navegação -->
     <div class="navbar-links">
-      <a href="" class="navbar-item">Página inicial</a>
-      <a href="view/busca" class="navbar-item">Buscar</a>
-      <a href="view/postar" class="navbar-item">Postar</a>
-      <a href="view/perfil" class="navbar-item">Perfil</a>
+      <a href="/home/" class="navbar-item">Página inicial</a>
+      <a href="/usuarios/busca/" class="navbar-item">Buscar</a>
+      <a href="/usuarios/postar/" class="navbar-item">Postar</a>
+      <a href="/usuarios/perfil/" class="navbar-item">Perfil</a>
     </div>
 
     <!-- Área do usuário -->
     <div class="navbar-user-area">
-      @if(session('usuario'))
-        @php
-          $foto = session('usuario.foto') ?? '';
-          $caminhoPadrao = asset('uploads/imgPadrao.png');
-          $caminhoFoto = $foto && file_exists(public_path($foto))
-            ? asset($foto)
-            : $caminhoPadrao;
-        @endphp
+      @php
+        $usuarioId = session('usuario_id');
+        $usuario = null;
+        if ($usuarioId) {
+          $usuario = \App\Models\Usuario::find($usuarioId);
+        }
+        $caminhoPadrao = asset('uploads/imgPadrao.png');
+        $caminhoFoto = $caminhoPadrao;
+        if ($usuario && $usuario->imagem_usuario) {
+          $caminhoFoto = asset($usuario->imagem_usuario);
+        }
+      @endphp
+      @if($usuario)
         <img src="{{ $caminhoFoto }}" class="profile-img-mini" alt="Perfil">
-        <a href="usuarios/logout/"><button class="profile-btn">Logout</button></a>
+        <a href="/usuarios/logout/"><button class="profile-btn">Logout</button></a>
       @else
         <a href="/usuarios/loginForm/"><button class="profile-btn">Login</button></a>
       @endif
@@ -46,22 +51,29 @@
 </nav>
 
 <script>
-const themeSwitch = document.getElementById('theme-switch');
-const body = document.body;
+document.addEventListener('DOMContentLoaded', function() {
+  // Dark mode toggle
+  const themeSwitch = document.getElementById('theme-switch');
+  const body = document.body;
+  if (themeSwitch && localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      themeSwitch.checked = true;
+  }
+  if (themeSwitch) {
+    themeSwitch.addEventListener('change', () => {
+      body.classList.toggle('dark-mode', themeSwitch.checked);
+      localStorage.setItem('theme', themeSwitch.checked ? 'dark' : 'light');
+    });
+  }
 
-if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('dark-mode');
-    themeSwitch.checked = true;
-}
-
-themeSwitch.addEventListener('change', () => {
-    if (themeSwitch.checked) {
-        body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-    }
+  // Menu mobile toggle
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navbarLinks = document.querySelector('.navbar-links');
+  if (menuToggle && navbarLinks) {
+    menuToggle.addEventListener('click', () => {
+      navbarLinks.classList.toggle('active');
+    });
+  }
 });
 </script>
 
@@ -74,13 +86,7 @@ themeSwitch.addEventListener('change', () => {
 </div>
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
-
-<script>
-const menuToggle = document.querySelector('.menu-toggle');
-const navbarLinks = document.querySelector('.navbar-links');
-menuToggle?.addEventListener('click', () => {
-  navbarLinks.classList.toggle('active');
-});
+  if (window.VLibras) {
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  }
 </script>

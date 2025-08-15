@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Professor extends Model
 {
     use HasFactory;
+    protected $table = 'professor';
+    protected $primaryKey = 'id_professor';
+    public $incrementing = true;
     protected $fillable = [
-        'id_professor',
         'nome_professor',
         'ra_professor',
-        'id_usuario'
+        'id_usuario',
     ];
 }

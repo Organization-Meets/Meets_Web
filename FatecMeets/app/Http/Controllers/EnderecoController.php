@@ -8,8 +8,7 @@ use App\Models\Endereco; // Importa o modelo Endereco
 
 class EnderecoController extends Controller
 {
-    // Método para criar um novo endereço
-    public function create(Request $request)
+    public function store(Request $request)
     {
         // Validação dos dados do endereço
         $request->validate([
@@ -24,6 +23,23 @@ class EnderecoController extends Controller
         $endereco->numero = $request->input('numero');
         $endereco->save();
 
-        return redirect()->route('usuarios.create')->with('success', 'Endereço criado com sucesso!');
+        return $endereco; // Retorna o endereço criado
+    }
+    public function update(Request $request, $id_endereco)
+    {
+        // Validação dos dados do endereço
+        $request->validate([
+            'cep' => 'required|string|max:10',
+            'numero' => 'required|integer',
+            // Adicione outras validações conforme necessário
+        ]);
+
+        // Atualização do endereço
+        $endereco = Endereco::findOrFail($id_endereco);
+        $endereco->cep = $request->input('cep');
+        $endereco->numero = $request->input('numero');
+        $endereco->save();
+
+        return $endereco;
     }
 }

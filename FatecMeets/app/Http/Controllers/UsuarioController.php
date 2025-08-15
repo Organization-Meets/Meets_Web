@@ -35,9 +35,8 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         // Cria o endereço primeiro
-        $endereco = new Endereco;
-        $endereco->cep = $request->input('cep');
-        $endereco->numero = $request->input('numero');
+        $enderecoController = new EnderecoController();
+        $endereco = $enderecoController->store($request);
         $endereco->save();
 
         // Garante que o id_endereco está preenchido após o save
@@ -133,5 +132,8 @@ class UsuarioController extends Controller
     }
     public function eventos() {
         return $this->hasMany(Evento::class, 'id_usuario', 'id_usuario');
+    }
+    public function adicionais(){
+        
     }
 }

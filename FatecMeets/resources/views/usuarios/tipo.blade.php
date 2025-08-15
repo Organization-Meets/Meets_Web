@@ -1,8 +1,8 @@
-@extends('componentes.header')
+<link rel="stylesheet" href="/css/estilo-cadastro.css">
 <div class="container">
     <h2>Tipo de Usuário</h2>
 
-    <form action="/usuario/tipo/" method="POST">
+    <form action="/usuarios/tipo/" method="POST">
         @csrf
         <img src="/imagens/logo.png" alt="Logo" style="width: 100px; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Professor; // Importa o modelo Professor
+use App\Models\Usuario; // Importa o modelo Usuario
 
 class ProfessorController extends Controller
 {
@@ -10,19 +12,18 @@ class ProfessorController extends Controller
     {
         // Validação dos dados do professor
         $request->validate([
-            'nome' => 'required|string|max:100',
-            'email' => 'required|string|email|max:100',
-            'senha' => 'required|string|min:6',
+            'nome_professor' => 'required|string|max:100',
+            'ra_professor' => 'required|integer',
         ]);
 
         // Criação do professor
         $professor = new Professor;
-        $professor->nome = $request->input('nome');
-        $professor->email = $request->input('email');
-        $professor->senha = Hash::make($request->input('senha'));
+        $professor->nome_professor = $request->input('nome_professor');
+        $professor->ra_professor = $request->input('ra_professor');
+        $professor->id_usuario =  $usuario->id_usuario;
         $professor->save();
 
         return $professor; // Retorna o professor criado
     }
-    
+
 }

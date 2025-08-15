@@ -24,13 +24,18 @@ class AlunoController extends Controller
     // Salva novo aluno
     public function store(Request $request)
     {
+        $request->validate([
+            'ra_aluno' => 'required|integer',
+            'nome_aluno' => 'required|string|max:100',
+        ]);
+        $usuarioId = session('usuario_id');
         $aluno = new Aluno;
         $aluno->ra_aluno = $request->input('ra_aluno');
-        $aluno->id_usuario = $usuario->id_usuario;
+        $aluno->id_usuario = $usuarioId;
         $aluno->nome_aluno = $request->input('nome_aluno');
         $aluno->save();
 
-        return redirect()->route('usuario.perfil');
+        return $aluno;
     }
 
     // Mostra um aluno específico
@@ -51,13 +56,13 @@ class AlunoController extends Controller
     public function update(Request $request, $id)
     {
         $aluno = Aluno::findOrFail($id);
-        $aluno = new Aluno;
+        $usuarioId = session('usuario_id');
         $aluno->ra_aluno = $request->input('ra_aluno');
-        $aluno->id_usuario = $usuario->id_usuario;
+        $aluno->id_usuario = $usuarioId;
         $aluno->nome_aluno = $request->input('nome_aluno');
         $aluno->save();
 
-        return redirect()->route('usuario.perfil');
+        return redirect()->route('usuarios.perfil');
     }
 
     // Remove um aluno

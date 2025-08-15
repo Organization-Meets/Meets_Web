@@ -36,6 +36,14 @@ Route::get('/usuarios/perfil', [UsuarioController::class, 'perfil'])->name('usua
 Route::get('/usuarios/logout', [UsuarioController::class, 'logout'])->name('usuarios.logout');
 Route::get('/usuarios/loginForm', [UsuarioController::class, 'loginForm'])->name('usuarios.loginForm');
 Route::post('/usuarios/login', [UsuarioController::class, 'login'])->name('usuarios.login');
+Route::get('/usuarios/tipo', [UsuarioController::class, 'tipo'])->name('usuarios.tipo');
+Route::post('/usuarios/tipo', [UsuarioController::class, 'tipoUsuario'])->name('usuarios.tipoUsuario');
+Route::post('/usuarios/adicionais/{tipo}', [UsuarioController::class, 'adicionais'])->name('usuarios.adicionais');
+Route::post('/usuarios/adicionais', [UsuarioController::class, 'adicionais'])->name('usuarios.adicionais');
+Route::get('/usuarios/adicionais', [UsuarioController::class, 'adicionaisForm'])->name('usuarios.adicionais');
+
+
+
 Route::get('/eventos', [EventoController::class, 'index'])->name('eventos.index');
 Route::get('/eventos/create', [EventoController::class, 'create'])->name('eventos.create');
 Route::post('/eventos', [EventoController::class, 'store'])->name('eventos.store');

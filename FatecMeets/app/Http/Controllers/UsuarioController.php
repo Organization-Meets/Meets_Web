@@ -30,6 +30,43 @@ class UsuarioController extends Controller
     {
         return view('usuarios.tipo');
     }
+    public function tipoUsuario(Request $request)
+    {
+        $tipo = $request->input('tipo_usuario');
+        $adicionaisForm = $this->adicionaisForm($tipo);
+        return $adicionaisForm;
+    }
+    public function adicionais(Request $request)
+    {
+        $tipo = $request->input('tipo_usuario');
+
+        switch ($tipo) {
+            case 'aluno':
+                $alunoController = new AlunoController();
+                $alunoController->store($request);
+                break;
+            case 'professor':
+                $professorController = new ProfessorController();
+                $professorController->store($request);
+                break;
+            case 'admin':
+                break;
+            default:
+                echo "Tipo de usuário inválido.";
+                break;
+        }
+
+        $telefoneController = new TelefoneController();
+        $telefone = $telefoneController->store($request);
+        $telefone->save();
+
+        $perfil = $this->perfil();
+        return $perfil;
+    }
+    public function adicionaisForm($tipo)
+    {
+        return view('usuarios.adicionais', compact('tipo'));
+    }
 
     // Salva novo usuario
     public function store(Request $request)
@@ -45,12 +82,12 @@ class UsuarioController extends Controller
         $usuario->email = $request->input('email');
         $usuario->senha = Hash::make($request->input('senha'));
         $usuario->status_conta = 1;
-        $usuario->id_endereco = $endereco->id_endereco; // deve funcionar se o modelo estiver correto
+        $usuario->id_endereco = $endereco->id_endereco;
         $usuario->save();
 
-        // Use redirect('/usuarios/perfil') para garantir o redirecionamento por URL
-        $perfil = $this->perfil();
-        return $perfil;
+        session(['usuario_id' => $usuario->id_usuario]);
+        $tipo = $this->tipo();
+        return $tipo;
     }
 
     // Mostra um usuario específico
@@ -86,8 +123,8 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id_usuario);
         $usuario->delete();
-        $tipo = $this->tipo();
-        return $tipo;
+        $create = $this->create();
+        return $create;
     }
 
     public function perfil(){
@@ -132,8 +169,5 @@ class UsuarioController extends Controller
     }
     public function eventos() {
         return $this->hasMany(Evento::class, 'id_usuario', 'id_usuario');
-    }
-    public function adicionais(){
-        
     }
 }

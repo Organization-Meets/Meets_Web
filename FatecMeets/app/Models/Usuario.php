@@ -27,9 +27,4 @@ class Usuario extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime', // Converte o campo de verificação de e-mail para objeto DateTime
     ];
-
-    public function eventos()
-    {
-        return $this->hasMany(Evento::class, 'id_usuario', 'id_usuario');
-    }
 }

@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Administradores extends Model
 {
     use HasFactory;
+    protected $table = 'administradores';
+    protected $primaryKey = 'id_administrador';
+    public $incrementing = true;
 }

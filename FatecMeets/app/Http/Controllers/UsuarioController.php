@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Usuario; // Importa o modelo Usuario
 use App\Models\Endereco; // Importa o modelo Endereco
+use App\Models\Evento; // Importa o modelo Evento 
+use App\Http\Controllers\GameficacaoController; // Importa o controlador GameficacaoController
+use App\Http\Controllers\TelefoneController; // Importa o controlador TelefoneController
+use App\Http\Controllers\AlunoController; // Importa o controlador AlunoController
+use App\Http\Controllers\AcademicosController; // Importa o controlador AcademicosController
 use App\Http\Controllers\EnderecoController; // Importa o controlador EnderecoController
-use Illuminate\Support\Facades\Hash; // Importa o Hash para senhas
 use App\Http\Controllers\EventoController; // Importa o controlador EventoController
-use App\Models\Evento; // Importa o modelo Evento
-use App\Http\Controllers\UsuarioController; 
+use Illuminate\Support\Facades\Hash; // Importa o Hash para senhas
 
 class UsuarioController extends Controller
 {
@@ -25,21 +28,6 @@ class UsuarioController extends Controller
     {
         return view('usuarios.create');
     }
-
-    public function tipo()
-    {
-        if (session('usuario_nome')) {
-            $perfil = $this->perfil();
-            return $perfil;
-        }
-        return view('usuarios.tipo');
-    }
-    public function tipoUsuario(Request $request)
-    {
-        $tipo = $request->input('tipo_usuario');
-        $adicionaisForm = $this->adicionaisForm($tipo);
-        return $adicionaisForm;
-    }
     public function adicionais(Request $request)
     {
         $tipo = $request->input('tipo_usuario');
@@ -47,48 +35,53 @@ class UsuarioController extends Controller
         if ($tipo == 'aluno') {
             $alunoController = new AlunoController();
             $aluno = $alunoController->store($request);
-            session(['usuario_nome' => $aluno->nome_aluno]);
-        } elseif ($tipo == 'professor') {
-            $professorController = new ProfessorController();
-            $professor = $professorController->store($request);
-            session(['usuario_nome' => $professor->nome_professor]);
-        } elseif ($tipo == 'admin') {
-            echo "Admin";
+        } elseif ($tipo == 'academicos') {
+            $academicosController = new AcademicosController();
+            $academicos = $academicosController->store($request);
         } else {
             echo "Tipo de usuário inválido.";
         }
 
-        $telefoneController = new TelefoneController();
-        $telefone = $telefoneController->store($request);
-    
+        // Cria o endereço primeiro
+        $gameficacaoController = new GameficacaoController();
+        $gameficacao = $gameficacaoController->store($request);
+        $gameficacao->save();
+
 
         $perfil = $this->perfil();
         return $perfil;
     }
-    public function adicionaisForm($tipo)
+    public function adicionaisForm($tipo, $nome, $nickname)
     {
-        return view('usuarios.adicionais', compact('tipo'));
+        return view('usuarios.adicionais', compact('tipo', 'nome', 'nickname'));
     }
 
-    // Salva novo usuario
     public function store(Request $request)
     {
-        // Cria o endereço primeiro
-        $enderecoController = new EnderecoController();
-        $endereco = $enderecoController->store($request);
-        $endereco->save();
-
         $usuario = new Usuario;
         $usuario->imagem_usuario = $request->input('imagem_usuario');
         $usuario->email = $request->input('email');
         $usuario->senha = Hash::make($request->input('senha'));
         $usuario->status_conta = 1;
-        $usuario->id_endereco = $endereco->id_endereco;
+        $emailUser = explode('@', $usuario->email)[0];
+        $nickname = '@' . $emailUser;
+        // Nome: separa por ponto, remove dígitos de cada parte, capitaliza e junta
+        $nomeParts = explode('.', $emailUser);
+        $nome = array_map(function($part) {
+            return ucfirst(preg_replace('/\d+/', '', $part));
+        }, $nomeParts);
+        $nome = implode(' ', array_filter($nome, fn($part) => strlen($part) > 0));
+
         $usuario->save();
 
+        $tipo = $request->input('tipo_usuario');
         session(['usuario_id' => $usuario->id_usuario]);
-        $tipo = $this->tipo();
-        return $tipo;
+        $adicionaisForm = $this->adicionaisForm($tipo, $nome, $nickname);
+        return $adicionaisForm;
+    }
+    public function uploadImagem()
+    {
+
     }
 
     // Mostra um usuario específico

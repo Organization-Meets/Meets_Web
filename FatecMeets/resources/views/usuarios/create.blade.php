@@ -10,13 +10,18 @@
     <div class="container">
         <h2>Cadastro</h2>
 
-        <form action="/usuarios" method="POST" enctype="multipart/form-data">
+        <form action="/usuarios" method="POST" enctype="multipart/form-data" id="cadastroForm">
             @csrf
-            <input type="email" name="email" placeholder="E-mail" required>
-            <input type="password" name="senha" placeholder="Senha" required>
+            <input type="email" name="email" id="email" placeholder="E-mail" required>
+            <input type="password" name="senha" id="senha" placeholder="Senha" required>
+            <input type="password" name="confirmar_senha" id="confirmar_senha" placeholder="Confirmar Senha" required>
             <input type="file" name="imagem_usuario" accept="image/*">
-            <input type="text" name="cep" placeholder="CEP" required>
-            <input type="text" name="numero" placeholder="Número" required>
+            <p style="text-align: center; margin-bottom: 20px;">Selecione o tipo de usuário que deseja cadastrar:</p>
+            <select name="tipo_usuario" required>
+                <option value="">Selecione</option>
+                <option value="aluno">Aluno</option>
+                <option value="professor">Academicos</option>
+            </select>
             <hr>
             <button type="submit">Cadastrar</button>
             <hr>
@@ -24,5 +29,6 @@
 
         <a href="/home/"><button type="button">Voltar</button></a>
     </div>
+    <script src="/js/confirmarSenha.js"></script>
 </body>
 </html>

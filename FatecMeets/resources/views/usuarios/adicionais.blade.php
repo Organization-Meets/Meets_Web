@@ -13,10 +13,10 @@
 
         @if($tipo == 'aluno')
             <input type="number" name="ra_aluno" placeholder="ra_aluno" required>
-            <input type="text" name="nome_aluno" placeholder="Nome do Aluno" required>
+            <input id="nome" type="text" name="nome_aluno" placeholder="Primeiro e último nome" readonly>
         @elseif($tipo == 'professor')
-            <input type="number" name="ra_professor" placeholder="ra_professor" required>
-            <input type="text" name="nome_professor" placeholder="Nome do Professor" required>
+            <input type="number" name="ra_academicos" placeholder="ra_academicos" required>
+            <input id="nome" type="text" name="nome_academicos" placeholder="Primeiro e último nome" readonly>
         @endif
 
         <input type="number" name="ddd" placeholder="DDD" required>
@@ -27,4 +27,7 @@
 
     <a href="/home/"><button type="button">Voltar</button></a>
 </div>
-@include('componentes.footer')
+<script>
+    var nomeBackend = "{{ $nome }}";
+</script>
+<script src="/js/autocompletarNome.js"></script>

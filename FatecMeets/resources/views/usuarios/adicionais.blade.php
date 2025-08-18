@@ -19,8 +19,7 @@
             <input id="nome" type="text" name="nome_academicos" placeholder="Primeiro e último nome" readonly>
         @endif
 
-        <input type="number" name="ddd" placeholder="DDD" required>
-        <input type="number" name="numero_telefone" placeholder="Número" required>
+        <input type="text" name="nickname" placeholder="Nome de usuário" readonly>
 
         <button type="submit">Continuar</button>
     </form>
@@ -29,5 +28,7 @@
 </div>
 <script>
     var nomeBackend = "{{ $nome }}";
+    var nicknameBackend = "{{ $nickname }}";
 </script>
 <script src="/js/autocompletarNome.js"></script>
+<script src="/js/autocompletarNickname.js"></script>

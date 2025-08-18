@@ -39,10 +39,10 @@ class UsuarioController extends Controller
 
         if ($tipo == 'aluno') {
             $alunoController = new AlunoController();
-            $aluno = $alunoController->store($request);
+            $aluno = $alunoController->store($request, $usuario_id);
         } elseif ($tipo == 'academicos') {
             $academicosController = new AcademicosController();
-            $academicos = $academicosController->store($request);
+            $academicos = $academicosController->store($request, $usuario_id);
         } else {
             echo "Tipo de usuário inválido.";
             return;
@@ -63,9 +63,19 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $usuario = new Usuario;
-        $usuario->imagem_usuario = $request->input('imagem_usuario');
+
+        // Upload da imagem
+        if ($request->hasFile('imagem_usuario') && $request->file('imagem_usuario')->isValid()) {
+            $file = $request->file('imagem_usuario');
+            $nomeArquivo = uniqid() . '-' . $file->getClientOriginalName();
+            $caminho = $file->storeAs('usuarios', $nomeArquivo, 'public');
+            $usuario->imagem_usuario = '/uploads/' . $caminho;
+        } else {
+            $usuario->imagem_usuario = null;
+        }
+
         $usuario->email = $request->input('email');
-        $usuario->senha = Hash::make($request->input('senha'));
+        $usuario->senha = \Hash::make($request->input('senha'));
         $usuario->status_conta = 1;
         $emailUser = explode('@', $usuario->email)[0];
         $nickname = '@' . $emailUser;
@@ -128,15 +138,15 @@ class UsuarioController extends Controller
     public function perfil(){
         $usuarioId = session('usuario_id');
         if (!$usuarioId) {
-            $loginForm = $this->loginForm();
-            return $loginForm;
+            return $this->loginForm();
         }
         $usuario = Usuario::find($usuarioId);
         if (!$usuario) {
-            $loginForm = $this->loginForm();
-            return $loginForm;
+            return $this->loginForm();
         }
-        return view('usuarios.perfil', compact('usuario'));
+        $eventoController = new EventoController();
+        $eventos = $eventoController->eventosDoUsuario($usuario->id_usuario);
+        return view('usuarios.perfil', compact('usuario', 'eventos'));
     }
 
     public function logout(){
@@ -179,6 +189,6 @@ class UsuarioController extends Controller
     }
     public function countEventos($usuario) {
         $eventos = new EventoController();
-        return $eventos->countEventos($usuario->id_usuario);
+        return $eventos->countEventos(session('usuario_id'));
     }
 }

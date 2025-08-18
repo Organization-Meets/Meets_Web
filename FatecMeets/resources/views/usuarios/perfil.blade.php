@@ -3,7 +3,7 @@
 <section class="profile-container">
     <div class="profile-header">
         <div class="profile-img-container">
-            <img src="{{ asset($usuario->imagem_usuario ?? 'uploads/imgPadrao.png') }}" alt="Foto de Perfil" class="profile-img">
+            <img src="{{ asset($usuario->imagem_usuario ?? '/uploads/imgPadrao.png') }}" alt="Foto de Perfil" class="profile-img">
         </div>
         <div class="profile-info">
             <div class="profile-actions">
@@ -21,7 +21,7 @@
             </div>
             <div class="profile-stats">
                 <div class="stat-item">
-                    <span class="stat-count">{{ $usuario->countEventos() ?? 0 }}</span>
+                    <span class="stat-count">{{ $eventos->count() ?? 0 }}</span>
                     <span class="stat-label">Eventos</span>
                 </div>
                 <div class="stat-item">
@@ -56,7 +56,7 @@
         </div>
     </div>
     <div class="gallery">
-        @forelse($usuario->eventos as $evento)
+        @forelse($eventos as $evento)
             <div class="photo">
                 <img src="{{ asset($evento->imagem_evento ?? 'assets/default-event.jpg') }}" alt="{{ $evento->nome_evento }}">
                 <div class="event-info">

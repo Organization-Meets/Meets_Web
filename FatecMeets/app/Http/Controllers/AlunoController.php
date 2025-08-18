@@ -22,20 +22,17 @@ class AlunoController extends Controller
     }
 
     // Salva novo aluno
-    public function store(Request $request)
+    public function store(Request $request, $usuario_id)
     {
         $request->validate([
             'ra_aluno' => 'required|integer',
             'nome_aluno' => 'required|string|max:100',
         ]);
-        $usuarioId = session('usuario_id');
         $aluno = new Aluno;
         $aluno->ra_aluno = $request->input('ra_aluno');
-        $aluno->id_usuario = $usuarioId;
+        $aluno->id_usuario = $usuario_id;
         $aluno->nome_aluno = $request->input('nome_aluno');
         $aluno->save();
-
-        return $aluno;
     }
 
     // Mostra um aluno específico

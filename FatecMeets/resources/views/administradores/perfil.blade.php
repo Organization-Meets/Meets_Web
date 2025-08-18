@@ -3,7 +3,7 @@
 <section class="profile-container">
     <div class="profile-header">
         <div class="profile-img-container">
-            <img src="{{ asset($usuario->imagem_usuario ?? 'uploads/imgPadrao.png') }}" alt="Foto de Perfil" class="profile-img">
+            <img src="{{ asset($usuario->imagem_usuario ?? '/uploads/imgPadrao.png') }}" alt="Foto de Perfil" class="profile-img">
         </div>
         <div class="profile-info">
             <div class="profile-actions">

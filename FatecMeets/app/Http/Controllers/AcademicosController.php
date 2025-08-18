@@ -13,9 +13,9 @@ class AcademicosController extends Controller
         return view('academicos.create');
     }
 
-    public function store(Request $request){
+    public function store(Request $request, $usuario_id){
         $academicos = new Academicos();
-        $academicos->id_usuario = $request->input('id_usuario');
+        $academicos->id_usuario = $usuario_id;
         $academicos->nome_academicos = $request->input('nome_academicos');
         $academicos->ra_academicos = $request->input('ra_academicos');
         $academicos->save();

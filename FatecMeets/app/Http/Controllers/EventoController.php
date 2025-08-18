@@ -108,4 +108,8 @@ class EventoController extends Controller
         $count = Evento::where('id_usuario', $id_usuario)->count();
         return response()->json(['count' => $count]);
     }
+    public function eventosDoUsuario($id_usuario)
+    {
+        return \App\Models\Evento::where('id_usuario', $id_usuario)->get();
+    }
 }

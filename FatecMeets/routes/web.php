@@ -38,8 +38,7 @@ Route::get('/usuarios/loginForm', [UsuarioController::class, 'loginForm'])->name
 Route::post('/usuarios/login', [UsuarioController::class, 'login'])->name('usuarios.login');
 Route::get('/usuarios/tipo', [UsuarioController::class, 'tipo'])->name('usuarios.tipo');
 Route::post('/usuarios/tipo', [UsuarioController::class, 'tipoUsuario'])->name('usuarios.tipoUsuario');
-Route::post('/usuarios/adicionais/{tipo}', [UsuarioController::class, 'adicionais'])->name('usuarios.adicionais');
-Route::post('/usuarios/adicionais', [UsuarioController::class, 'adicionais'])->name('usuarios.adicionais');
+Route::post('/usuarios/adicionais/{usuario_id}', [UsuarioController::class, 'adicionais'])->name('usuarios.adicionais');
 Route::get('/usuarios/adicionais', [UsuarioController::class, 'adicionaisForm'])->name('usuarios.adicionais');
 
 

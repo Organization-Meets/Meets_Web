@@ -27,18 +27,21 @@ return new class extends Migration
             $table->string('numero_telefone', 15);
             $table->string('ddd', 3);
             $table->enum('tipo_telefone', ['celular', 'residencial', 'comercial'])->default('celular');
+            $table->timestamps();
         });
 
         Schema::create('endereco', function (Blueprint $table) {
             $table->bigIncrements('id_endereco');
             $table->string('numero', 10)->nullable();
             $table->string('cep', 10);
+            $table->timestamps();
         });
 
         Schema::create('instituicao', function (Blueprint $table) {
             $table->bigIncrements('id_instituicao');
             $table->string('nome_instituicao', 255);
             $table->string('codigo_institucional', 50)->unique()->nullable();
+            $table->timestamps();
         });
 
         Schema::create('administradores', function (Blueprint $table) {
@@ -46,6 +49,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario');
             $table->string('nome_administrador', 255);
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->timestamps();
         });
 
         Schema::create('aluno', function (Blueprint $table) {
@@ -54,6 +58,7 @@ return new class extends Migration
             $table->string('nome_aluno', 255);
             $table->string('ra_aluno', 20)->unique();
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->timestamps();
         });
 
         Schema::create('academicos', function (Blueprint $table) {
@@ -62,6 +67,7 @@ return new class extends Migration
             $table->string('nome_academicos', 255);
             $table->string('ra_academicos', 20)->unique();
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->timestamps();
         });
 
         Schema::create('logradouro', function (Blueprint $table) {
@@ -69,6 +75,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_endereco');
             $table->string('nome_logradouro', 255);
             $table->foreign('id_endereco')->references('id_endereco')->on('endereco');
+            $table->timestamps();
         });
 
         Schema::create('lugares', function (Blueprint $table) {
@@ -78,6 +85,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_administrador')->nullable();
             $table->foreign('id_endereco')->references('id_endereco')->on('endereco');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
+            $table->timestamps();
         });
 
         Schema::create('gameficacao', function (Blueprint $table) {
@@ -86,6 +94,7 @@ return new class extends Migration
             $table->string('nickname', 100)->unique()->nullable();
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->timestamps();
         });
 
         Schema::create('atividade', function (Blueprint $table) {
@@ -95,6 +104,7 @@ return new class extends Migration
             $table->enum('tipo_atividade', ['postagem', 'comentario', 'evento', 'participacao']);
             $table->unsignedBigInteger('id_gamificacao')->nullable();
             $table->foreign('id_gamificacao')->references('id_gameficacao')->on('gameficacao');
+            $table->timestamps();
         });
 
         Schema::create('evento', function (Blueprint $table) {
@@ -113,6 +123,7 @@ return new class extends Migration
             $table->foreign('id_atividade')->references('id_atividade')->on('atividade');
             $table->foreign('id_lugares')->references('id_lugar')->on('lugares');
             $table->foreign('id_logradouro')->references('id_logradouro')->on('logradouro');
+            $table->timestamps();
         });
 
         Schema::create('postagens', function (Blueprint $table) {
@@ -125,6 +136,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_atividade')->nullable();
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
             $table->foreign('id_atividade')->references('id_atividade')->on('atividade');
+            $table->timestamps();
         });
 
         Schema::create('comentarios', function (Blueprint $table) {
@@ -135,6 +147,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_atividade')->nullable();
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
             $table->foreign('id_atividade')->references('id_atividade')->on('atividade');
+            $table->timestamps();
         });
 
         Schema::create('intencao', function (Blueprint $table) {
@@ -145,6 +158,7 @@ return new class extends Migration
             $table->foreign('id_evento')->references('id_evento')->on('evento');
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
             $table->unique(['id_usuario', 'id_evento']);
+            $table->timestamps();
         });
 
         Schema::create('agenda', function (Blueprint $table) {
@@ -155,6 +169,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_evento')->nullable();
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
             $table->foreign('id_evento')->references('id_evento')->on('evento');
+            $table->timestamps();
         });
 
         Schema::create('adicionais', function (Blueprint $table) {
@@ -167,6 +182,7 @@ return new class extends Migration
             $table->foreign('id_telefone')->references('id_telefone')->on('telefone');
             $table->foreign('id_endereco')->references('id_endereco')->on('endereco');
             $table->foreign('id_instituicao')->references('id_instituicao')->on('instituicao');
+            $table->timestamps();
         });
 
         Schema::create('redes', function (Blueprint $table) {
@@ -175,12 +191,14 @@ return new class extends Migration
             $table->enum('tipo_rede', ['instagram', 'linkedin', 'github', 'twitter', 'facebook', 'outro']);
             $table->string('url_redes', 500);
             $table->foreign('id_adicionais')->references('id_adicionais')->on('adicionais');
+            $table->timestamps();
         });
 
         Schema::create('chat', function (Blueprint $table) {
             $table->bigIncrements('id_chat');
             $table->string('nome_chat', 255)->nullable();
             $table->enum('tipo_chat', ['privado', 'grupo'])->default('privado');
+            $table->timestamps();
         });
 
         Schema::create('membros', function (Blueprint $table) {
@@ -191,6 +209,7 @@ return new class extends Migration
             $table->foreign('id_chat')->references('id_chat')->on('chat');
             $table->foreign('id_gameficacao')->references('id_gameficacao')->on('gameficacao');
             $table->unique(['id_chat', 'id_gameficacao']);
+            $table->timestamps();
         });
 
         Schema::create('mensagens', function (Blueprint $table) {
@@ -201,6 +220,7 @@ return new class extends Migration
             $table->timestamp('data_mensagem')->useCurrent();
             $table->foreign('id_chat')->references('id_chat')->on('chat');
             $table->foreign('id_gameficacao')->references('id_gameficacao')->on('gameficacao');
+            $table->timestamps();
         });
 
         Schema::create('conexao', function (Blueprint $table) {
@@ -211,6 +231,7 @@ return new class extends Migration
             $table->foreign('id_gameficacao')->references('id_gameficacao')->on('gameficacao');
             $table->foreign('id_gameficacao_conexao')->references('id_gameficacao')->on('gameficacao');
             $table->unique(['id_gameficacao', 'id_gameficacao_conexao']);
+            $table->timestamps();
         });
 
         Schema::create('lixo', function (Blueprint $table) {
@@ -221,6 +242,7 @@ return new class extends Migration
             $table->text('motivo_exclusao')->nullable();
             $table->json('dados_tabela')->nullable();
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->timestamps();
         });
 
         Schema::create('usuario_denunciado', function (Blueprint $table) {
@@ -233,6 +255,7 @@ return new class extends Migration
             $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('mensagens_denunciado', function (Blueprint $table) {
@@ -245,6 +268,7 @@ return new class extends Migration
             $table->foreign('id_mensagens')->references('id_mensagens')->on('mensagens');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('chat_denunciado', function (Blueprint $table) {
@@ -257,6 +281,7 @@ return new class extends Migration
             $table->foreign('id_chat')->references('id_chat')->on('chat');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('postagens_denunciado', function (Blueprint $table) {
@@ -269,6 +294,7 @@ return new class extends Migration
             $table->foreign('id_postagem')->references('id_postagem')->on('postagens');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('gameficacao_denunciado', function (Blueprint $table) {
@@ -281,6 +307,7 @@ return new class extends Migration
             $table->foreign('id_gameficacao')->references('id_gameficacao')->on('gameficacao');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('comentarios_denunciado', function (Blueprint $table) {
@@ -293,6 +320,7 @@ return new class extends Migration
             $table->foreign('id_comentario')->references('id_comentario')->on('comentarios');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('evento_denunciado', function (Blueprint $table) {
@@ -305,6 +333,7 @@ return new class extends Migration
             $table->foreign('id_evento')->references('id_evento')->on('evento');
             $table->foreign('id_administrador')->references('id_administrador')->on('administradores');
             $table->foreign('id_lixo')->references('id_lixo')->on('lixo');
+            $table->timestamps();
         });
 
         Schema::create('comentario_evento', function (Blueprint $table) {
@@ -315,6 +344,7 @@ return new class extends Migration
             $table->foreign('id_evento')->references('id_evento')->on('evento');
             $table->foreign('id_comentario')->references('id_comentario')->on('comentarios');
             $table->unique(['id_evento', 'id_comentario']);
+            $table->timestamps();
         });
 
         Schema::create('comentario_postagem', function (Blueprint $table) {
@@ -325,6 +355,7 @@ return new class extends Migration
             $table->foreign('id_postagem')->references('id_postagem')->on('postagens');
             $table->foreign('id_comentario')->references('id_comentario')->on('comentarios');
             $table->unique(['id_postagem', 'id_comentario']);
+            $table->timestamps();
         });
     }
 

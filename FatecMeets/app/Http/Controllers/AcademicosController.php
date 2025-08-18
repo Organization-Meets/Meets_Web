@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Academicos;
+use App\Models\Usuarios;
+use App\Http\Controllers\UsuariosController;
 
 class AcademicosController extends Controller
 {
@@ -18,6 +20,8 @@ class AcademicosController extends Controller
         $academicos->ra_academicos = $request->input('ra_academicos');
         $academicos->save();
 
-        return redirect()->route('academicos.index');
+        $usuariosController = new UsuariosController();
+        $perfil = $usuariosController->perfil();
+        return $perfil;
     }
 }

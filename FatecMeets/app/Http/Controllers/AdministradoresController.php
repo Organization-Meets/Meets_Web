@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Administradores;
 use App\Models\Usuarios;
+use App\Models\Instituicao;
+use App\Models\Lugares;
+use App\Models\Logradouro;
+use App\Http\Controllers\UsuarioController;
 use App\Http\controllers\InstituicaoController;
 use App\Http\controllers\LugaresController;
 use App\Http\controllers\LogradouroController;
@@ -84,5 +88,10 @@ class AdministradoresController extends Controller
     {
         $administrador = $this->findByIDUsuario($id_usuario);
         return $administrador !== null;
+    }
+    public function perfil($usuario)
+    {
+        $usuarioController = new UsuarioController();
+        return view('administradores.perfil', compact('usuario', 'usuarioController'));
     }
 }

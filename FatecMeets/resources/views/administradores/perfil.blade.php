@@ -21,7 +21,7 @@
             </div>
             <div class="profile-stats">
                 <div class="stat-item">
-                    <span class="stat-count">{{ $usuario->countEventos() ?? 0 }}</span>
+                    <span class="stat-count">{{ $usuarioController->countEventos($usuario->id_usuario) ?? 0 }}</span>
                     <span class="stat-label">Eventos</span>
                 </div>
                 <div class="stat-item">

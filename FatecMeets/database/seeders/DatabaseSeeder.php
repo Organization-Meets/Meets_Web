@@ -15,14 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Cria 10 usuários fictícios usando a factory do modelo User
-        // \App\Models\User::factory(10)->create();
-
-        // Cria um usuário fictício com nome e e-mail específicos
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        
     }
 }
 

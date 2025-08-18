@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Gameficacao; // Importa o modelo Gameficacao
 use App\Models\Usuario; // Importa o modelo Usuario
 
 class GameficacaoController extends Controller
@@ -13,7 +14,7 @@ class GameficacaoController extends Controller
         $gameficacao = new Gameficacao;
         $gameficacao->nickname = $request->input('nickname');
         $gameficacao->score_total = 0;
-        $gameficacao->id_usuario = $usuario->id_usuario; // Associa o gameficação ao usuário
+        $gameficacao->id_usuario = $usuario_id; // Associa o gameficação ao usuário
         $gameficacao->save();
 
         return $gameficacao;

@@ -33,7 +33,7 @@ class UsuarioController extends Controller
     {
         return view('usuarios.create');
     }
-    public function adicionais(Request $request)
+    public function adicionais(Request $request, $usuario_id)
     {
         $tipo = $request->input('tipo_usuario');
 
@@ -45,20 +45,19 @@ class UsuarioController extends Controller
             $academicos = $academicosController->store($request);
         } else {
             echo "Tipo de usuário inválido.";
+            return;
         }
 
         // Cria o endereço primeiro
         $gameficacaoController = new GameficacaoController();
-        $gameficacao = $gameficacaoController->store($request);
-        $gameficacao->save();
-
+        $gameficacao = $gameficacaoController->store($request, $usuario_id);
 
         $perfil = $this->perfil();
         return $perfil;
     }
-    public function adicionaisForm($tipo, $nome, $nickname)
+    public function adicionaisForm($tipo, $nome, $nickname, $usuario_id)
     {
-        return view('usuarios.adicionais', compact('tipo', 'nome', 'nickname'));
+        return view('usuarios.adicionais', compact('tipo', 'nome', 'nickname', 'usuario_id'));
     }
 
     public function store(Request $request)
@@ -81,7 +80,7 @@ class UsuarioController extends Controller
 
         $tipo = $request->input('tipo_usuario');
         session(['usuario_id' => $usuario->id_usuario]);
-        $adicionaisForm = $this->adicionaisForm($tipo, $nome, $nickname);
+        $adicionaisForm = $this->adicionaisForm($tipo, $nome, $nickname, $usuario->id_usuario);
         return $adicionaisForm;
     }
     public function uploadImagem()
@@ -164,16 +163,22 @@ class UsuarioController extends Controller
             $administradores = new AdministradoresController();
             $admin = $administradores->isAdmin($usuario->id_usuario);
             if($admin){
-                session(['usuario_nome' => $usuario->email]);
-                return redirect()->route('admin.dashboard');
+                $adminPerfil = $administradores->perfil($usuario);
+                return $adminPerfil;
+            } else {
+                $perfil = $this->perfil();
+                return $perfil;
             }
-            $perfil = $this->perfil();
-            return $perfil;
         } else {
             return redirect()->back()->withErrors(['login' => 'Email ou senha inválidos']);
         }
     }
-    public function eventos() {
-        return $this->hasMany(Evento::class, 'id_usuario', 'id_usuario');
+    public function storeEvento(Request $request) {
+        $eventos = new EventoController();
+        return $eventos->store($request);
+    }
+    public function countEventos($usuario) {
+        $eventos = new EventoController();
+        return $eventos->countEventos($usuario->id_usuario);
     }
 }

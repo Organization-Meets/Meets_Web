@@ -2,7 +2,7 @@
 <div class="container">
     <h2>Tipo de Usuário</h2>
 
-    <form action="/usuarios/adicionais/" method="POST">
+    <form action="/usuarios/adicionais/{{ $usuario_id }}" method="POST">
         @csrf
         <img src="/imagens/logo.png" alt="Logo" style="width: 100px; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
 

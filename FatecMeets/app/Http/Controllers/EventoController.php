@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Evento;
 use App\Models\Endereco;
+use App\Models\Usuario;
+use App\Models\Atividade;
+use App\Models\Lugares;
+use App\Models\Logradouro;
+use App\Http\Controllers\UsuariosController;
 
 class EventoController extends Controller
 {
@@ -35,9 +40,22 @@ class EventoController extends Controller
             'id_endereco' => 'nullable|integer|exists:endereco,id_endereco',
         ]);
 
-        $evento = Evento::create($request->all());
+        $evento = new Evento();
+        $evento->nome_evento = $request->input('nome_evento');
+        $evento->descricao = $request->input('descricao');
+        $evento->data_inicio_evento = $request->input('data_inicio_evento');
+        $evento->data_final_evento = $request->input('data_final_evento');
+        $evento->imagem_evento = $request->input('imagem_evento');
+        $evento->categoria_evento = $request->input('categoria_evento');
+        $evento->id_usuario = $usuario->id_usuario;
+        $evento->id_atividade = $request->input('id_atividade');
+        $evento->id_lugares = $request->input('id_lugares');
+        $evento->id_logradouro = $request->input('id_logradouro');
+        $evento->save();
 
-        return redirect()->route('eventos.index')->with('success', 'Evento criado com sucesso!');
+        $usuariosController = new UsuariosController();
+        $perfil = $usuariosController->perfil();
+        return $perfil;
     }
 
     // Mostra um evento específico
@@ -84,5 +102,10 @@ class EventoController extends Controller
     {
         $eventos = Evento::where('id_usuario', $id_usuario)->get();
         return view('eventos.usuario', compact('eventos'));
+    }
+    public function countEventos($id_usuario)
+    {
+        $count = Evento::where('id_usuario', $id_usuario)->count();
+        return response()->json(['count' => $count]);
     }
 }

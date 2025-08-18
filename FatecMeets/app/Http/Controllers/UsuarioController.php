@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Usuario; // Importa o modelo Usuario
 use App\Models\Endereco; // Importa o modelo Endereco
 use App\Models\Evento; // Importa o modelo Evento 
+use App\Models\Aluno; // Importa o modelo Aluno
+use App\Models\Academicos; // Importa o modelo Academicos
+use App\Models\Telefone; // Importa o modelo Telefone
+use App\Models\Gameficacao; // Importa o modelo Gameficacao
+use App\Http\Controllers\AdministradoresController; 
 use App\Http\Controllers\GameficacaoController; // Importa o controlador GameficacaoController
 use App\Http\Controllers\TelefoneController; // Importa o controlador TelefoneController
 use App\Http\Controllers\AlunoController; // Importa o controlador AlunoController
@@ -156,6 +161,12 @@ class UsuarioController extends Controller
 
         if ($usuario && \Hash::check($senha, $usuario->senha)) {
             session(['usuario_id' => $usuario->id_usuario]);
+            $administradores = new AdministradoresController();
+            $admin = $administradores->isAdmin($usuario->id_usuario);
+            if($admin){
+                session(['usuario_nome' => $usuario->email]);
+                return redirect()->route('admin.dashboard');
+            }
             $perfil = $this->perfil();
             return $perfil;
         } else {

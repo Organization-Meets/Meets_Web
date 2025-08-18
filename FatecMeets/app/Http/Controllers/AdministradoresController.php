@@ -76,4 +76,13 @@ class AdministradoresController extends Controller
         $logradouroController = new LogradouroController();
         return $logradouroController->store($request);
     }
+    public function findByIDUsuario($id_usuario)
+    {
+        return Administradores::where('id_usuario', $id_usuario)->first();
+    }
+    public function isAdmin($id_usuario)
+    {
+        $administrador = $this->findByIDUsuario($id_usuario);
+        return $administrador !== null;
+    }
 }

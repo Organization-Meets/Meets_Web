@@ -30,5 +30,7 @@
         <a href="/home/"><button type="button">Voltar</button></a>
     </div>
     <script src="/js/confirmarSenha.js"></script>
+    <script src="/js/emailValido.js"></script>
+    <script src="/js/senhaSegura.js"></script>
 </body>
 </html>

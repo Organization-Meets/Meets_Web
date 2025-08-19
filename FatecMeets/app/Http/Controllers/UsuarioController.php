@@ -60,6 +60,38 @@ class UsuarioController extends Controller
         return view('usuarios.adicionais', compact('tipo', 'nome', 'nickname', 'usuario_id'));
     }
 
+    public function uploadImagem(Request $request)
+    {
+        $usuarioId = session('usuario_id');
+        if (!$usuarioId) {
+            return response()->json(['error' => 'Usuário não autenticado'], 401);
+        }
+
+        $usuario = Usuario::find($usuarioId);
+        if (!$usuario) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
+
+        // Verifica se veio uma imagem válida
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+            $file = $request->file('imagem');
+            $nomeArquivo = uniqid() . '-' . $file->getClientOriginalName();
+
+            $caminho = $file->storeAs('usuarios', $nomeArquivo, 'public');
+
+            // Atualiza o caminho da imagem no usuário
+            $usuario->imagem_usuario = 'uploads/' . $caminho;
+            $usuario->save();
+
+            return response()->json([
+                'success' => true,
+                'url' => asset('uploads/' . $caminho)
+            ]);
+        }
+
+        return response()->json(['error' => 'Imagem inválida'], 400);
+    }
+
     public function store(Request $request)
     {
         $usuario = new Usuario;
@@ -69,7 +101,7 @@ class UsuarioController extends Controller
             $file = $request->file('imagem_usuario');
             $nomeArquivo = uniqid() . '-' . $file->getClientOriginalName();
             $caminho = $file->storeAs('usuarios', $nomeArquivo, 'public');
-            $usuario->imagem_usuario = '/uploads/' . $caminho;
+            $usuario->imagem_usuario = 'uploads/' . $caminho; // <-- Aqui a correção!
         } else {
             $usuario->imagem_usuario = null;
         }
@@ -92,10 +124,6 @@ class UsuarioController extends Controller
         session(['usuario_id' => $usuario->id_usuario]);
         $adicionaisForm = $this->adicionaisForm($tipo, $nome, $nickname, $usuario->id_usuario);
         return $adicionaisForm;
-    }
-    public function uploadImagem()
-    {
-
     }
 
     // Mostra um usuario específico
@@ -190,5 +218,20 @@ class UsuarioController extends Controller
     public function countEventos($usuario) {
         $eventos = new EventoController();
         return $eventos->countEventos(session('usuario_id'));
+    }
+    public function getImagem()
+    {
+        $usuarioId = session('usuario_id');
+        $usuario = Usuario::find($usuarioId);
+
+        if ($usuario && $usuario->imagem_usuario) {
+            return response()->json([
+                'url' => asset($usuario->imagem_usuario)
+            ]);
+        }
+
+        return response()->json([
+            'url' => asset('/imagens/usuario/imgPadrao.png') // Imagem padrão no public/
+        ]);
     }
 }

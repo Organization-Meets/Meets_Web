@@ -2,9 +2,30 @@
 <link rel="stylesheet" href="/css/estilo-perfil.css">
 <section class="profile-container">
     <div class="profile-header">
-        <div class="profile-img-container">
-            <img src="{{ asset($usuario->imagem_usuario ?? '/uploads/imgPadrao.png') }}" alt="Foto de Perfil" class="profile-img">
-        </div>
+        <div id="imagem-container" class="profile-img-container"></div>
+
+        <script>
+        function buscarImagem() {
+            fetch('/imagem')
+            .then(response => response.json())
+            .then(data => {
+                const img = document.createElement("img");
+                img.src = data.url;
+                img.alt = "Foto de Perfil";
+                img.className = "profile-img"
+                img.style.maxWidth = "300px";
+
+                document.getElementById("imagem-container").innerHTML = "";
+                document.getElementById("imagem-container").appendChild(img);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar imagem:", error);
+            });
+        }
+
+        // Executa automaticamente quando a página termina de carregar
+        window.addEventListener('DOMContentLoaded', buscarImagem);
+        </script>
         <div class="profile-info">
             <div class="profile-actions">
                 <h1 class="profile-username">

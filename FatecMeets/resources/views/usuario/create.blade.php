@@ -5,37 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
     <link rel="stylesheet" href="/css/estilo-cadastro.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .section {
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h2>Cadastro</h2>
 
-        <form action="/usuarios" method="POST" enctype="multipart/form-data" id="cadastroForm">
-            @csrf
-            <input type="email" name="email" id="email" placeholder="E-mail" required>
-            <input type="password" name="senha" id="senha" placeholder="Senha" required>
-            <input type="password" name="confirmar_senha" id="confirmar_senha" placeholder="Confirmar Senha" required>
-            <input type="file" name="imagem_usuario" id="imagem_usuario" accept="image/*">
-            <div id="preview-container" style="text-align:center; margin-bottom:10px;">
-                <img id="preview-img" src="#" alt="Prévia da imagem" style="display:none; max-width:120px; max-height:120px; border-radius:50%; margin:0 auto;" />
-            </div>
-            <p style="text-align: center; margin-bottom: 20px;">Selecione o tipo de usuário que deseja cadastrar:</p>
-            <select name="tipo_usuario" required>
-                <option value="">Selecione</option>
-                <option value="aluno">Aluno</option>
-                <option value="professor">Academicos</option>
-            </select>
-            <hr>
-            <button type="submit">Cadastrar</button>
-            <hr>
-        </form>
+        <!-- PARTE 1 -->
+        <div id="parte1" class="section">
+            <form id="cadastroForm" enctype="multipart/form-data">
+                @csrf
+                <input type="email" name="email" id="email" placeholder="E-mail" required>
+                <input type="password" name="senha" id="senha" placeholder="Senha" required>
+                <input type="password" name="confirmar_senha" id="confirmar_senha" placeholder="Confirmar Senha" required>
+                <input type="file" name="imagem_usuario" id="imagem_usuario" accept="image/*">
+                
+                <div id="preview-container" style="text-align:center; margin-bottom:10px;">
+                    <img id="preview-img" src="#" alt="Prévia da imagem"
+                         style="display:none; max-width:120px; max-height:120px; border-radius:50%; margin:0 auto;" />
+                </div>
+
+                <p style="text-align: center; margin-bottom: 20px;">Selecione o tipo de usuário que deseja cadastrar:</p>
+                <select name="tipo_usuario" required>
+                    <option value="">Selecione</option>
+                    <option value="aluno">Aluno</option>
+                    <option value="professor">Academicos</option>
+                </select>
+                <hr>
+                <button type="submit">Cadastrar</button>
+                <hr>
+            </form>
+        </div>
+
+        <!-- PARTE 2 -->
+        <div id="parte2" class="section hidden">
+            <form id="dadosAdicionaisForm">
+                @csrf
+                <img src="/imagens/logo.png" alt="Logo"
+                     style="width: 100px; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
+
+                <p style="text-align: center; margin-bottom: 20px;">Tipo de Usuario:</p>
+                <select name="tipo_usuario" required>
+                    <option value="">Selecione</option>
+                    <option value="aluno">Aluno</option>
+                    <option value="professor">Academicos</option>
+                </select>
+
+                <div id="camposAluno" class="hidden">
+                    <input type="number" name="ra_aluno" placeholder="RA do aluno">
+                    <input id="nome_aluno" type="text" name="nome_aluno" placeholder="Primeiro e último nome" readonly>
+                </div>
+
+                <div id="camposProfessor" class="hidden">
+                    <input type="number" name="ra_academicos" placeholder="RA do acadêmico">
+                    <input id="nome_academicos" type="text" name="nome_academicos" placeholder="Primeiro e último nome" readonly>
+                </div>
+
+                <input type="text" name="nickname" placeholder="Nome de usuário" readonly>
+                <hr>
+                <button type="submit">Finalizar Cadastro</button>
+                <hr>
+            </form>
+        </div>
 
         <a href="/home/"><button type="button">Voltar</button></a>
     </div>
+
+    <!-- Scripts auxiliares -->
     <script src="/js/confirmarSenha.js"></script>
     <script src="/js/emailValido.js"></script>
     <script src="/js/senhaSegura.js"></script>
+
     <script>
+    // Pré-visualização da imagem
     document.getElementById('imagem_usuario').addEventListener('change', function(e) {
         const [file] = e.target.files;
         const preview = document.getElementById('preview-img');
@@ -48,41 +100,137 @@
         }
     });
     </script>
+
+    <script>
+    function mostrarParte2() {
+        document.getElementById("parte1").classList.add("hidden");
+        document.getElementById("parte2").classList.remove("hidden");
+    }
+    function voltarParte1() {
+        document.getElementById("parte2").classList.add("hidden");
+        document.getElementById("parte1").classList.remove("hidden");
+    }
+    </script>
+
+    <script>
+    // ==============================
+    // PARTE 1 -> POST /usuarios
+    // ==============================
+    document.getElementById("cadastroForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        let form = e.target;
+        let formData = new FormData(form);
+
+        try {
+            let response = await fetch("/usuarios", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            });
+
+            if (!response.ok) throw new Error("Erro ao cadastrar usuário!");
+
+            let result = await response.json();
+            console.log("Retorno backend:", result);
+
+            // pega dados retornados
+            let usuario_id = result.usuario_id;
+            let nome = result.nome;
+            let nickname = result.nickname;
+            let tipo = formData.get("tipo_usuario");
+
+            // guarda usuario_id para uso na segunda parte
+            window.usuarioId = usuario_id;
+
+            // Preenche automaticamente campos da parte 2
+            document.querySelector("#parte2 select[name='tipo_usuario']").value = tipo;
+            document.querySelector("#parte2 input[name='nickname']").value = nickname;
+
+            if (tipo === "aluno") {
+                document.getElementById("camposAluno").classList.remove("hidden");
+                document.getElementById("camposProfessor").classList.add("hidden");
+                document.getElementById("nome_aluno").value = nome;
+            } else if (tipo === "professor") {
+                document.getElementById("camposProfessor").classList.remove("hidden");
+                document.getElementById("camposAluno").classList.add("hidden");
+                document.getElementById("nome_academicos").value = nome;
+            }
+
+            // troca de tela
+            mostrarParte2();
+
+        } catch (err) {
+            console.error(err);
+            alert("Erro ao cadastrar!");
+        }
+    });
+
+
+    // ==============================
+    // PARTE 2 -> POST adicionais
+    // ==============================
+    document.getElementById("dadosAdicionaisForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        let form = e.target;
+        let formData = new FormData(form);
+        let tipo = formData.get("tipo_usuario");
+        let usuarioId = window.usuarioId;
+
+        try {
+            // Se for aluno
+            if (tipo === "aluno") {
+                await fetch(`/aluno/${usuarioId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        ra_aluno: formData.get("ra_aluno"),
+                        nome_aluno: formData.get("nome_aluno")
+                    })
+                });
+            }
+
+            // Se for professor
+            if (tipo === "professor") {
+                await fetch(`/academicos/${usuarioId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        ra_academicos: formData.get("ra_academicos"),
+                        nome_academicos: formData.get("nome_academicos")
+                    })
+                });
+            }
+
+            // Gameficação (sempre manda nickname)
+            await fetch(`/gameficacao/${usuarioId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    nickname: formData.get("nickname")
+                })
+            });
+
+            alert("Cadastro finalizado com sucesso!");
+            window.location.href = "/home/";
+
+        } catch (err) {
+            console.error(err);
+            alert("Erro ao finalizar cadastro!");
+        }
+    });
+    </script>
 </body>
 </html>
-
-<!--quando terminar o cadastro, mostrar:-->
-<link rel="stylesheet" href="/css/estilo-cadastro.css">
-<div class="container">
-    <h2>Tipo de Usuário</h2>
-
-    <form action="/usuarios/adicionais/{{ $usuario_id }}" method="POST">
-        @csrf
-        <img src="/imagens/logo.png" alt="Logo" style="width: 100px; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
-
-        <p style="text-align: center; margin-bottom: 20px;">Tipo de Usuario:</p>
-        <select name="tipo_usuario" required>
-            <option value="{{ $tipo }}">{{ $tipo }}</option>
-        </select>
-
-        @if($tipo == 'aluno')
-            <input type="number" name="ra_aluno" placeholder="ra_aluno" required>
-            <input id="nome" type="text" name="nome_aluno" placeholder="Primeiro e último nome" readonly>
-        @elseif($tipo == 'professor')
-            <input type="number" name="ra_academicos" placeholder="ra_academicos" required>
-            <input id="nome" type="text" name="nome_academicos" placeholder="Primeiro e último nome" readonly>
-        @endif
-
-        <input type="text" name="nickname" placeholder="Nome de usuário" readonly>
-
-        <button type="submit">Continuar</button>
-    </form>
-
-    <a href="/home/"><button type="button">Voltar</button></a>
-</div>
-<script>
-    var nomeBackend = "{{ $nome }}";
-    var nicknameBackend = "{{ $nickname }}";
-</script>
-<script src="/js/autocompletarNome.js"></script>
-<script src="/js/autocompletarNickname.js"></script>

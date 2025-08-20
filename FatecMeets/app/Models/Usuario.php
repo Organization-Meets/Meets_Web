@@ -25,6 +25,7 @@ class Usuario extends Authenticatable
         'remember_token',  // Oculta o token de "lembrar-me"
     ];
     protected $casts = [
+        'imagem_usuario' => 'array',
         'email_verified_at' => 'datetime', // Converte o campo de verificação de e-mail para objeto DateTime
     ];
 }

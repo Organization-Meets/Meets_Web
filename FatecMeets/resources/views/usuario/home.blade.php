@@ -1,4 +1,4 @@
-{{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/welcome.blade.php --}}
+{{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/usuario/home.blade.php --}}
     @include('componentes.header')
     <link rel="stylesheet" href="/css/estilo-feeds.css">
 

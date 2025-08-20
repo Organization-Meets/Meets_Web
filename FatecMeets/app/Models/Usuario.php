@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Evento; // Importa o modelo Evento
+use App\Models\Usuario; // Importa o modelo Evento
 
 class Usuario extends Authenticatable
 {

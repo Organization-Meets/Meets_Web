@@ -13,6 +13,7 @@
 
     <!-- CSS da navbar -->
     <link rel="stylesheet" href="/css/navbar.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     @include('componentes.navbar')

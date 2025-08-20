@@ -7,6 +7,14 @@
       navbarLinks.classList.toggle('active');
     });
   </script>
+  <!-- Define o nome do controller via PHP -->
+  <script>
+      var controllerName = "{{ $nomeArquivo }}"; // ex: "create"
+  </script>
+
+  <!-- Carrega o web.js -->
+  <script src="/js/web.js"></script>
+
 
   <!-- Outros scripts comuns (dark mode, Vlibras…) -->
   <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>

@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-Route::get('/', function () {
-    return view('welcome');
-});
 // Usuário
 require __DIR__.'/includes/UsuarioRoutes.php';
 // Evento

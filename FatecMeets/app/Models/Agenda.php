@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Agenda extends Model
 {
     use HasFactory;
+    protected $table = 'agenda';
+    protected $primaryKey = 'id_agenda';
+    public $incrementing = true;
 }

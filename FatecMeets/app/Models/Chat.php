@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Chat extends Model
 {
     use HasFactory;
+    protected $table = 'chat';
+    protected $primaryKey = 'id_chat';
+    public $incrementing = true;
 }

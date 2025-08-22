@@ -66,7 +66,7 @@ return [
         // Provider 'users' usa o driver Eloquent e o modelo User
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Usuario::class,
         ],
 
         // Exemplo de provider usando driver de banco de dados

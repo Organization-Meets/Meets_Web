@@ -26,8 +26,11 @@
             <form id="cadastroForm" enctype="multipart/form-data">
                 @csrf
                 <input type="email" name="email" id="email" placeholder="E-mail" required>
-                <input type="password" name="senha" id="senha" placeholder="Senha" required>
-                <input type="password" name="senha_confirmation" id="confirmar_senha" placeholder="Confirmar Senha" required>
+                
+                <!-- trocado de 'senha' para 'password' -->
+                <input type="password" name="password" id="password" placeholder="Senha" required>
+                <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirmar Senha" required>
+                
                 <input type="file" name="imagem_usuario" id="imagem_usuario" accept="image/*">
                 
                 <div id="preview-container" style="text-align:center; margin-bottom:10px;">
@@ -86,34 +89,6 @@
     <script src="/js/emailValido.js"></script>
     <script src="/js/senhaSegura.js"></script>
 
-    <script>
-    // Pré-visualização da imagem
-    document.getElementById('imagem_usuario').addEventListener('change', function(e) {
-        const [file] = e.target.files;
-        const preview = document.getElementById('preview-img');
-        if (file) {
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-        } else {
-            preview.src = '#';
-            preview.style.display = 'none';
-        }
-    });
-    </script>
-
-    <script>
-    function mostrarParte2() {
-        document.getElementById("parte1").classList.add("hidden");
-        document.getElementById("parte2").classList.remove("hidden");
-    }
-    function voltarParte1() {
-        document.getElementById("parte2").classList.add("hidden");
-        document.getElementById("parte1").classList.remove("hidden");
-    }
-    </script>
-
-    <script>
-    
-    </script>
+    <script src="/js/controllers/createUsuarioController.js"></script>
 </body>
 </html>

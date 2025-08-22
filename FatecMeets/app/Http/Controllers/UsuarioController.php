@@ -9,43 +9,45 @@ use Illuminate\Support\Facades\Auth;
 
 class UsuarioController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['create', 'store', 'loginForm', 'login']);
+    }
     public function create(){
         $nomeArquivo = "createUsuario";
         return view('usuario.create', compact('nomeArquivo'));
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
         $request->validate([
             'email' => 'required|email|unique:usuario,email',
-            'senha' => 'required|min:6|confirmed',
+            'password' => 'required|min:6|confirmed',
             'imagem_usuario' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'tipo_usuario' => 'required|in:aluno,professor'
         ]);
 
         $usuario = new Usuario();
-        
-        // email fornecido
         $usuario->email = $request->input('email');
-        $usuario->senha = Hash::make($request->input('senha'));
+        $usuario->password = Hash::make($request->input('password'));
         $usuario->status_conta = 'ativo';
 
-        // upload imagem
+        // Upload da imagem e armazenamento como JSON
         if ($request->hasFile('imagem_usuario')) {
             $path = $request->file('imagem_usuario')->store('usuarios', 'public');
-            $usuario->imagem_usuario = $path;
+            $usuario->imagem_usuario = json_encode([$path]);
+        } else {
+            $usuario->imagem_usuario = null;
         }
 
         $usuario->save();
 
         // Extrair nome do email para exibir como "Gabriel Rodrigues"
-        // Exemplo: email = gabriel.rodrigues106@fatec.sp.gov.br
-        $emailUser = explode('@', $usuario->email)[0]; // "gabriel.rodrigues106"
-        $parts = explode('.', $emailUser); // ["gabriel", "rodrigues106"]
+        $emailUser = explode('@', $usuario->email)[0];
+        $parts = explode('.', $emailUser);
         $firstName = ucfirst($parts[0]);
         $lastName = isset($parts[1]) ? ucfirst(preg_replace('/\d+$/', '', $parts[1])) : '';
         $nomeCompleto = trim($firstName . ' ' . $lastName);
-
         $nickname = '@' . $emailUser;
 
         return response()->json([
@@ -56,6 +58,7 @@ class UsuarioController extends Controller
         ]);
     }
 
+
     public function edit($id_usuario){
         $usuario = Usuario::find($id_usuario);
         return view('usuario.edit', compact('usuario'));
@@ -64,10 +67,10 @@ class UsuarioController extends Controller
     public function update(Request $request, $id_usuario){
         $usuario = Usuario::find($id_usuario);
         $usuario->email = $request->input('email');
-        if ($request->filled('senha')) {
-            $usuario->senha = Hash::make($request->input('senha'));
+        if ($request->filled('password')) {
+            $usuario->password = Hash::make($request->input('password'));
         }
-        $usuario->imagem_usuario = $request->input('imagem_usuario');
+        $usuario->imagem_usuario = json_encode([$path]);
         $usuario->status_conta = $request->input('status_conta', $usuario->status_conta);
         $usuario->save();
         return true;
@@ -95,9 +98,9 @@ class UsuarioController extends Controller
     }
 
     public function login(Request $request){
-        $credentials = $request->only('email', 'senha');
+        $credentials = $request->only('email', 'password');
         $usuario = Usuario::where('email', $credentials['email'])->first();
-        if ($usuario && Hash::check($credentials['senha'], $usuario->senha)) {
+        if ($usuario && Hash::check($credentials['password'], $usuario->password)) {
             Auth::login($usuario);
             return response()->json(['success' => true]);
         }
@@ -112,11 +115,36 @@ class UsuarioController extends Controller
     public function perfil(){
         $usuario = Auth::user();
         $nomeArquivo = "perfilUsuario";
-        return view('usuario.perfil', compact('usuario', 'nomeArquivo'));
+        if (!$usuario){
+            return false;
+        } else {
+            return view('usuario.perfil', compact('usuario', 'nomeArquivo'));
+        }
     }
     public function home(){
         $usuario = Auth::user();
         $nomeArquivo = "homeUsuario";
         return view('usuario.home', compact('usuario', 'nomeArquivo'));
     }
+    public function dadosUsuario() {
+        $usuario = Auth::user();
+        if (!$usuario) return response()->json([], 404);
+
+        return response()->json([
+            'nome' => $usuario->nome,
+            'nickname' => $usuario->nickname,
+            'email' => $usuario->email,
+            'numero' => $usuario->numero,
+        ]);
+    }
+
+    public function imagemUsuario() {
+        $usuario = Auth::user();
+        $url = $usuario && $usuario->imagem_usuario 
+            ? asset('storage/' . json_decode($usuario->imagem_usuario)[0])
+            : asset('assets/default-user.png');
+
+        return response()->json(['url' => $url]);
+    }
+
 }

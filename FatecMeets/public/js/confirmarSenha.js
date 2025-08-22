@@ -1,7 +1,7 @@
 document.getElementById('cadastroForm').addEventListener('submit', function(e) {
-    const senha = document.getElementById('senha').value;
-    const confirmar = document.getElementById('confirmar_senha').value;
-    if (senha !== confirmar) {
+    const password = document.getElementById('password').value;
+    const confirmar = document.getElementById('confirmar_password').value;
+    if (password !== confirmar) {
         alert('As senhas não coincidem!');
         e.preventDefault();
     }

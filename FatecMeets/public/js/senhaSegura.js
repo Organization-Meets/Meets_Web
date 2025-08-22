@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const senhaInput = document.getElementById("senha");
+    const passwordInput = document.getElementById("password");
     const form = document.getElementById("cadastroForm");
 
     // Cria um elemento para mostrar mensagens de erro
@@ -7,35 +7,35 @@ document.addEventListener("DOMContentLoaded", function () {
     errorMsg.style.color = "red";
     errorMsg.style.display = "block";
     errorMsg.style.marginBottom = "10px";
-    senhaInput.parentNode.insertBefore(errorMsg, senhaInput.nextSibling);
+    passwordInput.parentNode.insertBefore(errorMsg, passwordInput.nextSibling);
 
-    // Função para validar a senha
-    function senhaValida(senha) {
-        const temEspecial = /[!@#$%^&*(),.?":{}|<>_\-+=~`[\]\\;/]/.test(senha);
-        const temMaiuscula = /[A-Z]/.test(senha);
-        const temNumero = /[0-9]/.test(senha);
-        const tamanhoMinimo = senha.length >= 10;
+    // Função para validar a password
+    function passwordValida(password) {
+        const temEspecial = /[!@#$%^&*(),.?":{}|<>_\-+=~`[\]\\;/]/.test(password);
+        const temMaiuscula = /[A-Z]/.test(password);
+        const temNumero = /[0-9]/.test(password);
+        const tamanhoMinimo = password.length >= 10;
         return temEspecial && temMaiuscula && temNumero && tamanhoMinimo;
     }
 
-    // Validação ao sair do campo de senha
-    senhaInput.addEventListener("blur", function () {
-        const senha = senhaInput.value;
+    // Validação ao sair do campo de password
+    passwordInput.addEventListener("blur", function () {
+        const password = passwordInput.value;
 
-        if (!senhaValida(senha)) {
-            errorMsg.textContent = "A senha deve ter pelo menos 10 caracteres, uma letra maiúscula, um número e um caractere especial.";
-            senhaInput.setCustomValidity("Senha fraca.");
+        if (!passwordValida(password)) {
+            errorMsg.textContent = "A password deve ter pelo menos 10 caracteres, uma letra maiúscula, um número e um caractere especial.";
+            passwordInput.setCustomValidity("password fraca.");
         } else {
             errorMsg.textContent = "";
-            senhaInput.setCustomValidity("");
+            passwordInput.setCustomValidity("");
         }
     });
 
-    // Impede o envio do formulário se a senha for inválida
+    // Impede o envio do formulário se a password for inválida
     form.addEventListener("submit", function (e) {
-        if (!senhaValida(senhaInput.value)) {
+        if (!passwordValida(passwordInput.value)) {
             e.preventDefault();
-            senhaInput.reportValidity();
+            passwordInput.reportValidity();
         }
     });
 });

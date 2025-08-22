@@ -1,4 +1,25 @@
-    // ==============================
+// Pré-visualização da imagem
+    document.getElementById('imagem_usuario').addEventListener('change', function(e) {
+        const [file] = e.target.files;
+        const preview = document.getElementById('preview-img');
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
+
+    function mostrarParte2() {
+        document.getElementById("parte1").classList.add("hidden");
+        document.getElementById("parte2").classList.remove("hidden");
+    }
+    function voltarParte1() {
+        document.getElementById("parte2").classList.add("hidden");
+        document.getElementById("parte1").classList.remove("hidden");
+    }
+        // ==============================
     // PARTE 1 -> POST /usuarios
     // ==============================
     document.getElementById("cadastroForm").addEventListener("submit", async function(e) {
@@ -109,7 +130,7 @@
             });
 
             alert("Cadastro finalizado com sucesso!");
-            window.location.href = "/perfil/";
+            window.location.href = "/usuarios/loginForm/";
 
         } catch (err) {
             console.error(err);

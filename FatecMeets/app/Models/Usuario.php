@@ -16,12 +16,12 @@ class Usuario extends Authenticatable
     public $incrementing = true;
     protected $fillable = [
         'email',     // E-mail do usuário
-        'senha',  // Senha do usuário
+        'password',  // Senha do usuário
         'imagem_usuario', // Imagem do usuário
         'status_conta', // Status da conta do usuário
     ];
     protected $hidden = [
-        'senha',        // Oculta a senha do usuário
+        'password',        // Oculta a senha do usuário
         'remember_token',  // Oculta o token de "lembrar-me"
     ];
     protected $casts = [

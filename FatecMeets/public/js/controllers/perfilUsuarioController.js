@@ -1,20 +1,24 @@
 document.addEventListener("DOMContentLoaded", async function () {
+
     // ==========================
     // 1. Buscar dados do usuário
     // ==========================
     async function buscarUsuario() {
         try {
-            const response = await fetch("/perfil/dados"); // criar rota /perfil/dados para retornar JSON do usuário
+            const response = await fetch("/perfil/dados");
             if (!response.ok) throw new Error("Erro ao buscar usuário");
 
             const usuario = await response.json();
 
-            // Preencher campos do perfil
             document.querySelector(".profile-username").textContent = usuario.nome ?? "Usuário";
             document.querySelector(".bio-name").textContent = usuario.nome ?? "";
-            document.querySelector(".bio-text:nth-child(2)").textContent = "@ " + (usuario.nickname ?? "");
-            document.querySelector(".bio-text:nth-child(3)").textContent = "✉️ " + (usuario.email ?? "");
-            document.querySelector(".bio-text:nth-child(4)").textContent = "📞 " + (usuario.numero ?? "");
+            document.querySelector(".bio-nickname").textContent = "@ " + (usuario.nickname ?? "");
+            document.querySelector(".bio-email").textContent = "✉️ " + (usuario.email ?? "");
+            document.querySelector(".bio-telefone").textContent = "📞 " + (usuario.numero ?? "");
+
+            // Atualiza link do botão "Editar perfil"
+            document.getElementById("edit-profile-link").href = `/usuarios/${usuario.usuario_id}/edit/`;
+
         } catch (err) {
             console.error(err);
         }
@@ -25,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ==========================
     async function buscarImagem() {
         try {
-            const response = await fetch("/perfil/imagem"); // criar rota /perfil/imagem que retorna { url: ... }
+            const response = await fetch("/perfil/imagem");
             if (!response.ok) throw new Error("Erro ao buscar imagem");
 
             const data = await response.json();
@@ -39,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             const container = document.getElementById("imagem-container");
             container.innerHTML = "";
             container.appendChild(img);
+
         } catch (err) {
             console.error(err);
         }
@@ -49,12 +54,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ==========================
     async function buscarEventos() {
         try {
-            const response = await fetch("/perfil/eventos"); // criar rota /perfil/eventos que retorna JSON dos eventos
+            const response = await fetch("/perfil/eventos");
             if (!response.ok) throw new Error("Erro ao buscar eventos");
 
             const eventos = await response.json();
             const gallery = document.querySelector(".gallery");
             gallery.innerHTML = "";
+
+            document.getElementById("stat-eventos").textContent = eventos.length ?? 0;
 
             if (eventos.length === 0) {
                 gallery.innerHTML = `
@@ -79,6 +86,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 `;
                 gallery.appendChild(div);
             });
+
         } catch (err) {
             console.error(err);
         }

@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('usuario', function (Blueprint $table) {
             $table->bigIncrements('id_usuario');
             $table->string('email', 255)->unique();
-            $table->string('senha', 255);
+            $table->string('password', 255);
             $table->json('imagem_usuario')->nullable(); // <-- aqui virou JSON
             $table->enum('status_conta', ['ativo', 'inativo', 'suspenso'])->default('ativo');
-            $table->timestamps();
+            $table->timestamp('email_verified_at')->nullable(); // verificação de email
+            $table->rememberToken() -> nullable(); // token "lembrar login"
+            $table->timestamps(); // created_at e updated_at
         });
 
         Schema::create('gameficacao', function (Blueprint $table) {

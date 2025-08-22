@@ -17,7 +17,7 @@
         <img src="/imagens/logo.png" alt="Logo" style="width:100px; margin:0 auto 15px; display:block;">
 
         <input type="email" name="email" placeholder="E-mail" required>
-        <input type="password" name="senha" placeholder="Senha" required>
+        <input type="password" name="password" placeholder="Senha" required>
         <button type="submit">Entrar</button>
 
         <hr>

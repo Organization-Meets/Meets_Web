@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\UsuarioController;
 Route::get('/', [UsuarioController::class, 'home'])->name('usuario.home');
+Route::get('/home', [UsuarioController::class, 'home'])->name('usuario.home');
 Route::get('/usuario/logged', function() {
     $usuario = Auth::user();
     return response()->json([
@@ -21,4 +22,8 @@ Route::get('/usuarios/perfil', [UsuarioController::class, 'perfil'])->name('usua
 Route::get('/usuarios/logout', [UsuarioController::class, 'logout'])->name('usuarios.logout');
 Route::get('/usuarios/loginForm', [UsuarioController::class, 'loginForm'])->name('usuario.loginForm');
 Route::post('/usuarios/login', [UsuarioController::class, 'login'])->name('usuario.login');
+Route::middleware('auth')->group(function () {
+    Route::get('/perfil/dados', [UsuarioController::class, 'dadosUsuario']);
+    Route::get('/perfil/imagem', [UsuarioController::class, 'imagemUsuario']);
+});
 ?>

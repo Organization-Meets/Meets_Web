@@ -1,38 +1,15 @@
 @include('componentes.header')
 <link rel="stylesheet" href="/css/estilo-perfil.css">
+
 <section class="profile-container">
     <div class="profile-header">
         <div id="imagem-container" class="profile-img-container"></div>
 
-        <script>
-        function buscarImagem() {
-            fetch('/imagem')
-            .then(response => response.json())
-            .then(data => {
-                const img = document.createElement("img");
-                img.src = data.url;
-                img.alt = "Foto de Perfil";
-                img.className = "profile-img"
-                img.style.maxWidth = "300px";
-
-                document.getElementById("imagem-container").innerHTML = "";
-                document.getElementById("imagem-container").appendChild(img);
-            })
-            .catch(error => {
-                console.error("Erro ao buscar imagem:", error);
-            });
-        }
-
-        // Executa automaticamente quando a página termina de carregar
-        window.addEventListener('DOMContentLoaded', buscarImagem);
-        </script>
         <div class="profile-info">
             <div class="profile-actions">
-                <h1 class="profile-username">
-                    {{ session('usuario_nome') ?? $usuario->nome ?? 'Usuário' }}
-                </h1>
+                <h1 class="profile-username">Usuário</h1>
                 <div class="action-buttons">
-                    <a href="/usuarios/{{ $usuario->id_usuario }}/edit/" class="btn-edit">
+                    <a id="edit-profile-link" class="btn-edit">
                         <button class="edit-btn">Editar perfil</button>
                     </a>
                     <button class="settings-btn" aria-label="Configurações">
@@ -40,9 +17,10 @@
                     </button>
                 </div>
             </div>
+
             <div class="profile-stats">
                 <div class="stat-item">
-                    <span class="stat-count">{{ $eventos->count() ?? 0 }}</span>
+                    <span id="stat-eventos" class="stat-count">0</span>
                     <span class="stat-label">Eventos</span>
                 </div>
                 <div class="stat-item">
@@ -54,14 +32,16 @@
                     <span class="stat-label">Seguindo</span>
                 </div>
             </div>
+
             <div class="profile-bio">
-                <h2 class="bio-name">{{ session('usuario_nome') ?? $usuario->nome ?? '' }}</h2>
-                <p class="bio-text">@ {{ $usuario->nickname ?? '' }}</p>
-                <p class="bio-text">✉️ {{ $usuario->email ?? '' }}</p>
-                <p class="bio-text">📞 {{ $usuario->numero ?? '' }}</p>
+                <h2 class="bio-name"></h2>
+                <p class="bio-text bio-nickname"></p>
+                <p class="bio-text bio-email"></p>
+                <p class="bio-text bio-telefone"></p>
             </div>
         </div>
     </div>
+
     <div class="profile-tabs">
         <div class="tab active">
             <i class="fas fa-calendar-alt"></i>
@@ -76,24 +56,9 @@
             <span>Participando</span>
         </div>
     </div>
-    <div class="gallery">
-        @forelse($eventos as $evento)
-            <div class="photo">
-                <img src="{{ asset($evento->imagem_evento ?? 'assets/default-event.jpg') }}" alt="{{ $evento->nome_evento }}">
-                <div class="event-info">
-                    <strong>{{ $evento->nome_evento }}</strong><br>
-                    <span>{{ \Carbon\Carbon::parse($evento->data_inicio_evento)->format('d/m/Y') }}</span>
-                </div>
-            </div>
-        @empty
-            <div class="no-eventos">
-                <i class="fas fa-calendar-plus"></i>
-                <p>Você ainda não criou nenhum evento</p>
-                <a href="/eventos/create/" class="btn-create-event">
-                    Criar primeiro evento
-                </a>
-            </div>
-        @endforelse
-    </div>
+
+    <div class="gallery"></div>
 </section>
+
+<script src="/js/perfilUsuarioController.js"></script>
 @include('componentes.footer')

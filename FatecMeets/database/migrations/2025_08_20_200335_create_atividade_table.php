@@ -85,7 +85,7 @@ return new class extends Migration
             $table->text('descricao')->nullable();
             $table->dateTime('data_inicio_evento');
             $table->dateTime('data_final_evento')->nullable();
-            $table->string('imagem_evento', 500)->nullable();
+            $table->json('imagem_evento', 500)->nullable();
             $table->string('categoria_evento', 100)->nullable();
             $table->unsignedBigInteger('id_usuario');
             $table->unsignedBigInteger('id_atividade')->nullable();
@@ -102,7 +102,7 @@ return new class extends Migration
             $table->bigIncrements('id_postagem');
             $table->string('titulo_postagem', 255);
             $table->text('descricao_postagem')->nullable();
-            $table->string('imagem_postagem', 500)->nullable();
+            $table->json('imagem_postagem', 500)->nullable();
             $table->timestamp('data_postagem')->useCurrent();
             $table->unsignedBigInteger('id_usuario');
             $table->unsignedBigInteger('id_atividade')->nullable();

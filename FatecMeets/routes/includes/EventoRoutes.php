@@ -7,4 +7,8 @@ Route::get('/eventos/{id_evento}', [EventoController::class, 'show'])->name('eve
 Route::get('/eventos/{id_evento}/edit', [EventoController::class, 'edit'])->name('eventos.edit');
 Route::put('/eventos/{id_evento}', [EventoController::class, 'update'])->name('eventos.update');
 Route::delete('/eventos/{id_evento}', [EventoController::class, 'destroy'])->name('eventos.destroy');
+Route::middleware('auth')->group(function () {
+    Route::get('/perfil/eventos', [EventoController::class, 'eventosUsuario']);
+});
+
 ?>

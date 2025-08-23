@@ -18,12 +18,12 @@ class UsuarioController extends Controller
         return view('usuario.create', compact('nomeArquivo'));
     }
 
-        public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'email' => 'required|email|unique:usuario,email',
             'password' => 'required|min:6|confirmed',
-            'imagem_usuario' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'imagem_usuario.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'tipo_usuario' => 'required|in:aluno,professor'
         ]);
 
@@ -32,17 +32,22 @@ class UsuarioController extends Controller
         $usuario->password = Hash::make($request->input('password'));
         $usuario->status_conta = 'ativo';
 
-        // Upload da imagem e armazenamento como JSON
+        // =====================
+        // Upload de imagens
+        // =====================
         if ($request->hasFile('imagem_usuario')) {
-            $path = $request->file('imagem_usuario')->store('usuarios', 'public');
-            $usuario->imagem_usuario = json_encode([$path]);
+            $paths = [];
+            foreach ($request->file('imagem_usuario') as $file) {
+                $paths[] = $file->store('usuarios', 'public');
+            }
+            $usuario->imagem_usuario = json_encode($paths);
         } else {
             $usuario->imagem_usuario = null;
         }
 
         $usuario->save();
 
-        // Extrair nome do email para exibir como "Gabriel Rodrigues"
+        // Criar nome e nickname a partir do email
         $emailUser = explode('@', $usuario->email)[0];
         $parts = explode('.', $emailUser);
         $firstName = ucfirst($parts[0]);
@@ -59,22 +64,38 @@ class UsuarioController extends Controller
     }
 
 
+
     public function edit($id_usuario){
         $usuario = Usuario::find($id_usuario);
         return view('usuario.edit', compact('usuario'));
     }
 
-    public function update(Request $request, $id_usuario){
-        $usuario = Usuario::find($id_usuario);
+    public function update(Request $request, $id_usuario)
+    {
+        $usuario = Usuario::findOrFail($id_usuario);
+
         $usuario->email = $request->input('email');
         if ($request->filled('password')) {
             $usuario->password = Hash::make($request->input('password'));
         }
-        $usuario->imagem_usuario = json_encode([$path]);
         $usuario->status_conta = $request->input('status_conta', $usuario->status_conta);
+
+        // =====================
+        // Atualizar imagens
+        // =====================
+        if ($request->hasFile('imagem_usuario')) {
+            $paths = [];
+            foreach ($request->file('imagem_usuario') as $file) {
+                $paths[] = $file->store('usuarios', 'public');
+            }
+            $usuario->imagem_usuario = json_encode($paths);
+        }
+
         $usuario->save();
-        return true;
+
+        return response()->json(['success' => true]);
     }
+
 
     public function destroy($id_usuario){
         $usuario = Usuario::find($id_usuario);
@@ -138,13 +159,20 @@ class UsuarioController extends Controller
         ]);
     }
 
-    public function imagemUsuario() {
+    public function imagemUsuario()
+    {
         $usuario = Auth::user();
-        $url = $usuario && $usuario->imagem_usuario 
-            ? asset('storage/' . json_decode($usuario->imagem_usuario)[0])
-            : asset('assets/default-user.png');
+
+        if (!$usuario) {
+            return response()->json(['url' => '/assets/default-user.jpg']);
+        }
+
+        // Recupera o JSON e transforma em array
+        $imagens = json_decode($usuario->imagem_usuario ?? '[]', true);
+
+        // Pega a primeira imagem se existir, senão usa default
+        $url = count($imagens) > 0 ? asset('storage/' . $imagens[0]) : asset('assets/default-user.jpg');
 
         return response()->json(['url' => $url]);
     }
-
 }

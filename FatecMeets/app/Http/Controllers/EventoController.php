@@ -98,9 +98,27 @@ class EventoController extends Controller
     }
 
     // ✅ Rota para buscar eventos do usuário logado (ou por ID)
-    public function eventosUsuario() {
+    public function eventosUsuario()
+    {
         $usuario = Auth::user();
         $eventos = Evento::where('id_usuario', $usuario->id_usuario)->get();
+
+        $eventos = $eventos->map(function($evento) {
+            return [
+                'id_evento' => $evento->id_evento,
+                'nome_evento' => $evento->nome_evento,
+                'descricao' => $evento->descricao,
+                'data_inicio_evento' => $evento->data_inicio_evento,
+                'data_final_evento' => $evento->data_final_evento,
+                'categoria_evento' => $evento->categoria_evento,
+                // verifica se há imagem e retorna URL
+                'imagem_evento' => $evento->imagem_evento 
+                    ? asset('storage/' . $evento->imagem_evento) 
+                    : asset('assets/default-event.jpg')
+            ];
+        });
+
         return response()->json($eventos);
     }
+
 }

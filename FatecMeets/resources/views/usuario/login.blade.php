@@ -27,7 +27,7 @@
         </p>
     </form>
 
-    <a href="/home/"><button type="button">Voltar</button></a>
+    <a href="../../"><button type="button">Voltar</button></a>
 </div>
 
 <script>

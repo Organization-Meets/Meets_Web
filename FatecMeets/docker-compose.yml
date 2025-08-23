@@ -8,9 +8,11 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
-    command: php -S 0.0.0.0:8000 -t public
+    command: php -S 0.0.0.0:80 -t public
+
     ports:
-      - "8000:8000"
+      - "8080:80"
+
     depends_on:
       - db
 

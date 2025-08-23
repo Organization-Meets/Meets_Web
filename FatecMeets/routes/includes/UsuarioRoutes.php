@@ -1,13 +1,13 @@
 <?php
 use App\Http\Controllers\UsuarioController;
-Route::get('/', [UsuarioController::class, 'home'])->name('usuario.home');
 Route::get('/home', [UsuarioController::class, 'home'])->name('usuario.home');
 Route::get('/usuario/logged', function() {
     $usuario = Auth::user();
     return response()->json([
         'logado' => $usuario ? true : false,
         'nome' => $usuario ? $usuario->email : null,
-        'id' => $usuario ? $usuario->id_usuario : null
+        'id' => $usuario ? $usuario->id_usuario : null,
+        'foto' => $usuario ? ($usuario->imagem_usuario ? asset('storage/' . json_decode($usuario->imagem_usuario)[0]) : asset('/assets/default-user.jpg')) : asset('/assets/default-user.jpg')
     ]);
 });
 Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');

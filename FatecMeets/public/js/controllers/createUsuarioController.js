@@ -30,7 +30,7 @@
 
         try {
             let response = await fetch("/usuarios", {
-                method: "POST",
+                method: "POST", 
                 headers: {
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                 },

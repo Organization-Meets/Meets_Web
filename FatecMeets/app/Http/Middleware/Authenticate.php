@@ -19,7 +19,7 @@ class Authenticate extends Middleware
         // Verifica se a requisição não espera uma resposta em JSON
         if (! $request->expectsJson()) {
             // Retorna a rota de login para redirecionar o usuário não autenticado
-            return route('login');
+            return '/usuarios/loginForm/';
         }
         // Se espera JSON, não retorna nada (null), permitindo resposta padrão do Laravel
     }

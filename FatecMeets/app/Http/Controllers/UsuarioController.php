@@ -164,14 +164,14 @@ class UsuarioController extends Controller
         $usuario = Auth::user();
 
         if (!$usuario) {
-            return response()->json(['url' => '/assets/default-user.jpg']);
+            return response()->json(['url' => '/uploads/imgPadrao.png']);
         }
 
         // Recupera o JSON e transforma em array
         $imagens = json_decode($usuario->imagem_usuario ?? '[]', true);
 
         // Pega a primeira imagem se existir, senão usa default
-        $url = count($imagens) > 0 ? asset('storage/' . $imagens[0]) : asset('assets/default-user.jpg');
+        $url = count($imagens) > 0 ? asset('storage/' . $imagens[0]) : asset('/uploads/imgPadrao.png');
 
         return response()->json(['url' => $url]);
     }

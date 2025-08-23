@@ -81,7 +81,7 @@
             </form>
         </div>
 
-        <a href="/home/"><button type="button">Voltar</button></a>
+        <a href="/inicio/"><button type="button">Voltar</button></a>
     </div>
 
     <!-- Scripts auxiliares -->

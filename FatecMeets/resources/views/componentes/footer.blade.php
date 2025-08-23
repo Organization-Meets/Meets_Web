@@ -13,7 +13,7 @@
   </script>
 
   <!-- Carrega o web.js -->
-  <script src="/js/web.js"></script>
+  <script src="/js/routes/web.js"></script>
 
 
   <!-- Outros scripts comuns (dark mode, Vlibras…) -->

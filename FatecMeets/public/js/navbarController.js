@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", async function() {
 
             if (data.logado) {
                 profileBtn.textContent = "Logout";
-                profileImg.src = data.foto || "/uploads/imgPadrao.png";
+                profileImg.src = "/perfil/imagem/" || "/uploads/imgPadrao.png";
 
                 profileBtn.onclick = async () => {
                     await fetch("/usuarios/logout");
-                    window.location.href = "/../..";
+                    window.location.href = "/inicio/";
                 };
             } else {
                 profileBtn.textContent = "Login";

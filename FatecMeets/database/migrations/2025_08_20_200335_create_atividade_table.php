@@ -85,7 +85,7 @@ return new class extends Migration
             $table->text('descricao')->nullable();
             $table->dateTime('data_inicio_evento');
             $table->dateTime('data_final_evento')->nullable();
-            $table->json('imagem_evento', 500)->nullable();
+            $table->json('imagem_evento')->nullable();
             $table->string('categoria_evento', 100)->nullable();
             $table->unsignedBigInteger('id_usuario');
             $table->unsignedBigInteger('id_atividade')->nullable();

@@ -10,7 +10,7 @@
     </div>
 
     <div class="navbar-links">
-      <a href="/" class="navbar-item">Página inicial</a>
+      <a href="/inicio/" class="navbar-item">Página inicial</a>
       <a href="/usuarios/busca/" class="navbar-item">Buscar</a>
       <a href="/usuarios/postar/" class="navbar-item">Postar</a>
       <a href="/usuarios/perfil/" class="navbar-item">Perfil</a>

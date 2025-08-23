@@ -7,47 +7,88 @@ use App\Models\Logradouro;
 
 class LogradouroController extends Controller
 {
-    public function create(){
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show', 'getByEnderecoId']);
+    }
+
+    // Exibir formulário de criação
+    public function create()
+    {
         return view('logradouro.create');
     }
 
-    public function store(Request $request){
+    // Armazenar novo logradouro
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_endereco' => 'required|integer|exists:endereco,id_endereco',
+            'nome_logradouro' => 'required|string|max:255',
+        ]);
+
         $logradouro = new Logradouro();
         $logradouro->id_endereco = $request->input('id_endereco');
         $logradouro->nome_logradouro = $request->input('nome_logradouro');
         $logradouro->save();
+
+        return response()->json([
+            'success' => true,
+            'id_logradouro' => $logradouro->id_logradouro,
+            'nome_logradouro' => $logradouro->nome_logradouro,
+        ]);
     }
 
-    public function edit($id_logradouro){
-        $logradouro = Logradouro::find($id_logradouro);
+    // Exibir formulário de edição
+    public function edit($id_logradouro)
+    {
+        $logradouro = Logradouro::findOrFail($id_logradouro);
         return view('logradouro.edit', compact('logradouro'));
     }
 
-    public function update(Request $request, $id_logradouro){
-        $logradouro = Logradouro::find($id_logradouro);
-        $logradouro->id_endereco = $request->input('id_endereco');
-        $logradouro->nome_logradouro = $request->input('nome_logradouro');
+    // Atualizar logradouro
+    public function update(Request $request, $id_logradouro)
+    {
+        $logradouro = Logradouro::findOrFail($id_logradouro);
+
+        $request->validate([
+            'id_endereco' => 'nullable|integer|exists:endereco,id_endereco',
+            'nome_logradouro' => 'nullable|string|max:255',
+        ]);
+
+        $logradouro->id_endereco = $request->input('id_endereco', $logradouro->id_endereco);
+        $logradouro->nome_logradouro = $request->input('nome_logradouro', $logradouro->nome_logradouro);
         $logradouro->save();
-        return true;
+
+        return response()->json(['success' => true]);
     }
 
-    public function destroy($id_logradouro){
-        $logradouro = Logradouro::find($id_logradouro);
+    // Excluir logradouro
+    public function destroy($id_logradouro)
+    {
+        $logradouro = Logradouro::findOrFail($id_logradouro);
         $logradouro->delete();
-        return true;
+
+        return response()->json(['success' => true]);
     }
 
-    public function show($id_logradouro){
-        $logradouro = Logradouro::find($id_logradouro);
+    // Mostrar detalhes de um logradouro
+    public function show($id_logradouro)
+    {
+        $logradouro = Logradouro::findOrFail($id_logradouro);
         return view('logradouro.show', compact('logradouro'));
     }
 
-    public function index(){
+    // Listar todos os logradouros
+    public function index()
+    {
         $logradouros = Logradouro::all();
         return view('logradouro.index', compact('logradouros'));
     }
 
-    public function getByEnderecoId($id_endereco){
-        return Logradouro::where('id_endereco', $id_endereco)->get();
+    // Buscar logradouros por id_endereco
+    public function getByEnderecoId($id_endereco)
+    {
+        $logradouros = Logradouro::where('id_endereco', $id_endereco)->get();
+        return response()->json($logradouros);
     }
 }

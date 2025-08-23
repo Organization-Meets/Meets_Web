@@ -46,8 +46,10 @@
         <div class="tab active">
             <i class="fas fa-calendar-alt"></i>
             <span>Meus Eventos</span>
-            <a src="" >Criar</a>
         </div>
+        <i class="fas fa-calendar-plus"></i>
+        <p>Criar Evento</p>
+        <a href="/eventos/create/" class="btn-create-event">Criar primeiro evento</a>
         <div class="tab">
             <i class="far fa-bookmark"></i>
             <span>Eventos Salvos</span>

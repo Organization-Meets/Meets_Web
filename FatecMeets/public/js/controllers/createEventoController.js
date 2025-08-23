@@ -14,7 +14,6 @@ document.getElementById('createEventoForm').addEventListener('submit', async fun
         });
 
         const data = await response.json();
-
         const messageEl = document.getElementById('responseMessage');
 
         if(response.ok){

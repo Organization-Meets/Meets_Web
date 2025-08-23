@@ -14,7 +14,8 @@ class EventoController extends Controller
     }
 
     public function create() {
-        return view('evento.create');
+        $nomeArquivo = "createEvento";
+        return view('evento.create', compact('nomeArquivo'));
     }
 
     public function store(Request $request) {

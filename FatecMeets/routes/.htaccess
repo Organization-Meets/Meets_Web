@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Força a manter a porta 8080 (se vier sem ela)
+    RewriteCond %{HTTP_HOST} !:8080$
+    RewriteRule ^(.*)$ http://%{HTTP_HOST}:8080/$1 [L,R=301]
+
+    # Mantém o Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Remove barras finais desnecessárias
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Redireciona tudo para index.php se não for arquivo/pasta
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

@@ -8,5 +8,5 @@ require __DIR__.'/includes/EventoRoutes.php';
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 

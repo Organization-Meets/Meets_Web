@@ -46,6 +46,7 @@
         <div class="tab active">
             <i class="fas fa-calendar-alt"></i>
             <span>Meus Eventos</span>
+            <a src="" >Criar</a>
         </div>
         <div class="tab">
             <i class="far fa-bookmark"></i>
@@ -60,5 +61,5 @@
     <div class="gallery"></div>
 </section>
 
-<script src="/js/perfilUsuarioController.js"></script>
+<!-- <script src="/js/perfilUsuarioController.js"></script> -->
 @include('componentes.footer')

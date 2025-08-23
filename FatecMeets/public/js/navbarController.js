@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                 profileBtn.onclick = async () => {
                     await fetch("/usuarios/logout");
-                    window.location.reload();
+                    window.location.href = "/../..";
                 };
             } else {
                 profileBtn.textContent = "Login";

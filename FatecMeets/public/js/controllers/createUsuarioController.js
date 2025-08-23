@@ -19,7 +19,7 @@
         document.getElementById("parte2").classList.add("hidden");
         document.getElementById("parte1").classList.remove("hidden");
     }
-        // ==============================
+    // ==============================
     // PARTE 1 -> POST /usuarios
     // ==============================
     document.getElementById("cadastroForm").addEventListener("submit", async function(e) {

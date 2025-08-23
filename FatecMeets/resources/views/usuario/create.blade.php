@@ -31,7 +31,7 @@
                 <input type="password" name="password" id="password" placeholder="Senha" required>
                 <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirmar Senha" required>
                 
-                <input type="file" name="imagem_usuario" id="imagem_usuario[]" accept="image/*">
+                <input type="file" name="imagem_usuario[]" id="imagem_usuario" accept="image/*">
                 
                 <div id="preview-container" style="text-align:center; margin-bottom:10px;">
                     <img id="preview-img" src="#" alt="Prévia da imagem"

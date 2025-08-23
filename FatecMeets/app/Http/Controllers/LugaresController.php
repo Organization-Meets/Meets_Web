@@ -21,17 +21,17 @@ class LugaresController extends Controller
     // Armazenar novo lugar
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_endereco' => 'required|integer|exists:endereco,id_endereco',
             'nome_lugares' => 'required|string|max:255',
             'id_administrador' => 'required|integer|exists:usuario,id_usuario',
         ]);
 
-        $lugar = new Lugares();
-        $lugar->id_endereco = $request->input('id_endereco');
-        $lugar->nome_lugares = $request->input('nome_lugares');
-        $lugar->id_administrador = $request->input('id_administrador');
-        $lugar->save();
+        $lugar = Lugares::create([
+            'id_endereco' => $validated['id_endereco'],
+            'nome_lugares' => $validated['nome_lugares'],
+            'id_administrador' => $validated['id_administrador'],
+        ]);
 
         return response()->json([
             'success' => true,
@@ -41,33 +41,34 @@ class LugaresController extends Controller
     }
 
     // Exibir formulário de edição
-    public function edit($id_lugar)
+    public function edit(int $id_lugar)
     {
         $lugar = Lugares::findOrFail($id_lugar);
         return view('lugares.edit', compact('lugar'));
     }
 
     // Atualizar lugar
-    public function update(Request $request, $id_lugar)
+    public function update(Request $request, int $id_lugar)
     {
         $lugar = Lugares::findOrFail($id_lugar);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_endereco' => 'nullable|integer|exists:endereco,id_endereco',
             'nome_lugares' => 'nullable|string|max:255',
             'id_administrador' => 'nullable|integer|exists:usuario,id_usuario',
         ]);
 
-        $lugar->id_endereco = $request->input('id_endereco', $lugar->id_endereco);
-        $lugar->nome_lugares = $request->input('nome_lugares', $lugar->nome_lugares);
-        $lugar->id_administrador = $request->input('id_administrador', $lugar->id_administrador);
-        $lugar->save();
+        $lugar->update([
+            'id_endereco' => $validated['id_endereco'] ?? $lugar->id_endereco,
+            'nome_lugares' => $validated['nome_lugares'] ?? $lugar->nome_lugares,
+            'id_administrador' => $validated['id_administrador'] ?? $lugar->id_administrador,
+        ]);
 
         return response()->json(['success' => true]);
     }
 
     // Excluir lugar
-    public function destroy($id_lugar)
+    public function destroy(int $id_lugar)
     {
         $lugar = Lugares::findOrFail($id_lugar);
         $lugar->delete();
@@ -76,7 +77,7 @@ class LugaresController extends Controller
     }
 
     // Mostrar detalhes de um lugar
-    public function show($id_lugar)
+    public function show(int $id_lugar)
     {
         $lugar = Lugares::findOrFail($id_lugar);
         return view('lugares.show', compact('lugar'));
@@ -90,7 +91,7 @@ class LugaresController extends Controller
     }
 
     // Buscar lugares por id_endereco
-    public function getByEnderecoId($id_endereco)
+    public function getByEnderecoId(int $id_endereco)
     {
         $lugares = Lugares::where('id_endereco', $id_endereco)->get();
         return response()->json($lugares);

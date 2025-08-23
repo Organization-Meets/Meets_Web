@@ -11,4 +11,8 @@ class Lugares extends Model
     protected $table = 'lugares';
     protected $primaryKey = 'id_lugares';
     public $incrementing = true;
+
+    // App\Models\Lugares.php
+    protected $fillable = ['id_endereco', 'nome_lugares', 'id_administrador'];
+
 }

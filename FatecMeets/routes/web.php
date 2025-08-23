@@ -1,10 +1,11 @@
-<?php
+<?php 
 
 use Illuminate\Support\Facades\Route;
-// Usuário
-require __DIR__.'/includes/UsuarioRoutes.php';
-// Evento
-require __DIR__.'/includes/EventoRoutes.php';
+
+// Inclui automaticamente todos os arquivos PHP dentro de includes/
+foreach (glob(__DIR__ . '/includes/*.php') as $file) {
+    require $file;
+}
 
 Route::get('/', function () {
     return view('welcome');

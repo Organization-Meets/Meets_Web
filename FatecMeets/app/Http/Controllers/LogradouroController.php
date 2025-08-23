@@ -21,15 +21,15 @@ class LogradouroController extends Controller
     // Armazenar novo logradouro
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_endereco' => 'required|integer|exists:endereco,id_endereco',
             'nome_logradouro' => 'required|string|max:255',
         ]);
 
-        $logradouro = new Logradouro();
-        $logradouro->id_endereco = $request->input('id_endereco');
-        $logradouro->nome_logradouro = $request->input('nome_logradouro');
-        $logradouro->save();
+        $logradouro = Logradouro::create([
+            'id_endereco' => $validated['id_endereco'],
+            'nome_logradouro' => $validated['nome_logradouro'],
+        ]);
 
         return response()->json([
             'success' => true,
@@ -39,31 +39,32 @@ class LogradouroController extends Controller
     }
 
     // Exibir formulário de edição
-    public function edit($id_logradouro)
+    public function edit(int $id_logradouro)
     {
         $logradouro = Logradouro::findOrFail($id_logradouro);
         return view('logradouro.edit', compact('logradouro'));
     }
 
     // Atualizar logradouro
-    public function update(Request $request, $id_logradouro)
+    public function update(Request $request, int $id_logradouro)
     {
         $logradouro = Logradouro::findOrFail($id_logradouro);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_endereco' => 'nullable|integer|exists:endereco,id_endereco',
             'nome_logradouro' => 'nullable|string|max:255',
         ]);
 
-        $logradouro->id_endereco = $request->input('id_endereco', $logradouro->id_endereco);
-        $logradouro->nome_logradouro = $request->input('nome_logradouro', $logradouro->nome_logradouro);
-        $logradouro->save();
+        $logradouro->update([
+            'id_endereco' => $validated['id_endereco'] ?? $logradouro->id_endereco,
+            'nome_logradouro' => $validated['nome_logradouro'] ?? $logradouro->nome_logradouro,
+        ]);
 
         return response()->json(['success' => true]);
     }
 
     // Excluir logradouro
-    public function destroy($id_logradouro)
+    public function destroy(int $id_logradouro)
     {
         $logradouro = Logradouro::findOrFail($id_logradouro);
         $logradouro->delete();
@@ -72,7 +73,7 @@ class LogradouroController extends Controller
     }
 
     // Mostrar detalhes de um logradouro
-    public function show($id_logradouro)
+    public function show(int $id_logradouro)
     {
         $logradouro = Logradouro::findOrFail($id_logradouro);
         return view('logradouro.show', compact('logradouro'));
@@ -85,8 +86,8 @@ class LogradouroController extends Controller
         return view('logradouro.index', compact('logradouros'));
     }
 
-    // Buscar logradouros por id_endereco
-    public function getByEnderecoId($id_endereco)
+    // Buscar logradouros por id_endereco (API)
+    public function getByEnderecoId(int $id_endereco)
     {
         $logradouros = Logradouro::where('id_endereco', $id_endereco)->get();
         return response()->json($logradouros);

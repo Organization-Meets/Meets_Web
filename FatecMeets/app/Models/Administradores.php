@@ -11,4 +11,8 @@ class Administradores extends Model
     protected $table = 'administradores';
     protected $primaryKey = 'id_administrador';
     public $incrementing = true;
+
+    // App\Models\Administradores.php
+    protected $fillable = ['id_usuario', 'nome_administrador'];
+
 }

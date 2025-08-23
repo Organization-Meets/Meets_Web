@@ -11,4 +11,8 @@ class Logradouro extends Model
     protected $primaryKey = 'id_logradouro';
     public $incrementing = true;
     use HasFactory;
+
+    // App\Models\Logradouro.php
+    protected $fillable = ['id_endereco', 'nome_logradouro'];
+
 }

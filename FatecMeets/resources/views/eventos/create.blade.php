@@ -1,3 +1,4 @@
+@include('componentes.header')
 <link rel="stylesheet" href="/css/estilo-evento.css">
 <form id="createEventoForm" enctype="multipart/form-data">
     @csrf

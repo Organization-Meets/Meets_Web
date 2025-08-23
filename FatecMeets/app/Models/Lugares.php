@@ -9,7 +9,7 @@ class Lugares extends Model
 {
     use HasFactory;
     protected $table = 'lugares';
-    protected $primaryKey = 'id_lugares';
+    protected $primaryKey = 'id_lugar';
     public $incrementing = true;
 
     // App\Models\Lugares.php

@@ -1,77 +1,97 @@
-// Suponha que você tenha endpoints:
-// /lugares -> retorna JSON com todos os lugares
-// /logradouros -> retorna JSON com todos os logradouros
-// /atividades -> endpoint POST para criar atividade
-// /eventos -> endpoint POST para criar evento
-
 document.addEventListener('DOMContentLoaded', async () => {
     const lugaresContainer = document.getElementById('lugaresContainer');
     const logradourosContainer = document.getElementById('logradourosContainer');
+    const msgEl = document.getElementById('responseMessage');
 
-    // 1. Buscar lugares
-    const lugaresResp = await fetch('/lugares');
-    const lugares = await lugaresResp.json();
+    // Função auxiliar para buscar JSON com tratamento de erros
+    async function fetchJSON(url) {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`Erro ao buscar ${url}: ${resp.statusText}`);
+        const data = await resp.json();
+        return data;
+    }
 
-    lugares.forEach(lugar => {
-        const div = document.createElement('div');
-        div.innerHTML = `<input type="radio" name="id_lugares" value="${lugar.id_lugar}" class="lugar-radio"> ${lugar.nome_lugares}`;
-        lugaresContainer.appendChild(div);
-    });
-
-    // 2. Buscar logradouros
-    const logradourosResp = await fetch('/logradouros');
-    const logradouros = await logradourosResp.json();
-
-    // Filtrar logradouros quando lugar mudar
-    document.querySelectorAll('.lugar-radio').forEach(radio => {
-        radio.addEventListener('change', () => {
-            logradourosContainer.innerHTML = '';
-            const selectedLugar = radio.value;
-            logradouros.filter(l => l.id_lugares == selectedLugar).forEach(l => {
-                const div = document.createElement('div');
-                div.innerHTML = `<input type="radio" name="id_logradouro" value="${l.id_logradouro}"> ${l.nome_logradouro}`;
-                logradourosContainer.appendChild(div);
-            });
+    try {
+        // 1. Buscar lugares
+        const lugares = await fetchJSON('/lugares/json');
+        lugares.forEach(lugar => {
+            const div = document.createElement('div');
+            div.innerHTML = `<input type="radio" name="id_lugares" value="${lugar.id_lugar}" class="lugar-radio"> ${lugar.nome_lugares}`;
+            lugaresContainer.appendChild(div);
         });
-    });
 
-    // 3. Envio do formulário
+        // 2. Atualiza logradouros ao mudar o lugar selecionado
+        lugaresContainer.addEventListener('change', async (e) => {
+            if (!e.target.classList.contains('lugar-radio')) return;
+
+            logradourosContainer.innerHTML = '';
+            const selectedLugar = e.target.value;
+
+            try {
+                const logradouros = await fetchJSON(`/logradouros/json/${selectedLugar}`);
+                logradouros.forEach(l => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `<input type="radio" name="id_logradouro" value="${l.id_logradouro}"> ${l.nome_logradouro}`;
+                    logradourosContainer.appendChild(div);
+                });
+            } catch (err) {
+                console.error('Erro ao buscar logradouros:', err);
+            }
+        });
+
+    } catch (err) {
+        console.error('Erro ao buscar lugares:', err);
+        msgEl.style.color = 'red';
+        msgEl.textContent = `Erro ao carregar lugares: ${err.message}`;
+    }
+
+    // 3. Captura envio do formulário
     document.getElementById('createEventoForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
 
-        const msgEl = document.getElementById('responseMessage');
-
         try {
-            // Primeiro criar atividade
+            // 3.1 Criar atividade do tipo 'evento'
             const atividadeResp = await fetch('/atividades', {
                 method: 'POST',
-                body: JSON.stringify({ tipo_atividade: 'evento' }),
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': formData.get('_token') }
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': formData.get('_token')
+                },
+                body: JSON.stringify({ tipo_atividade: 'evento' })
             });
             const atividadeData = await atividadeResp.json();
+            if (!atividadeData.id_atividade) throw new Error('Falha ao criar atividade');
             formData.append('id_atividade', atividadeData.id_atividade);
 
-            // Agora criar evento
+            // 3.2 Buscar gameficação do usuário logado
+            const gamificacaoResp = await fetch('/gameficacoes/usuario');
+            const gamificacoes = await gamificacaoResp.json();
+            if (!gamificacoes.length) throw new Error('Nenhuma gameficação encontrada');
+            const id_gameficacao = gamificacoes[0].id_gameficacao; // pegar primeira
+            formData.append('id_gameficacao', id_gameficacao);
+
+            // 3.3 Criar evento
             const eventoResp = await fetch('/eventos', {
                 method: 'POST',
                 body: formData
             });
             const eventoData = await eventoResp.json();
 
-            if(eventoResp.ok && eventoData.success){
+            if (eventoResp.ok && eventoData.success) {
                 msgEl.style.color = 'green';
                 msgEl.textContent = 'Evento criado com sucesso!';
                 form.reset();
+                logradourosContainer.innerHTML = '';
             } else {
                 msgEl.style.color = 'red';
                 msgEl.textContent = eventoData.message || 'Erro ao criar evento.';
             }
 
-        } catch(err) {
+        } catch (err) {
             msgEl.style.color = 'red';
-            msgEl.textContent = 'Erro de rede. Tente novamente.';
+            msgEl.textContent = `Erro: ${err.message}`;
             console.error(err);
         }
     });

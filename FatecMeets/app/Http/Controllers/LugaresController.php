@@ -96,4 +96,11 @@ class LugaresController extends Controller
         $lugares = Lugares::where('id_endereco', $id_endereco)->get();
         return response()->json($lugares);
     }
+    // Retorna todos os lugares em JSON
+    public function getAllJson()
+    {
+        $lugares = Lugares::all();
+        return response()->json($lugares);
+    }
+
 }

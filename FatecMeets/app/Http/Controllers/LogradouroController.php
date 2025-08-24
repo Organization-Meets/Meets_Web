@@ -92,4 +92,11 @@ class LogradouroController extends Controller
         $logradouros = Logradouro::where('id_endereco', $id_endereco)->get();
         return response()->json($logradouros);
     }
+    // Retorna logradouros de um lugar em JSON (para JS)
+    // Buscar logradouros por id_endereco (API)
+    public function jsonByEndereco($id_endereco)
+    {
+        $logradouros = Logradouro::where('id_endereco', $id_endereco)->get();
+        return response()->json($logradouros);
+    }
 }

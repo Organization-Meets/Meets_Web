@@ -77,11 +77,12 @@ class LugaresController extends Controller
     }
 
     // Mostrar detalhes de um lugar
-    public function show(int $id_lugar)
+    public function show($id_lugar) 
     {
-        $lugar = Lugares::findOrFail($id_lugar);
+        $lugar = Lugares::findOrFail((int) $id_lugar);
         return view('lugares.show', compact('lugar'));
     }
+
 
     // Listar todos os lugares
     public function index()
@@ -102,5 +103,11 @@ class LugaresController extends Controller
         $lugares = Lugares::all();
         return response()->json($lugares);
     }
+    public function getEnderecoId($id_lugar)
+    {
+        $lugar = Lugares::findOrFail($id_lugar);
+        return $lugar->id_endereco;
+    }
+
 
 }

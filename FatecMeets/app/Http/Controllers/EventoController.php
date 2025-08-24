@@ -26,9 +26,9 @@ class EventoController extends Controller
             'descricao' => 'nullable|string',
             'data_inicio_evento' => 'required|date',
             'data_final_evento' => 'nullable|date|after_or_equal:data_inicio_evento',
-            'imagem_evento' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'imagem_evento' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'categoria_evento' => 'nullable|string|max:100',
-            'local_evento' => 'nullable|string|max:255'
+            'local_evento' => 'nullable|string|max:255',
         ]);
 
         $evento = new Evento();
@@ -46,7 +46,11 @@ class EventoController extends Controller
 
         $evento->save();
 
-        return redirect()->route('eventos.create')->with('success', 'Evento criado com sucesso!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Evento criado com sucesso!',
+            'id_evento' => $evento->id_evento
+        ]);
     }
 
     public function edit($id_evento)

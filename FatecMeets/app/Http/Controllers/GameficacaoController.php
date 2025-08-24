@@ -2,46 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Gameficacao;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GameficacaoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('auth')->except(['index', 'show', 'getByUsuarioId', 'store']);
     }
 
-    // Exibir formulário de criação
+    // Formulário de criação
     public function create()
     {
-        return view('gameficacao.create');
+        $nomeArquivo = "createGameficacao";
+        return view('gameficacao.create', compact('nomeArquivo'));
     }
 
     // Armazenar nova gameficação
-    public function store(Request $request)
+    public function store(Request $request, $id_usuario)
     {
         $request->validate([
-            'score_total' => 'nullable|integer|min:0',
             'nickname' => 'required|string|max:255',
+            'score_total' => 'nullable|integer|min:0',
         ]);
 
-        $gameficacao = new Gameficacao();
-        $gameficacao->score_total = $request->input('score_total', 0);
-        $gameficacao->nickname = $request->input('nickname');
-        $gameficacao->id_usuario = Auth::id();
-        $gameficacao->save();
+        $gameficacao = Gameficacao::create([
+            'nickname'    => $request->input('nickname'),
+            'score_total' => $request->input('score_total', 0),
+            'id_usuario'  => $id_usuario,
+        ]);
 
         return response()->json([
-            'success' => true,
-            'gameficacao_id' => $gameficacao->id_gameficacao,
-            'nickname' => $gameficacao->nickname,
-            'score_total' => $gameficacao->score_total
+            'success'          => true,
+            'id_gameficacao'   => $gameficacao->id_gameficacao,
+            'nickname'         => $gameficacao->nickname,
+            'score_total'      => $gameficacao->score_total,
         ]);
     }
 
-    // Exibir formulário de edição
+    // Editar gameficação
     public function edit($id_gameficacao)
     {
         $gameficacao = Gameficacao::findOrFail($id_gameficacao);
@@ -51,18 +52,20 @@ class GameficacaoController extends Controller
     // Atualizar gameficação
     public function update(Request $request, $id_gameficacao)
     {
-        $gameficacao = Gameficacao::findOrFail($id_gameficacao);
-
         $request->validate([
-            'score_total' => 'nullable|integer|min:0',
-            'nickname' => 'nullable|string|max:255',
+            'nickname'    => 'required|string|max:255',
+            'score_total' => 'required|integer|min:0',
         ]);
 
-        $gameficacao->score_total = $request->input('score_total', $gameficacao->score_total);
-        $gameficacao->nickname = $request->input('nickname', $gameficacao->nickname);
+        $gameficacao = Gameficacao::findOrFail($id_gameficacao);
+        $gameficacao->nickname    = $request->input('nickname');
+        $gameficacao->score_total = $request->input('score_total');
         $gameficacao->save();
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success'        => true,
+            'id_gameficacao' => $gameficacao->id_gameficacao,
+        ]);
     }
 
     // Excluir gameficação
@@ -71,24 +74,27 @@ class GameficacaoController extends Controller
         $gameficacao = Gameficacao::findOrFail($id_gameficacao);
         $gameficacao->delete();
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Gameficação excluída com sucesso!'
+        ]);
     }
 
-    // Mostrar detalhes de uma gameficação
+    // Mostrar detalhes
     public function show($id_gameficacao)
     {
         $gameficacao = Gameficacao::findOrFail($id_gameficacao);
         return view('gameficacao.show', compact('gameficacao'));
     }
 
-    // Listar todas as gameficações
+    // Listar todas
     public function index()
     {
         $gameficacoes = Gameficacao::all();
         return view('gameficacao.index', compact('gameficacoes'));
     }
 
-    // Buscar por usuário logado ou por ID
+    // Buscar por usuário logado ou ID
     public function getByUsuarioId($id_usuario = null)
     {
         $id_usuario = $id_usuario ?? Auth::id();

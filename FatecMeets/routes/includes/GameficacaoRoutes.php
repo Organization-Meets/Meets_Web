@@ -1,26 +1,28 @@
 <?php
 use App\Http\Controllers\GameficacaoController;
 
-// Listar todas as gameficações
-Route::get('/gameficacoes', [GameficacaoController::class, 'index']);
+Route::prefix('gameficacoes')->name('gameficacoes.')->group(function () {
 
-// Mostrar detalhes de uma gameficação
-Route::get('/gameficacoes/{id_gameficacao}', [GameficacaoController::class, 'show']);
+    Route::post('/store/{id_usuario}', [GameficacaoController::class, 'store'])
+        ->where('id_usuario', '[0-9]+')
+        ->name('store');
 
-// Criar nova gameficação (formulário)
-Route::get('/gameficacoes/create', [GameficacaoController::class, 'create']);
+    Route::get('/', [GameficacaoController::class, 'index'])->name('index');
+    Route::get('/create', [GameficacaoController::class, 'create'])->name('create');
 
-// Armazenar nova gameficação
-Route::post('/gameficacoes', [GameficacaoController::class, 'store']);
+    Route::get('/{id_gameficacao}', [GameficacaoController::class, 'show'])
+        ->where('id_gameficacao', '[0-9]+')
+        ->name('show');
 
-// Editar gameficação (formulário)
-Route::get('/gameficacoes/{id_gameficacao}/edit', [GameficacaoController::class, 'edit']);
+    Route::get('/{id_gameficacao}/edit', [GameficacaoController::class, 'edit'])
+        ->where('id_gameficacao', '[0-9]+')
+        ->name('edit');
 
-// Atualizar gameficação
-Route::put('/gameficacoes/{id_gameficacao}', [GameficacaoController::class, 'update']);
+    Route::put('/{id_gameficacao}', [GameficacaoController::class, 'update'])
+        ->where('id_gameficacao', '[0-9]+')
+        ->name('update');
 
-// Excluir gameficação
-Route::delete('/gameficacoes/{id_gameficacao}', [GameficacaoController::class, 'destroy']);
-
-// Buscar gameficações pelo ID do usuário (ou do logado, se não passar)
-Route::get('/gameficacoes/usuario/{id_usuario?}', [GameficacaoController::class, 'getByUsuarioId']);
+    Route::delete('/{id_gameficacao}', [GameficacaoController::class, 'destroy'])
+        ->where('id_gameficacao', '[0-9]+')
+        ->name('destroy');
+});

@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 // Inclui automaticamente todos os arquivos PHP dentro de includes/
-foreach (glob(__DIR__ . '/includes/*.php') as $file) {
-    require $file;
+foreach (glob(__DIR__ . '/includes/*.php') as $filename) {
+    require_once $filename;
 }
 
 Route::get('/', function () {

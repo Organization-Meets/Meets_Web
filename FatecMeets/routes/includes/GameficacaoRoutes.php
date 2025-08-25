@@ -25,4 +25,8 @@ Route::prefix('gameficacoes')->name('gameficacoes.')->group(function () {
     Route::delete('/{id_gameficacao}', [GameficacaoController::class, 'destroy'])
         ->where('id_gameficacao', '[0-9]+')
         ->name('destroy');
+        
+    Route::get('/usuario/{id_usuario?}', [GameficacaoController::class, 'getByUsuarioId'])
+        ->where('id_usuario', '[0-9]+')
+        ->name('getByUsuarioId');
 });

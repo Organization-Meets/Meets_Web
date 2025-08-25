@@ -47,9 +47,6 @@
             <i class="fas fa-calendar-alt"></i>
             <span>Meus Eventos</span>
         </div>
-        <i class="fas fa-calendar-plus"></i>
-        <p>Criar Evento</p>
-        <a href="/eventos/create/" class="btn-create-event">Criar primeiro evento</a>
         <div class="tab">
             <i class="far fa-bookmark"></i>
             <span>Eventos Salvos</span>
@@ -59,9 +56,14 @@
             <span>Participando</span>
         </div>
     </div>
-
+        <i class="fas fa-calendar-plus"></i>
+        <p>Criar Evento</p>
+        <a href="/eventos/create/" class="btn-create-event">Criar primeiro evento</a>
     <div class="gallery"></div>
 </section>
+<script>
+    const usuario = @json($usuario);
+</script>
 
-<!-- <script src="/js/perfilUsuarioController.js"></script> -->
+<script src="/js/controllers/perfilUsuarioController.js"></script>
 @include('componentes.footer')

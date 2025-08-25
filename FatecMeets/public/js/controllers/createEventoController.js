@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async () => { 
     const lugaresContainer = document.getElementById('lugaresContainer');
     const logradourosContainer = document.getElementById('logradourosContainer');
     const msgEl = document.getElementById('responseMessage');
@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const gamificacoes = await gamificacaoResp.json();
             if (!gamificacoes.length) throw new Error('Nenhuma gamificação encontrada');
 
-            // 3.2 Criar atividade do tipo 'evento'
-            const atividadeResp = await fetch('/atividades', {
+            // 3.2 Criar atividade do tipo 'evento' (rota: POST /atividades)
+            const atividadeResp = await fetch('/atividades/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,8 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!atividadeData.atividade_id) throw new Error('Falha ao criar atividade');
             formData.append('id_atividade', atividadeData.atividade_id);
 
-            // 3.3 Criar evento
-            const eventoResp = await fetch('/eventos', {
+            const eventoResp = await fetch(`/eventos/store/${idUsuario}`, {
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': csrfToken },
                 body: formData
@@ -96,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 form.reset();
                 lugaresContainer.innerHTML = '';
                 logradourosContainer.innerHTML = '';
+                window.location.href = "/usuarios/perfil/";
             } else {
                 msgEl.style.color = 'red';
                 msgEl.textContent = eventoData.message || 'Erro ao criar evento.';

@@ -1,21 +1,33 @@
 <?php
 use App\Http\Controllers\EventoController;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/eventos/create', [EventoController::class, 'create'])->name('eventos.create');
-    Route::get('/eventos', [EventoController::class, 'index']);
-    Route::get('/eventos/{id_evento}', [EventoController::class, 'show']);
-    Route::post('/eventos', [EventoController::class, 'store']);
-    Route::put('/eventos/{id_evento}', [EventoController::class, 'update']);
-    Route::delete('/eventos/{id_evento}', [EventoController::class, 'destroy']);
+Route::prefix('eventos')->name('eventos.')->group(function () {
+
+    Route::post('/store/{id_usuario}', [EventoController::class, 'store'])
+        ->where('id_usuario', '[0-9]+')
+        ->name('store');
+
+    Route::get('/', [EventoController::class, 'index'])->name('index');
+    Route::get('/create', [EventoController::class, 'create'])->name('create');
+
+    Route::get('/{id_evento}', [EventoController::class, 'show'])
+        ->where('id_evento', '[0-9]+')
+        ->name('show');
+
+    Route::get('/{id_evento}/edit', [EventoController::class, 'edit'])
+        ->where('id_evento', '[0-9]+')
+        ->name('edit');
+
+    Route::put('/{id_evento}', [EventoController::class, 'update'])
+        ->where('id_evento', '[0-9]+')
+        ->name('update');
+
+    Route::delete('/{id_evento}', [EventoController::class, 'destroy'])
+        ->where('id_evento', '[0-9]+')
+        ->name('destroy');
+
+    // JSON: eventos do usuário
+    Route::get('/usuario/{id_usuario?}', [EventoController::class, 'eventosUsuario'])
+        ->where('id_usuario', '[0-9]+')
+        ->name('eventosUsuario');
 });
-
-
-// rota json para perfil
-Route::get('/perfil/eventos', [EventoController::class, 'eventosUsuario']);
-Route::get('/perfil/eventos/salvos', [EventoController::class, 'eventosSalvosUsuario']);
-
-// routes/web.php ou routes/api.php
-
-
-?>

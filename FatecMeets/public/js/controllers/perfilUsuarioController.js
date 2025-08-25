@@ -1,32 +1,27 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    let usuarioLogado = null;
 
-    // ==========================
-    // 1. Buscar dados do usuário
-    // ==========================
     async function buscarUsuario() {
         try {
             const response = await fetch("/perfil/dados");
             if (!response.ok) throw new Error("Erro ao buscar usuário");
 
-            const usuario = await response.json();
+            usuarioLogado = await response.json();
 
-            document.querySelector(".profile-username").textContent = usuario.nome ?? "Usuário";
-            document.querySelector(".bio-name").textContent = usuario.nome ?? "";
-            document.querySelector(".bio-nickname").textContent = "@ " + (usuario.nickname ?? "");
-            document.querySelector(".bio-email").textContent = "✉️ " + (usuario.email ?? "");
-            document.querySelector(".bio-telefone").textContent = "📞 " + (usuario.numero ?? "");
+            document.querySelector(".profile-username").textContent = usuarioLogado.nome ?? "Usuário";
+            document.querySelector(".bio-name").textContent = usuarioLogado.nome ?? "";
+            document.querySelector(".bio-nickname").textContent = "@ " + (usuarioLogado.nickname ?? "");
+            document.querySelector(".bio-email").textContent = "✉️ " + (usuarioLogado.email ?? "");
+            document.querySelector(".bio-telefone").textContent = "📞 " + (usuarioLogado.numero ?? "");
 
             // Atualiza link do botão "Editar perfil"
-            document.getElementById("edit-profile-link").href = `/usuarios/${usuario.usuario_id}/edit/`;
+            document.getElementById("edit-profile-link").href = `/usuarios/${usuarioLogado.usuario_id}/edit/`;
 
         } catch (err) {
             console.error(err);
         }
     }
 
-    // ==========================
-    // 2. Buscar imagem do usuário
-    // ==========================
     async function buscarImagem() {
         try {
             const response = await fetch("/perfil/imagem");
@@ -49,12 +44,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // ==========================
-    // 3. Buscar eventos do usuário
-    // ==========================
     async function buscarEventos() {
         try {
-            const response = await fetch("/perfil/eventos");
+            if (!usuarioLogado) return; // garante que já buscou o usuário
+
+            const response = await fetch(`/eventos/usuario/${usuarioLogado.usuario_id}`);
             if (!response.ok) throw new Error("Erro ao buscar eventos");
 
             const eventos = await response.json();
@@ -92,10 +86,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // ==========================
-    // Executa todas funções
-    // ==========================
-    buscarUsuario();
-    buscarImagem();
-    buscarEventos();
+    // Executa em ordem
+    await buscarUsuario();
+    await buscarImagem();
+    await buscarEventos();
 });

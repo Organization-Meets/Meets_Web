@@ -9,7 +9,7 @@ class AtividadeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show', 'getByGamificacaoId']);
+        $this->middleware('auth')->except(['index', 'show', 'getByGamificacaoId', 'store']);
     }
 
     // Exibir formulário de criação
@@ -83,18 +83,30 @@ class AtividadeController extends Controller
     }
 
     // Mostrar detalhes de uma atividade
-    public function show(int $id_atividade)
+    public function show(int $id_atividade, Request $request)
     {
         $atividade = Atividade::findOrFail($id_atividade);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json($atividade);
+        }
+
         return view('atividade.show', compact('atividade'));
     }
 
+
     // Listar todas as atividades
-    public function index()
+    public function index(Request $request)
     {
         $atividades = Atividade::all();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json($atividades);
+        }
+
         return view('atividade.index', compact('atividades'));
     }
+
 
     // Buscar atividades por gamificação (API)
     public function getByGamificacaoId(int $id_gamificacao)

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -10,35 +10,89 @@ class EventoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('auth')->except(['index', 'show', 'eventosUsuario', 'store']);
     }
 
+    // Formulário de criação
     public function create()
     {
         $nomeArquivo = "createEvento";
         return view('eventos.create', compact('nomeArquivo'));
     }
 
-    public function store(Request $request)
+    // Criar evento
+    public function store(Request $request, $id_usuario)
     {
         $request->validate([
-            'nome_evento' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
+            'nome_evento'        => 'required|string|max:255',
+            'descricao'          => 'nullable|string',
             'data_inicio_evento' => 'required|date',
-            'data_final_evento' => 'nullable|date|after_or_equal:data_inicio_evento',
-            'imagem_evento' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'categoria_evento' => 'nullable|string|max:100',
-            'local_evento' => 'nullable|string|max:255',
+            'data_final_evento'  => 'nullable|date|after_or_equal:data_inicio_evento',
+            'imagem_evento.*'    => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'categoria_evento'   => 'nullable|string|max:100',
+            'id_lugares'         => 'required|integer|exists:lugares,id_lugar',
+            'id_logradouro'      => 'required|integer|exists:logradouro,id_logradouro',
+            'id_atividade'       => 'required|integer|exists:atividade,id_atividade',
         ]);
 
         $evento = new Evento();
-        $evento->nome_evento = $request->nome_evento;
-        $evento->descricao = $request->descricao;
+        $evento->nome_evento        = $request->nome_evento;
+        $evento->descricao          = $request->descricao;
         $evento->data_inicio_evento = $request->data_inicio_evento;
-        $evento->data_final_evento = $request->data_final_evento;
-        $evento->categoria_evento = $request->categoria_evento;
-        $evento->local_evento = $request->local_evento;
-        $evento->id_usuario = Auth::id();
+        $evento->data_final_evento  = $request->data_final_evento;
+        $evento->categoria_evento   = $request->categoria_evento;
+        $evento->id_usuario         = $id_usuario;
+        $evento->id_atividade       = $request->id_atividade;
+        $evento->id_lugares         = $request->id_lugares;
+        $evento->id_logradouro      = $request->id_logradouro;
+
+        if ($request->hasFile('imagem_evento')) {
+            $paths = [];
+            foreach ($request->file('imagem_evento') as $img) {
+                $paths[] = $img->store('eventos', 'public');
+            }
+            // se aceitar várias, salva como JSON
+            $evento->imagem_evento = json_encode($paths);
+        }
+
+        $evento->save();
+
+        return response()->json([
+            'success'   => true,
+            'id_evento' => $evento->id_evento,
+            'message'   => 'Evento criado com sucesso!',
+        ]);
+    }
+
+    // Editar
+    public function edit($id_evento)
+    {
+        $evento = Evento::findOrFail($id_evento);
+        return view('eventos.edit', compact('evento'));
+    }
+
+    // Atualizar
+    public function update(Request $request, $id_evento)
+    {
+        $request->validate([
+            'nome_evento'        => 'required|string|max:255',
+            'descricao'          => 'nullable|string',
+            'data_inicio_evento' => 'required|date',
+            'data_final_evento'  => 'nullable|date|after_or_equal:data_inicio_evento',
+            'imagem_evento'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'categoria_evento'   => 'nullable|string|max:100',
+            'id_lugares'         => 'nullable|integer|exists:lugares,id',
+            'id_logradouro'      => 'nullable|integer|exists:logradouros,id',
+        ]);
+
+        $evento = Evento::findOrFail($id_evento);
+        $evento->nome_evento        = $request->nome_evento;
+        $evento->descricao          = $request->descricao;
+        $evento->data_inicio_evento = $request->data_inicio_evento;
+        $evento->data_final_evento  = $request->data_final_evento;
+        $evento->categoria_evento   = $request->categoria_evento;
+        $evento->id_lugares         = $request->id_lugares;
+        $evento->id_logradouro      = $request->id_logradouro;
 
         if ($request->hasFile('imagem_evento')) {
             $evento->imagem_evento = $request->file('imagem_evento')->store('eventos', 'public');
@@ -47,82 +101,54 @@ class EventoController extends Controller
         $evento->save();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Evento criado com sucesso!',
-            'id_evento' => $evento->id_evento
+            'success'   => true,
+            'id_evento' => $evento->id_evento,
+            'message'   => 'Evento atualizado com sucesso!'
         ]);
     }
 
-    public function edit($id_evento)
-    {
-        $evento = Evento::findOrFail($id_evento);
-        return view('eventos.edit', compact('evento'));
-    }
-
-    public function update(Request $request, $id_evento)
-    {
-        $evento = Evento::findOrFail($id_evento);
-
-        $request->validate([
-            'nome_evento' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'data_inicio_evento' => 'required|date',
-            'data_final_evento' => 'nullable|date|after_or_equal:data_inicio_evento',
-            'imagem_evento' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'categoria_evento' => 'nullable|string|max:100',
-            'local_evento' => 'nullable|string|max:255'
-        ]);
-
-        $evento->nome_evento = $request->nome_evento;
-        $evento->descricao = $request->descricao;
-        $evento->data_inicio_evento = $request->data_inicio_evento;
-        $evento->data_final_evento = $request->data_final_evento;
-        $evento->categoria_evento = $request->categoria_evento;
-        $evento->local_evento = $request->local_evento;
-
-        if ($request->hasFile('imagem_evento')) {
-            $evento->imagem_evento = $request->file('imagem_evento')->store('eventos', 'public');
-        }
-
-        $evento->save();
-
-        return redirect()->route('eventos.edit', $evento->id_evento)->with('success', 'Evento atualizado com sucesso!');
-    }
-
+    // Excluir
     public function destroy($id_evento)
     {
         $evento = Evento::findOrFail($id_evento);
         $evento->delete();
-        return redirect()->back()->with('success', 'Evento excluído com sucesso!');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Evento excluído com sucesso!'
+        ]);
     }
 
+    // Mostrar 1 evento
     public function show($id_evento)
     {
         $evento = Evento::findOrFail($id_evento);
         return view('eventos.show', compact('evento'));
     }
 
+    // Listar todos
     public function index()
     {
         $eventos = Evento::all();
         return view('eventos.index', compact('eventos'));
     }
 
-    public function eventosUsuario()
+    // Eventos do usuário logado
+    public function eventosUsuario($id_usuario = null)
     {
-        $usuario = Auth::user();
-        $eventos = Evento::where('id_usuario', $usuario->id_usuario)->get();
+        $id_usuario = $id_usuario ?? Auth::id();
 
-        $eventos = $eventos->map(function ($evento) {
+        $eventos = Evento::where('id_usuario', $id_usuario)->get()->map(function ($evento) {
             return [
-                'id_evento' => $evento->id_evento,
-                'nome_evento' => $evento->nome_evento,
-                'descricao' => $evento->descricao,
+                'id_evento'          => $evento->id_evento,
+                'nome_evento'        => $evento->nome_evento,
+                'descricao'          => $evento->descricao,
                 'data_inicio_evento' => $evento->data_inicio_evento,
-                'data_final_evento' => $evento->data_final_evento,
-                'categoria_evento' => $evento->categoria_evento,
-                'local_evento' => $evento->local_evento,
-                'imagem_evento' => $evento->imagem_evento
+                'data_final_evento'  => $evento->data_final_evento,
+                'categoria_evento'   => $evento->categoria_evento,
+                'id_lugares'         => $evento->id_lugares,
+                'id_logradouro'      => $evento->id_logradouro,
+                'imagem_evento'      => $evento->imagem_evento
                     ? asset('storage/' . $evento->imagem_evento)
                     : asset('assets/default-event.jpg'),
             ];

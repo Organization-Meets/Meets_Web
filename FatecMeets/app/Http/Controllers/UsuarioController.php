@@ -11,7 +11,7 @@ class UsuarioController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['create', 'store', 'loginForm', 'login']);
+        $this->middleware('auth')->except(['create', 'store', 'loginForm', 'login', 'perfil', 'home', 'dadosUsuario', 'imagemUsuario']);
     }
     public function create(){
         $nomeArquivo = "createUsuario";
@@ -152,6 +152,7 @@ class UsuarioController extends Controller
         if (!$usuario) return response()->json([], 404);
 
         return response()->json([
+            'usuario_id' => $usuario->id_usuario,
             'nome' => $usuario->nome,
             'nickname' => $usuario->nickname,
             'email' => $usuario->email,
@@ -163,16 +164,22 @@ class UsuarioController extends Controller
     {
         $usuario = Auth::user();
 
-        if (!$usuario) {
-            return response()->json(['url' => '/uploads/imgPadrao.png']);
+        if (!$usuario || !$usuario->imagem_usuario) {
+            return response()->json([
+                'url' => 'uploads/imgPadrao.png'
+            ]);
         }
 
-        // Recupera o JSON e transforma em array
-        $imagens = json_decode($usuario->imagem_usuario ?? '[]', true);
+        // Se for JSON, decodifica
+        $path = $usuario->imagem_usuario;
+        if (is_string($path) && str_starts_with($path, '[')) {
+            $decoded = json_decode($path, true);
+            $path = $decoded[0] ?? $path;
+        }
 
-        // Pega a primeira imagem se existir, senão usa default
-        $url = count($imagens) > 0 ? asset('storage/' . $imagens[0]) : asset('/uploads/imgPadrao.png');
-
-        return response()->json(['url' => $url]);
+        return response()->json([
+            'url' => '/../storage/' . ltrim($path, '/')
+        ]);
     }
+
 }

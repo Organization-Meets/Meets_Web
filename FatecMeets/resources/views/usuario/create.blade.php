@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -64,6 +64,27 @@
 
             <input type="text" name="nickname" placeholder="Nome de usuário" readonly>
             <hr>
+            <button type="submit">Avançar</button>
+        </form>
+    </div>
+
+    <!-- PARTE 3: Preferências -->
+    <div id="parte3" class="section hidden">
+        <form id="preferenciasForm">
+            @csrf
+            <h3>Preferências do Usuário</h3>
+            <p>Escolha seus interesses:</p>
+            <label><input type="checkbox" name="interesses[]" value="tecnologia"> Tecnologia</label><br>
+            <label><input type="checkbox" name="interesses[]" value="ciencia"> Ciência</label><br>
+            <label><input type="checkbox" name="interesses[]" value="esporte"> Esporte</label><br>
+            <label><input type="checkbox" name="interesses[]" value="arte"> Arte</label><br>
+
+            <p>Notificações:</p>
+            <label><input type="radio" name="notificacoes" value="email" required> E-mail</label>
+            <label><input type="radio" name="notificacoes" value="sms"> SMS</label>
+            <label><input type="radio" name="notificacoes" value="nenhum"> Nenhum</label>
+
+            <hr>
             <button type="submit">Finalizar Cadastro</button>
         </form>
     </div>
@@ -80,9 +101,14 @@
         else { preview.src='#'; preview.style.display='none'; }
     });
 
+    // funções de troca de partes
     function mostrarParte2() {
         document.getElementById("parte1").classList.add("hidden");
         document.getElementById("parte2").classList.remove("hidden");
+    }
+    function mostrarParte3() {
+        document.getElementById("parte2").classList.add("hidden");
+        document.getElementById("parte3").classList.remove("hidden");
     }
 
     // PARTE 1 -> POST /usuarios
@@ -127,17 +153,14 @@
         const usuarioId = window.usuarioId;
 
         try {
-
             await fetch(`/gameficacoes/store/${usuarioId}`, {
                 method: "POST",
                 headers: { 
-                    "Content-Type": "application/json",  // importante para JSON
+                    "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                 },
                 body: JSON.stringify({ nickname: formData.get("nickname") })
             });
-
-
 
             if(tipo==="aluno") {
                 await fetch(`/alunos/${usuarioId}`, {
@@ -152,10 +175,33 @@
                     body: JSON.stringify({ ra_professor: formData.get("ra_professor"), nome_professor: formData.get("nome_professor") })
                 });
             }
-            alert("Cadastro finalizado com sucesso!");
+
+            // segue para parte 3 em vez de finalizar
+            mostrarParte3();
+
+        } catch(err){ console.error(err); alert("Erro ao salvar dados adicionais!"); }
+    });
+
+    // PARTE 3 -> POST /preferencias
+    document.getElementById("preferenciasForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const usuarioId = window.usuarioId;
+
+        try {
+            await fetch(`/preferencias/${usuarioId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content },
+                body: JSON.stringify({
+                    interesses: formData.getAll("interesses[]"),
+                    notificacoes: formData.get("notificacoes")
+                })
+            });
+
+            alert("Cadastro concluído com sucesso!");
             window.location.href="/usuarios/loginForm/";
 
-        } catch(err){ console.error(err); alert("Erro ao finalizar cadastro!"); }
+        } catch(err){ console.error(err); alert("Erro ao salvar preferências!"); }
     });
 </script>
 </body>

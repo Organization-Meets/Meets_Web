@@ -87,3 +87,7 @@ button.save-btn {
 button.save-btn:hover {
     background-color: var(--btn-hover);
 }
+
+.hidden {
+    display: none !important;
+}

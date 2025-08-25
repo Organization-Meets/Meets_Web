@@ -3,30 +3,36 @@
 
 <section class="edit-profile-container">
     <h1>Editar Perfil</h1>
+    <div id="mensagem-usuario"></div>
 
-    {{-- Exibe mensagem de sucesso, se houver --}}
-    @if(session('success'))
-        <p class="mensagem-sucesso">{{ session('success') }}</p>
-    @endif
+    <!-- Etapa 1: Solicitar senha (visível ao abrir) -->
+    <div id="etapaSenha" class="section">
+        <form id="formSenha" autocomplete="off">
+            <input type="password" id="senha_confirmacao" placeholder="Digite sua senha para editar" required>
+            <button type="submit">Confirmar</button>
+        </form>
+    </div>
 
-    {{-- Formulário para editar perfil do usuário --}}
-    <form action="/usuarios/{{ $usuario->id_usuario }}/" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <div class="form-group">
-            <label for="nome">Nome completo:</label>
-            <input type="text" name="nome" id="nome" value="{{ old('nome', $usuario->nome ?? '') }}" required>
+    <!-- Etapa 2: Formulário de edição (inicialmente oculto) -->
+    <div id="etapaEdicao" class="section hidden">
+        <div class="profile-header">
+            <div id="imagem-container" class="profile-img-container"></div>
         </div>
-
-        <div class="form-group">
-            <label for="imagem_usuario">Foto de perfil:</label><br>
-            <input type="file" name="imagem_usuario" id="imagem_usuario" accept="image/*">
-            <div class="foto-atual">
-                <p>Foto atual:</p>
-                <img src="{{ asset($usuario->imagem_usuario ?? 'uploads/imgPadrao.png') }}" alt="Foto atual" width="100">
+        <form id="form-editar-usuario" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <div class="form-group">
+                <label for="nome">Nome completo:</label>
+                <input type="text" name="nome" id="nome" required>
             </div>
-        </div>
-
-        <button type="submit" class="btn-salvar">Salvar Alterações</button>
-    </form>
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="imagem_usuario">Foto de perfil:</label><br>
+                <input type="file" name="imagem_usuario" id="imagem_usuario" accept="image/*">
+            </div>
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+        </form>
+    </div>
 </section>
+<script src="/js/controllers/editUsuarioController.js"></script>

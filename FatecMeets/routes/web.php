@@ -15,3 +15,4 @@ Route::redirect('/inicio', '/')->name('inicio');
 
 // ou em routes/includes/GameficacaoRoutes.php
 Route::get('/gameficacao/usuario/{id_usuario}', [App\Http\Controllers\GameficacaoController::class, 'getByUsuarioId']);
+Route::post('/usuarios/confirmar-senha', [App\Http\Controllers\UsuarioController::class, 'confirmarSenha']);

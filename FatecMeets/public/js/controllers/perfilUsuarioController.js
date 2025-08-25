@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             const responseGame = await fetch(`/gameficacao/usuario/${usuario_id}`);
             if (responseGame.ok) {
                 const game = await responseGame.json();
-                return game?.nickname ? `${game.nickname}` : "@";
+                return game?.nickname ? `🎮 ${game.nickname}` : "@";
             }
             return "@";
         } catch (err) {
@@ -40,10 +40,37 @@ document.addEventListener("DOMContentLoaded", async function () {
             const nomeUsuario = await buscarNomeUsuario(usuarioLogado.usuario_id);
             const nickname = await buscarNickname(usuarioLogado.usuario_id);
 
-            document.querySelector(".profile-username").textContent = nomeUsuario; // <-- Adicione esta linha
-            document.querySelector(".bio-nickname").textContent = nickname;
-            document.querySelector(".bio-email").textContent = "✉️ " + (usuarioLogado.email ?? "");
-            document.querySelector(".bio-telefone").textContent = "📞 " + (usuarioLogado.numero ?? "");
+            // Nome
+            const nomeElem = document.querySelector(".profile-username");
+            if (!nomeUsuario || nomeUsuario === "Usuário") {
+                nomeElem.innerHTML = `<a href="/alunos/create">Adicionar nome</a>`;
+            } else {
+                nomeElem.textContent = nomeUsuario;
+            }
+
+            // Nickname
+            const nicknameElem = document.querySelector(".bio-nickname");
+            if (!nickname || nickname === "@") {
+                nicknameElem.innerHTML = `<a href="/gameficacao/create">Adicionar nickname</a>`;
+            } else {
+                nicknameElem.textContent = nickname;
+            }
+
+            // Email
+            const emailElem = document.querySelector(".bio-email");
+            if (!usuarioLogado.email) {
+                emailElem.innerHTML = `<a href="/usuarios/${usuarioLogado.usuario_id}/edit/">Adicionar email</a>`;
+            } else {
+                emailElem.textContent = "✉️ " + usuarioLogado.email;
+            }
+
+            // Telefone
+            const telefoneElem = document.querySelector(".bio-telefone");
+            if (!usuarioLogado.numero) {
+                telefoneElem.innerHTML = `<a href="/usuarios/${usuarioLogado.usuario_id}/edit/">Adicionar telefone</a>`;
+            } else {
+                telefoneElem.textContent = "📞 " + usuarioLogado.numero;
+            }
 
             document.getElementById("edit-profile-link").href = `/usuarios/${usuarioLogado.usuario_id}/edit/`;
 

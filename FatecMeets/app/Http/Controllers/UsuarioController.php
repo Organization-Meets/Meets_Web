@@ -11,7 +11,7 @@ class UsuarioController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['create', 'store', 'loginForm', 'login', 'perfil', 'home', 'dadosUsuario', 'imagemUsuario']);
+        $this->middleware('auth')->except(['create', 'store', 'loginForm', 'login', 'perfil', 'home', 'dadosUsuario', 'imagemUsuario', 'edit', 'show', 'index', 'confirmarSenha', 'update', 'destroy']);
     }
     public function create(){
         $nomeArquivo = "createUsuario";
@@ -182,4 +182,12 @@ class UsuarioController extends Controller
         ]);
     }
 
+    public function confirmarSenha(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user || !Hash::check($request->senha, $user->password)) {
+            return response()->json(['erro' => 'Senha incorreta'], 401);
+        }
+        return response()->json(['ok' => true]);
+    }
 }

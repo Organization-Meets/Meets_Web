@@ -1,9 +1,28 @@
 document.addEventListener("DOMContentLoaded", async function() {
     const profileBtn = document.querySelector(".profile-btn");
-    const profileImg = document.querySelector(".profile-img-mini");
 
-    if (!profileBtn || !profileImg) return;
+    if (!profileBtn) return;
+    async function buscarImagem() {
+        try {
+            const response = await fetch("/perfil/imagem");
+            if (!response.ok) throw new Error("Erro ao buscar imagem");
 
+            const data = await response.json();
+
+            const img = document.createElement("img");
+            img.src = data.url;
+            img.alt = "Foto de Perfil";
+            img.className = "profile-img-mini";
+            img.style.maxWidth = "300px";
+
+            const container = document.getElementById("img-container");
+            container.innerHTML = "";
+            container.appendChild(img);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
     // Função para verificar login
     async function verificarLogin() {
         try {
@@ -12,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
             if (data.logado) {
                 profileBtn.textContent = "Logout";
-                profileImg.src = "/perfil/imagem/" || "/uploads/imgPadrao.png";
+                await buscarImagem();
 
                 profileBtn.onclick = async () => {
                     await fetch("/usuarios/logout");

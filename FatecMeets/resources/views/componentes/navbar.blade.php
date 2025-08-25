@@ -18,7 +18,7 @@
 
     <!-- Área do usuário -->
     <div class="navbar-user-area">
-      <img src="/uploads/imgPadrao.png" class="profile-img-mini" alt="Perfil">
+      <div id="img-container" class="profile-img-mini"></div>
       <button class="profile-btn">Login</button>
     </div>
   </div>

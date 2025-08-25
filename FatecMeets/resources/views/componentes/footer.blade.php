@@ -8,12 +8,6 @@
     });
   </script>
   <!-- Define o nome do controller via PHP -->
-  <script>
-      var controllerName = "{{ $nomeArquivo }}"; // ex: "create"
-  </script>
-
-  <!-- Carrega o web.js -->
-  <script src="/js/routes/web.js"></script>
 
 
   <!-- Outros scripts comuns (dark mode, Vlibras…) -->

@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const div = document.createElement("div");
                 div.className = "photo";
                 div.innerHTML = `
-                    <img src="${evento.imagem_evento ?? '/assets/default-event.jpg'}" alt="${evento.nome_evento}">
+                    <img src="${evento.imagem_evento ?? '/imagens/default-event.jpg'}" alt="${evento.nome_evento}">
                     <div class="event-info">
                         <strong>${evento.nome_evento}</strong><br>
                         <span>${new Date(evento.data_inicio_evento).toLocaleDateString('pt-BR')}</span>

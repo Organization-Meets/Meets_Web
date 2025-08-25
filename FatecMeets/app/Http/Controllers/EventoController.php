@@ -139,6 +139,18 @@ class EventoController extends Controller
         $id_usuario = $id_usuario ?? Auth::id();
 
         $eventos = Evento::where('id_usuario', $id_usuario)->get()->map(function ($evento) {
+            if (!$evento || !$evento->imagem_evento) {
+                return response()->json([
+                    'url' => 'imagens/default-event.jpg'
+                ]);
+            }
+
+            // Se for JSON, decodifica
+            $path = $evento->imagem_evento;
+            if (is_string($path) && str_starts_with($path, '[')) {
+                $decoded = json_decode($path, true);
+                $path = $decoded[0] ?? $path;
+            }
             return [
                 'id_evento'          => $evento->id_evento,
                 'nome_evento'        => $evento->nome_evento,
@@ -149,8 +161,8 @@ class EventoController extends Controller
                 'id_lugares'         => $evento->id_lugares,
                 'id_logradouro'      => $evento->id_logradouro,
                 'imagem_evento'      => $evento->imagem_evento
-                    ? asset('storage/' . $evento->imagem_evento)
-                    : asset('assets/default-event.jpg'),
+                    ? '/../storage/' . ltrim($path, '/')
+                    : 'imagens/default-event.jpg',
             ];
         });
 

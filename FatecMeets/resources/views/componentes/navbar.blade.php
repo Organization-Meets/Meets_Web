@@ -9,6 +9,14 @@
       <i class="fas fa-bars"></i>
     </div>
 
+    <div class="navbar-user-area">
+      <label for="theme-switch">Modo:</label>
+      <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch">
+        <label for="theme-switch" class="switch"></label>
+      </div>
+    </div>
+
     <div class="navbar-links">
       <a href="/inicio/" class="navbar-item">Página inicial</a>
       <a href="/usuarios/busca/" class="navbar-item">Buscar</a>
@@ -25,6 +33,7 @@
 </nav>
 
 <script src="/js/navbarController.js"></script>
+
 
 <!-- Vlibras -->
 <div vw class="enabled">

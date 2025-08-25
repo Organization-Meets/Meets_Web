@@ -66,16 +66,3 @@ function validateForm(form) {
     
     return isValid;
 }
-
-// Adiciona estilos CSS para inputs com erro
-if (!document.getElementById('error-styles')) {
-    const style = document.createElement('style');
-    style.id = 'error-styles';
-    style.textContent = `
-        input.error, textarea.error {
-            border-color: var(--btn-color) !important;
-            background-color: rgba(255, 107, 107, 0.05);
-        }
-    `;
-    document.head.appendChild(style);
-}

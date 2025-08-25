@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                 };
             } else {
                 profileBtn.textContent = "Login";
-                profileImg.src = "/uploads/imgPadrao.png";
                 profileBtn.onclick = () => {
                     window.location.href = "/usuarios/loginForm/";
                 };

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
@@ -11,8 +14,14 @@ class UsuarioController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['create', 'store', 'loginForm', 'login', 'perfil', 'home', 'dadosUsuario', 'imagemUsuario', 'edit', 'show', 'index', 'confirmarSenha', 'update', 'destroy']);
+        $this->middleware('auth')->except([
+            'create', 'store', 'loginForm', 'login', 
+            'perfil', 'home', 'dadosUsuario', 'imagemUsuario', 
+            'edit', 'show', 'index', 'confirmarSenha', 
+            'update', 'destroy', 'criarTokenEmail', 'verificarToken', 'reenviarToken'
+        ]);
     }
+    
     public function create(){
         $nomeArquivo = "createUsuario";
         return view('usuario.create', compact('nomeArquivo'));
@@ -30,11 +39,8 @@ class UsuarioController extends Controller
         $usuario = new Usuario();
         $usuario->email = $request->input('email');
         $usuario->password = Hash::make($request->input('password'));
-        $usuario->status_conta = 'ativo';
+        $usuario->status_conta = 'inativo'; // 🚨 agora inativo até validar token
 
-        // =====================
-        // Upload de imagens
-        // =====================
         if ($request->hasFile('imagem_usuario')) {
             $paths = [];
             foreach ($request->file('imagem_usuario') as $file) {
@@ -47,7 +53,6 @@ class UsuarioController extends Controller
 
         $usuario->save();
 
-        // Criar nome e nickname a partir do email
         $emailUser = explode('@', $usuario->email)[0];
         $parts = explode('.', $emailUser);
         $firstName = ucfirst($parts[0]);
@@ -121,7 +126,11 @@ class UsuarioController extends Controller
     public function login(Request $request){
         $credentials = $request->only('email', 'password');
         $usuario = Usuario::where('email', $credentials['email'])->first();
+
         if ($usuario && Hash::check($credentials['password'], $usuario->password)) {
+            if ($usuario->status_conta !== 'ativo') {
+                return response()->json(['error' => 'Conta inativa ou não verificada.'], 403);
+            }
             Auth::login($usuario);
             return response()->json(['success' => true]);
         }
@@ -190,4 +199,57 @@ class UsuarioController extends Controller
         }
         return response()->json(['ok' => true]);
     }
+    public function criarTokenEmail($id_usuario)
+    {
+        $usuario = Usuario::findOrFail($id_usuario);
+
+        // Gera token alfanumérico (letras e números)
+        $token = Str::upper(Str::random(6));
+
+        $usuario->email_verification_token = $token;
+        $usuario->save();
+
+        // Envia o e-mail
+        Mail::raw("Seu código de verificação é: {$token}", function ($message) use ($usuario) {
+            $message->to($usuario->email)
+                    ->subject('Confirmação de E-mail');
+        });
+
+        return response()->json(['message' => 'Token enviado para o e-mail.']);
+    }
+
+    public function verificarToken(Request $request, $id_usuario)
+    {
+        $usuario = Usuario::findOrFail($id_usuario);
+
+        if ($usuario->email_verification_token === $request->token) {
+            $usuario->status_conta = 'ativo';
+            $usuario->email_verified_at = Carbon::now();
+            $usuario->email_verification_token = null;
+            $usuario->save();
+
+            return response()->json(['success' => true, 'message' => 'Conta verificada com sucesso!']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Token inválido.'], 400);
+    }
+    public function reenviarToken($id_usuario)
+    {
+        $usuario = Usuario::findOrFail($id_usuario);
+
+        // Gera novo token
+        $token = Str::upper(Str::random(6));
+
+        $usuario->email_verification_token = $token;
+        $usuario->save();
+
+        // Reenvia o e-mail
+        Mail::raw("Seu novo código de verificação é: {$token}", function ($message) use ($usuario) {
+            $message->to($usuario->email)
+                    ->subject('Reenvio do Código de Verificação');
+        });
+
+        return response()->json(['message' => 'Código reenviado com sucesso!']);
+    }
+
 }

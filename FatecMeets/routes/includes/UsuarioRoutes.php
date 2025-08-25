@@ -1,5 +1,10 @@
 <?php
 use App\Http\Controllers\UsuarioController;
+
+Route::post('/usuarios/{id_usuario}/criar-token', [UsuarioController::class, 'criarTokenEmail']) ->where('id_usuario', '[0-9]+') ->name('usuarios.criarToken');
+Route::post('/usuarios/{id_usuario}/confirmar-token', [UsuarioController::class, 'verificarToken']) ->where('id_usuario', '[0-9]+') ->name('usuarios.verificarToken');
+Route::post('/usuarios/{id_usuario}/reenviar-token', [UsuarioController::class, 'reenviarToken']) ->where('id_usuario', '[0-9]+') ->name('usuarios.reenviarToken');
+
 Route::get('/home', [UsuarioController::class, 'home'])->name('usuario.home');
 Route::get('/usuario/logged', function() {
     $usuario = Auth::user();

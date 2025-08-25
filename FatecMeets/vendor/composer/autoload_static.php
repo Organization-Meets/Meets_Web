@@ -10,10 +10,10 @@ class ComposerStaticInitfe33f98a750b8c5a51b30c78bd3fab21
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
@@ -73,6 +73,8 @@ class ComposerStaticInitfe33f98a750b8c5a51b30c78bd3fab21
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\Mime\\' => 23,
+            'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\' => 40,
+            'Symfony\\Component\\Mailer\\Bridge\\Google\\' => 39,
             'Symfony\\Component\\Mailer\\' => 25,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
@@ -276,6 +278,14 @@ class ComposerStaticInitfe33f98a750b8c5a51b30c78bd3fab21
         'Symfony\\Component\\Mime\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
+        ),
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/mailgun-mailer',
+        ),
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/google-mailer',
         ),
         'Symfony\\Component\\Mailer\\' => 
         array (
@@ -532,10 +542,8 @@ class ComposerStaticInitfe33f98a750b8c5a51b30c78bd3fab21
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
-        'App\\Http\\Controllers\\AcademicoController' => __DIR__ . '/../..' . '/app/Http/Controllers/AcademicoController.php',
         'App\\Http\\Controllers\\AcademicosController' => __DIR__ . '/../..' . '/app/Http/Controllers/AcademicosController.php',
         'App\\Http\\Controllers\\AdicionaisController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdicionaisController.php',
-        'App\\Http\\Controllers\\AdicionalController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdicionalController.php',
         'App\\Http\\Controllers\\AdministradoresController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdministradoresController.php',
         'App\\Http\\Controllers\\AgendaController' => __DIR__ . '/../..' . '/app/Http/Controllers/AgendaController.php',
         'App\\Http\\Controllers\\AlunoController' => __DIR__ . '/../..' . '/app/Http/Controllers/AlunoController.php',
@@ -561,10 +569,8 @@ class ComposerStaticInitfe33f98a750b8c5a51b30c78bd3fab21
         'App\\Http\\Controllers\\MembrosController' => __DIR__ . '/../..' . '/app/Http/Controllers/MembrosController.php',
         'App\\Http\\Controllers\\MensagensController' => __DIR__ . '/../..' . '/app/Http/Controllers/MensagensController.php',
         'App\\Http\\Controllers\\MensagensDenunciadoController' => __DIR__ . '/../..' . '/app/Http/Controllers/MensagensDenunciadoController.php',
-        'App\\Http\\Controllers\\PostagemController' => __DIR__ . '/../..' . '/app/Http/Controllers/PostagemController.php',
         'App\\Http\\Controllers\\PostagensController' => __DIR__ . '/../..' . '/app/Http/Controllers/PostagensController.php',
         'App\\Http\\Controllers\\PostagensDenunciadoController' => __DIR__ . '/../..' . '/app/Http/Controllers/PostagensDenunciadoController.php',
-        'App\\Http\\Controllers\\RedeController' => __DIR__ . '/../..' . '/app/Http/Controllers/RedeController.php',
         'App\\Http\\Controllers\\RedesController' => __DIR__ . '/../..' . '/app/Http/Controllers/RedesController.php',
         'App\\Http\\Controllers\\TelefoneController' => __DIR__ . '/../..' . '/app/Http/Controllers/TelefoneController.php',
         'App\\Http\\Controllers\\UsuarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsuarioController.php',
@@ -5380,6 +5386,13 @@ class ComposerStaticInitfe33f98a750b8c5a51b30c78bd3fab21
         'Symfony\\Component\\HttpKernel\\RebootableInterface' => __DIR__ . '/..' . '/symfony/http-kernel/RebootableInterface.php',
         'Symfony\\Component\\HttpKernel\\TerminableInterface' => __DIR__ . '/..' . '/symfony/http-kernel/TerminableInterface.php',
         'Symfony\\Component\\HttpKernel\\UriSigner' => __DIR__ . '/..' . '/symfony/http-kernel/UriSigner.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\Transport\\GmailSmtpTransport' => __DIR__ . '/..' . '/symfony/google-mailer/Transport/GmailSmtpTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\Transport\\GmailTransportFactory' => __DIR__ . '/..' . '/symfony/google-mailer/Transport/GmailTransportFactory.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunApiTransport' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunApiTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunHeadersTrait' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunHeadersTrait.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunHttpTransport' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunHttpTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunSmtpTransport' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunSmtpTransport.php',
+        'Symfony\\Component\\Mailer\\Bridge\\Mailgun\\Transport\\MailgunTransportFactory' => __DIR__ . '/..' . '/symfony/mailgun-mailer/Transport/MailgunTransportFactory.php',
         'Symfony\\Component\\Mailer\\DataCollector\\MessageDataCollector' => __DIR__ . '/..' . '/symfony/mailer/DataCollector/MessageDataCollector.php',
         'Symfony\\Component\\Mailer\\DelayedEnvelope' => __DIR__ . '/..' . '/symfony/mailer/DelayedEnvelope.php',
         'Symfony\\Component\\Mailer\\Envelope' => __DIR__ . '/..' . '/symfony/mailer/Envelope.php',

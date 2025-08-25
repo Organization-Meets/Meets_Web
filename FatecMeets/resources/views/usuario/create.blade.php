@@ -68,25 +68,18 @@
         </form>
     </div>
 
-    <!-- PARTE 3: Preferências -->
     <div id="parte3" class="section hidden">
-        <form id="preferenciasForm">
+        <form id="tokenForm">
             @csrf
-            <h3>Preferências do Usuário</h3>
-            <p>Escolha seus interesses:</p>
-            <label><input type="checkbox" name="interesses[]" value="tecnologia"> Tecnologia</label><br>
-            <label><input type="checkbox" name="interesses[]" value="ciencia"> Ciência</label><br>
-            <label><input type="checkbox" name="interesses[]" value="esporte"> Esporte</label><br>
-            <label><input type="checkbox" name="interesses[]" value="arte"> Arte</label><br>
-
-            <p>Notificações:</p>
-            <label><input type="radio" name="notificacoes" value="email" required> E-mail</label>
-            <label><input type="radio" name="notificacoes" value="sms"> SMS</label>
-            <label><input type="radio" name="notificacoes" value="nenhum"> Nenhum</label>
-
+            <h3>Confirmação de E-mail</h3>
+            <p>Enviamos um código de verificação para seu e-mail. Digite abaixo:</p>
+            <input type="text" name="token" placeholder="Código de verificação" required maxlength="6">
             <hr>
-            <button type="submit">Finalizar Cadastro</button>
+            <button type="submit">Confirmar Conta</button>
         </form>
+
+        <!-- Botão para reenviar -->
+        <button type="button" id="reenviarBtn" style="margin-top:10px;">Reenviar Código</button>
     </div>
 
     <a href="/inicio/"><button type="button">Voltar</button></a>
@@ -182,26 +175,51 @@
         } catch(err){ console.error(err); alert("Erro ao salvar dados adicionais!"); }
     });
 
-    // PARTE 3 -> POST /preferencias
-    document.getElementById("preferenciasForm").addEventListener("submit", async function(e) {
+    // PARTE 3 -> Confirmação do token
+    document.getElementById("tokenForm").addEventListener("submit", async function(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const usuarioId = window.usuarioId;
 
         try {
-            await fetch(`/preferencias/${usuarioId}`, {
+            const response = await fetch(`/usuarios/${usuarioId}/confirmar-token`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content },
-                body: JSON.stringify({
-                    interesses: formData.getAll("interesses[]"),
-                    notificacoes: formData.get("notificacoes")
-                })
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ token: formData.get("token") })
             });
 
-            alert("Cadastro concluído com sucesso!");
+            if(!response.ok) throw new Error("Token inválido!");
+            alert("Conta confirmada com sucesso!");
             window.location.href="/usuarios/loginForm/";
 
-        } catch(err){ console.error(err); alert("Erro ao salvar preferências!"); }
+        } catch(err){ 
+            console.error(err); 
+            alert("Erro ao confirmar token!");
+        }
+    });
+    // Reenvio do token
+    document.getElementById("reenviarBtn").addEventListener("click", async function() {
+        const usuarioId = window.usuarioId;
+
+        try {
+            const response = await fetch(`/usuarios/${usuarioId}/reenviar-token`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                }
+            });
+
+            if (!response.ok) throw new Error("Erro ao reenviar código!");
+            alert("Novo código enviado para seu e-mail!");
+
+        } catch(err) {
+            console.error(err);
+            alert("Não foi possível reenviar o código.");
+        }
     });
 </script>
 </body>

@@ -1,5 +1,28 @@
 document.addEventListener("DOMContentLoaded", async function () {
     let usuarioLogado = null;
+    
+    async function buscarNomeUsuario() {
+        try {
+            const response = await fetch("/perfil/dados");
+            if (!response.ok) throw new Error("Erro ao buscar usuário");
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    async function buscarNicknameUsuario() {
+        try {
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    async function buscarNomeUsuario() {
+        try {
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     async function buscarUsuario() {
         try {
@@ -21,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.error(err);
         }
     }
-
     async function buscarImagem() {
         try {
             const response = await fetch("/perfil/imagem");

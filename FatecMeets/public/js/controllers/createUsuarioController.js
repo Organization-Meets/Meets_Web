@@ -2,138 +2,134 @@
     document.getElementById('imagem_usuario').addEventListener('change', function(e) {
         const [file] = e.target.files;
         const preview = document.getElementById('preview-img');
-        if (file) {
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-        } else {
-            preview.src = '#';
-            preview.style.display = 'none';
-        }
+        if(file) { preview.src = URL.createObjectURL(file); preview.style.display = 'block'; }
+        else { preview.src='#'; preview.style.display='none'; }
     });
 
+    // funções de troca de partes
     function mostrarParte2() {
         document.getElementById("parte1").classList.add("hidden");
         document.getElementById("parte2").classList.remove("hidden");
     }
-    function voltarParte1() {
+    function mostrarParte3() {
         document.getElementById("parte2").classList.add("hidden");
-        document.getElementById("parte1").classList.remove("hidden");
+        document.getElementById("parte3").classList.remove("hidden");
     }
-    // ==============================
+
     // PARTE 1 -> POST /usuarios
-    // ==============================
     document.getElementById("cadastroForm").addEventListener("submit", async function(e) {
         e.preventDefault();
-
-        let form = e.target;
-        let formData = new FormData(form);
+        const formData = new FormData(e.target);
 
         try {
-            let response = await fetch("/usuarios", {
-                method: "POST", 
-                headers: {
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                },
+            const response = await fetch("/usuarios", {
+                method: "POST",
+                headers: { "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content },
                 body: formData
             });
 
-            if (!response.ok) throw new Error("Erro ao cadastrar usuário!");
+            if(!response.ok) throw new Error("Erro ao cadastrar usuário!");
+            const result = await response.json();
 
-            let result = await response.json();
-            console.log("Retorno backend:", result);
+            window.usuarioId = result.usuario_id;
+            const tipo = formData.get("tipo_usuario");
 
-            // pega dados retornados
-            let usuario_id = result.usuario_id;
-            let nome = result.nome;
-            let nickname = result.nickname;
-            let tipo = formData.get("tipo_usuario");
-
-            // guarda usuario_id para uso na segunda parte
-            window.usuarioId = usuario_id;
-
-            // Preenche automaticamente campos da parte 2
             document.querySelector("#parte2 select[name='tipo_usuario']").value = tipo;
-            document.querySelector("#parte2 input[name='nickname']").value = nickname;
+            document.querySelector("#parte2 input[name='nickname']").value = result.nickname;
 
-            if (tipo === "aluno") {
+            if(tipo==="aluno") {
                 document.getElementById("camposAluno").classList.remove("hidden");
-                document.getElementById("camposProfessor").classList.add("hidden");
-                document.getElementById("nome_aluno").value = nome;
-            } else if (tipo === "professor") {
+                document.getElementById("nome_aluno").value = result.nome;
+            } else {
                 document.getElementById("camposProfessor").classList.remove("hidden");
-                document.getElementById("camposAluno").classList.add("hidden");
-                document.getElementById("nome_academicos").value = nome;
+                document.getElementById("nome_professor").value = result.nome;
             }
 
-            // troca de tela
             mostrarParte2();
 
-        } catch (err) {
-            console.error(err);
-            alert("Erro ao cadastrar!");
-        }
+        } catch(err) { console.error(err); alert("Erro ao cadastrar!"); }
     });
 
-
-    // ==============================
     // PARTE 2 -> POST adicionais
-    // ==============================
     document.getElementById("dadosAdicionaisForm").addEventListener("submit", async function(e) {
         e.preventDefault();
-
-        let form = e.target;
-        let formData = new FormData(form);
-        let tipo = formData.get("tipo_usuario");
-        let usuarioId = window.usuarioId;
+        const formData = new FormData(e.target);
+        const tipo = formData.get("tipo_usuario");
+        const usuarioId = window.usuarioId;
 
         try {
-            // Se for aluno
-            if (tipo === "aluno") {
-                await fetch(`/aluno/${usuarioId}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        ra_aluno: formData.get("ra_aluno"),
-                        nome_aluno: formData.get("nome_aluno")
-                    })
-                });
-            }
+            await fetch(`/gameficacoes/store/${usuarioId}`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ nickname: formData.get("nickname") })
+            });
 
-            // Se for professor
-            if (tipo === "professor") {
+            if(tipo==="aluno") {
+                await fetch(`/alunos/${usuarioId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content },
+                    body: JSON.stringify({ ra_aluno: formData.get("ra_aluno"), nome_aluno: formData.get("nome_aluno") })
+                });
+            } else {
                 await fetch(`/academicos/${usuarioId}`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        ra_academicos: formData.get("ra_academicos"),
-                        nome_academicos: formData.get("nome_academicos")
-                    })
+                    headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content },
+                    body: JSON.stringify({ ra_professor: formData.get("ra_professor"), nome_professor: formData.get("nome_professor") })
                 });
             }
 
-            // Gameficação (sempre manda nickname)
-            await fetch(`/gameficacao/${usuarioId}`, {
+            // segue para parte 3 em vez de finalizar
+            mostrarParte3();
+
+        } catch(err){ console.error(err); alert("Erro ao salvar dados adicionais!"); }
+    });
+
+    // PARTE 3 -> Confirmação do token
+    document.getElementById("tokenForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const usuarioId = window.usuarioId;
+
+        try {
+            const response = await fetch(`/usuarios/${usuarioId}/confirmar-token`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ token: formData.get("token") })
+            });
+
+            if(!response.ok) throw new Error("Token inválido!");
+            alert("Conta confirmada com sucesso!");
+            window.location.href="/usuarios/loginForm/";
+
+        } catch(err){ 
+            console.error(err); 
+            alert("Erro ao confirmar token!");
+        }
+    });
+    // Reenvio do token
+    document.getElementById("reenviarBtn").addEventListener("click", async function() {
+        const usuarioId = window.usuarioId;
+
+        try {
+            const response = await fetch(`/usuarios/${usuarioId}/reenviar-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    nickname: formData.get("nickname")
-                })
+                }
             });
 
-            alert("Cadastro finalizado com sucesso!");
-            window.location.href = "/usuarios/loginForm/";
+            if (!response.ok) throw new Error("Erro ao reenviar código!");
+            alert("Novo código enviado para seu e-mail!");
 
-        } catch (err) {
+        } catch(err) {
             console.error(err);
-            alert("Erro ao finalizar cadastro!");
+            alert("Não foi possível reenviar o código.");
         }
     });

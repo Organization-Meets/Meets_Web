@@ -1,5 +1,6 @@
 @extends('componentes.header')
 <link rel="stylesheet" href="/css/estilo-editar-perfil.css">
+<link rel="stylesheet" href="/css/estilo-perfil.css">
 
 <section class="edit-profile-container">
     <h1>Editar Perfil</h1>

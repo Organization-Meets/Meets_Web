@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             const responseGame = await fetch(`/gameficacao/usuario/${usuario_id}`);
             if (responseGame.ok) {
                 const game = await responseGame.json();
-                return game?.nickname ? `@${game.nickname}` : "@";
+                return game?.nickname ? `${game.nickname}` : "@";
             }
             return "@";
         } catch (err) {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             const nomeUsuario = await buscarNomeUsuario(usuarioLogado.usuario_id);
             const nickname = await buscarNickname(usuarioLogado.usuario_id);
 
-            document.querySelector(".bio-name").textContent = nomeUsuario;
+            document.querySelector(".profile-username").textContent = nomeUsuario; // <-- Adicione esta linha
             document.querySelector(".bio-nickname").textContent = nickname;
             document.querySelector(".bio-email").textContent = "✉️ " + (usuarioLogado.email ?? "");
             document.querySelector(".bio-telefone").textContent = "📞 " + (usuarioLogado.numero ?? "");

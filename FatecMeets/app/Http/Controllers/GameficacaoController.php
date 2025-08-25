@@ -97,7 +97,7 @@ class GameficacaoController extends Controller
     // Buscar por usuário logado ou ID
     public function getByUsuarioId($id_usuario)
     {
-        $game = \App\Models\Gameficacao::where('id_usuario', $id_usuario)->first();
-        return response()->json($game);
+        $gameficacoes = Gameficacao::where('id_usuario', $id_usuario)->first();
+        return response()->json($gameficacoes);
     }
 }

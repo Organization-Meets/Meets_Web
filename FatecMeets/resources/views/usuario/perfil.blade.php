@@ -7,7 +7,7 @@
 
         <div class="profile-info">
             <div class="profile-actions">
-                <h1 class="profile-username">Usuário</h1>
+                <h1 class="profile-username"></h1>
                 <div class="action-buttons">
                     <a id="edit-profile-link" class="btn-edit">
                         <button class="edit-btn">Editar perfil</button>
@@ -34,7 +34,6 @@
             </div>
 
             <div class="profile-bio">
-                <h2 class="bio-name"></h2>
                 <p class="bio-text bio-nickname"></p>
                 <p class="bio-text bio-email"></p>
                 <p class="bio-text bio-telefone"></p>

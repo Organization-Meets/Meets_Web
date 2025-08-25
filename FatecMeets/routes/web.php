@@ -12,3 +12,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::redirect('/inicio', '/')->name('inicio');
+
+// ou em routes/includes/GameficacaoRoutes.php
+Route::get('/gameficacao/usuario/{id_usuario}', [App\Http\Controllers\GameficacaoController::class, 'getByUsuarioId']);

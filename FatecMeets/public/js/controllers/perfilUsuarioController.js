@@ -1,50 +1,50 @@
 document.addEventListener("DOMContentLoaded", async function () {
     let usuarioLogado = null;
     
-    async function buscarNomeUsuario() {
+    async function buscarNomeUsuario(usuario_id) {
         try {
-            const responseAluno = await fetch("/alunos/usuario/${usuarioLogado.usuario_id}");
-            const responseAcademico = await fetch("/alunos/usuario/${usuarioLogado.usuario_id}");
-            if (responseAluno.ok){ 
-                alunoLogado = await response.json();
-                document.querySelector(".profile-username").textContent = alunoLogado.nome ?? "Usuário";
-            } else if (!response.ok) throw new Error("Erro ao buscar usuário Aluno");
-            if (responseAcademico.ok){ 
-                    academicoLogado = await response.json();
-                    document.querySelector(".profile-username").textContent = academicoLogado.nome ?? "Usuário";
-                } else if (!response.ok) throw new Error("Erro ao buscar usuário Aluno");
-            } catch (err) {
-                console.error(err);
+            const responseAluno = await fetch(`/alunos/usuario/${usuario_id}`);
+            if (responseAluno.ok) {
+                const aluno = await responseAluno.json();
+                return aluno?.nome_aluno ?? "Usuário";
             }
-    }
-    async function buscarNicknameUsuario() {
-        try {
-
+            return "Usuário";
         } catch (err) {
             console.error(err);
+            return "Usuário";
         }
     }
-    async function buscarNomeUsuario() {
-        try {
 
+    async function buscarNickname(usuario_id) {
+        try {
+            const responseGame = await fetch(`/gameficacao/usuario/${usuario_id}`);
+            if (responseGame.ok) {
+                const game = await responseGame.json();
+                return game?.nickname ? `@${game.nickname}` : "@";
+            }
+            return "@";
         } catch (err) {
             console.error(err);
+            return "@";
         }
     }
 
     async function buscarUsuario() {
         try {
             const response = await fetch("/perfil/dados");
-            if (!response.ok) throw new Error("Erro ao buscar usuário");
+            if (!response.ok) return;
 
             usuarioLogado = await response.json();
 
-            document.querySelector(".bio-name").textContent = usuarioLogado.nome ?? "";
-            document.querySelector(".bio-nickname").textContent = "@ " + (usuarioLogado.nickname ?? "");
+            // Busca nome e nickname corretos
+            const nomeUsuario = await buscarNomeUsuario(usuarioLogado.usuario_id);
+            const nickname = await buscarNickname(usuarioLogado.usuario_id);
+
+            document.querySelector(".bio-name").textContent = nomeUsuario;
+            document.querySelector(".bio-nickname").textContent = nickname;
             document.querySelector(".bio-email").textContent = "✉️ " + (usuarioLogado.email ?? "");
             document.querySelector(".bio-telefone").textContent = "📞 " + (usuarioLogado.numero ?? "");
 
-            // Atualiza link do botão "Editar perfil"
             document.getElementById("edit-profile-link").href = `/usuarios/${usuarioLogado.usuario_id}/edit/`;
 
         } catch (err) {

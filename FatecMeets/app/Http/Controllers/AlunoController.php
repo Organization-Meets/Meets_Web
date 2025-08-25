@@ -98,8 +98,8 @@ class AlunoController extends Controller
     public function getByUsuarioId($id_usuario = null)
     {
         $id_usuario = $id_usuario ?? Auth::id();
-        $alunos = Aluno::where('id_usuario', $id_usuario)->get();
+        $aluno = Aluno::where('id_usuario', $id_usuario)->first();
 
-        return response()->json($alunos);
+        return response()->json($aluno);
     }
 }

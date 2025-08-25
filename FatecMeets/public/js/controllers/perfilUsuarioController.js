@@ -3,11 +3,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     async function buscarNomeUsuario() {
         try {
-            const response = await fetch("/perfil/dados");
-            if (!response.ok) throw new Error("Erro ao buscar usuário");
-        } catch (err) {
-            console.error(err);
-        }
+            const responseAluno = await fetch("/alunos/usuario/${usuarioLogado.usuario_id}");
+            const responseAcademico = await fetch("/alunos/usuario/${usuarioLogado.usuario_id}");
+            if (responseAluno.ok){ 
+                alunoLogado = await response.json();
+                document.querySelector(".profile-username").textContent = alunoLogado.nome ?? "Usuário";
+            } else if (!response.ok) throw new Error("Erro ao buscar usuário Aluno");
+            if (responseAcademico.ok){ 
+                    academicoLogado = await response.json();
+                    document.querySelector(".profile-username").textContent = academicoLogado.nome ?? "Usuário";
+                } else if (!response.ok) throw new Error("Erro ao buscar usuário Aluno");
+            } catch (err) {
+                console.error(err);
+            }
     }
     async function buscarNicknameUsuario() {
         try {
@@ -31,7 +39,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             usuarioLogado = await response.json();
 
-            document.querySelector(".profile-username").textContent = usuarioLogado.nome ?? "Usuário";
             document.querySelector(".bio-name").textContent = usuarioLogado.nome ?? "";
             document.querySelector(".bio-nickname").textContent = "@ " + (usuarioLogado.nickname ?? "");
             document.querySelector(".bio-email").textContent = "✉️ " + (usuarioLogado.email ?? "");

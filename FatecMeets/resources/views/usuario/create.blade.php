@@ -20,9 +20,9 @@
     <div id="parte1" class="section">
         <form id="cadastroForm" enctype="multipart/form-data">
             @csrf
-            <input type="email" name="email" placeholder="E-mail" required>
-            <input type="password" name="password" placeholder="Senha" required>
-            <input type="password" name="password_confirmation" placeholder="Confirmar Senha" required>
+            <input type="email" id="email" name="email" placeholder="E-mail" required>
+            <input type="password" id="password" name="password" placeholder="Senha" required>
+            <input type="password" id="confirmar_password" name="password_confirmation" placeholder="Confirmar Senha" required>
             <input type="file" name="imagem_usuario[]" accept="image/*" id="imagem_usuario">
 
             <div id="preview-container" style="text-align:center; margin-bottom:10px;">
@@ -84,7 +84,9 @@
 
     <a href="/inicio/"><button type="button">Voltar</button></a>
 </div>
-<script src="/js/controllers/createUsuarioController.js"></script>
+<script src="/js/emailValido.js"></script>
+<script src="/js/senhaSegura.js"></script>
 <script src="/js/confirmarSenha.js"></script>
+<script src="/js/controllers/createUsuarioController.js"></script>
 </body>
 </html>

@@ -22,13 +22,15 @@ CREATE TABLE usuario (
 -- TABELA ADMINISTRADORES
 -- =====================
 CREATE TABLE administradores (
-    id_administrador BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_administrador BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BIGINT UNSIGNED NOT NULL,
     nome VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    imagem_admin VARCHAR(255) NULL,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ra VARCHAR(20) NOT NULL UNIQUE,
+    created_at TIMESTAMP NULL DEFAULT NULL,
+    updated_at TIMESTAMP NULL DEFAULT NULL,
+    CONSTRAINT fk_alunos_usuarios FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
 );
 
 -- =====================
@@ -144,6 +146,10 @@ CREATE TABLE endereco (
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL
 );
+
+-- =====================
+-- TABELA COMPLEMENTO
+-- =====================
 CREATE TABLE complemento (
     id_complemento BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_endereco BIGINT UNSIGNED NOT NULL,
@@ -155,6 +161,9 @@ CREATE TABLE complemento (
         ON DELETE CASCADE
 );
 
+-- =====================
+-- TABELA LUGARES
+-- =====================
 CREATE TABLE lugares (
     id_lugar BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_endereco BIGINT UNSIGNED NOT NULL,
@@ -317,7 +326,9 @@ CREATE TABLE denuncia (
         ON DELETE CASCADE
 );
 
-
+-- =====================
+-- TABELA ARQUIVO_MORTO
+-- =====================
 CREATE TABLE arquivo_morto (
     id_arquivo_morto BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_usuario BIGINT UNSIGNED NOT NULL,

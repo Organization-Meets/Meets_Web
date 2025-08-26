@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             // Telefone
             const telefoneElem = document.querySelector(".bio-telefone");
             if (!usuarioLogado.numero) {
-                telefoneElem.innerHTML = `<a href="/usuarios/${usuarioLogado.usuario_id}/edit/">Adicionar telefone</a>`;
+                telefoneElem.innerHTML = `<a href="/usuarios/${usuarioLogado.usuario_id}/adicionais/">Adicionar telefone</a>`;
             } else {
                 telefoneElem.textContent = "📞 " + usuarioLogado.numero;
             }

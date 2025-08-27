@@ -2,50 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Telefone;
+use Illuminate\Http\Request;
 
 class TelefoneController extends Controller
 {
-    public function create(){
-        return view('telefone.create');
+    public function __construct()
+    {
+        // Apenas usuários autenticados podem criar, atualizar ou deletar
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
-    public function store(Request $request){
-        $telefone = new Telefone();
-        $telefone->numero_telefone = $request->input('numero_telefone');
-        $telefone->ddd = $request->input('ddd');
-        $telefone->tipo_telefone = $request->input('tipo_telefone', 'celular');
-        $telefone->save();
+    public function index()
+    {
+        return response()->json(Telefone::all());
     }
 
-    public function edit($id_telefone){
-        $telefone = Telefone::find($id_telefone);
-        return view('telefone.edit', compact('telefone'));
+    public function show($id)
+    {
+        return response()->json(Telefone::findOrFail($id));
     }
 
-    public function update(Request $request, $id_telefone){
-        $telefone = Telefone::find($id_telefone);
-        $telefone->numero_telefone = $request->input('numero_telefone');
-        $telefone->ddd = $request->input('ddd');
-        $telefone->tipo_telefone = $request->input('tipo_telefone', $telefone->tipo_telefone);
-        $telefone->save();
-        return true;
+    public function store(Request $request)
+    {
+        $obj = Telefone::create($request->all());
+        return response()->json($obj, 201);
     }
 
-    public function destroy($id_telefone){
-        $telefone = Telefone::find($id_telefone);
-        $telefone->delete();
-        return true;
+    public function update(Request $request, $id)
+    {
+        $obj = Telefone::findOrFail($id);
+        $obj->update($request->all());
+        return response()->json($obj);
     }
 
-    public function show($id_telefone){
-        $telefone = Telefone::find($id_telefone);
-        return view('telefone.show', compact('telefone'));
-    }
-
-    public function index(){
-        $telefones = Telefone::all();
-        return view('telefone.index', compact('telefones'));
+    public function destroy($id)
+    {
+        Telefone::destroy($id);
+        return response()->json(null, 204);
     }
 }

@@ -2,88 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Conexao;
+use Illuminate\Http\Request;
 
 class ConexaoController extends Controller
 {
-    public function create()
+    public function __construct()
     {
-        return view('conexao.create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'id_gameficacao' => 'required|integer|exists:gameficacoes,id_gameficacao',
-            'id_gameficacao_conexao' => 'required|integer|exists:gameficacoes,id_gameficacao',
-            'status_conexao' => 'nullable|string|in:pendente,aceita,rejeitada'
-        ]);
-
-        $conexao = new Conexao();
-        $conexao->id_gameficacao = $request->input('id_gameficacao');
-        $conexao->id_gameficacao_conexao = $request->input('id_gameficacao_conexao');
-        $conexao->status_conexao = $request->input('status_conexao', 'pendente');
-        $conexao->save();
-
-        return response()->json([
-            'success' => true,
-            'id_conexao' => $conexao->id_conexao
-        ]);
-    }
-
-    public function edit($id_conexao)
-    {
-        $conexao = Conexao::findOrFail($id_conexao);
-        return view('conexao.edit', compact('conexao'));
-    }
-
-    public function update(Request $request, $id_conexao)
-    {
-        $request->validate([
-            'id_gameficacao' => 'required|integer|exists:gameficacoes,id_gameficacao',
-            'id_gameficacao_conexao' => 'required|integer|exists:gameficacoes,id_gameficacao',
-            'status_conexao' => 'nullable|string|in:pendente,aceita,rejeitada'
-        ]);
-
-        $conexao = Conexao::findOrFail($id_conexao);
-        $conexao->id_gameficacao = $request->input('id_gameficacao');
-        $conexao->id_gameficacao_conexao = $request->input('id_gameficacao_conexao');
-        $conexao->status_conexao = $request->input('status_conexao', $conexao->status_conexao);
-        $conexao->save();
-
-        return response()->json(['success' => true]);
-    }
-
-    public function destroy($id_conexao)
-    {
-        $conexao = Conexao::findOrFail($id_conexao);
-        $conexao->delete();
-
-        return response()->json(['success' => true]);
-    }
-
-    public function show($id_conexao)
-    {
-        $conexao = Conexao::findOrFail($id_conexao);
-        return view('conexao.show', compact('conexao'));
+        // Apenas usuários autenticados podem criar, atualizar ou deletar
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     public function index()
     {
-        $conexoes = Conexao::all();
-        return view('conexao.index', compact('conexoes'));
+        return response()->json(Conexao::all());
     }
 
-    public function getByGameficacaoId($id_gameficacao)
+    public function show($id)
     {
-        $conexoes = Conexao::where('id_gameficacao', $id_gameficacao)->get();
-        return response()->json($conexoes);
+        return response()->json(Conexao::findOrFail($id));
     }
 
-    public function getByGameficacaoConexaoId($id_gameficacao_conexao)
+    public function store(Request $request)
     {
-        $conexoes = Conexao::where('id_gameficacao_conexao', $id_gameficacao_conexao)->get();
-        return response()->json($conexoes);
+        $obj = Conexao::create($request->all());
+        return response()->json($obj, 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $obj = Conexao::findOrFail($id);
+        $obj->update($request->all());
+        return response()->json($obj);
+    }
+
+    public function destroy($id)
+    {
+        Conexao::destroy($id);
+        return response()->json(null, 204);
     }
 }

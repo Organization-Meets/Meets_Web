@@ -2,72 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Endereco;
+use Illuminate\Http\Request;
 
 class EnderecoController extends Controller
 {
-    public function create()
+    public function __construct()
     {
-        return view('endereco.create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'numero' => 'required|string|max:10',
-            'cep' => 'required|string|regex:/^\d{5}-?\d{3}$/'
-        ]);
-
-        $endereco = new Endereco();
-        $endereco->numero = $request->input('numero');
-        $endereco->cep = $request->input('cep');
-        $endereco->save();
-
-        return response()->json([
-            'success' => true,
-            'id_endereco' => $endereco->id_endereco
-        ]);
-    }
-
-    public function edit($id_endereco)
-    {
-        $endereco = Endereco::findOrFail($id_endereco);
-        return view('endereco.edit', compact('endereco'));
-    }
-
-    public function update(Request $request, $id_endereco)
-    {
-        $request->validate([
-            'numero' => 'required|string|max:10',
-            'cep' => 'required|string|regex:/^\d{5}-?\d{3}$/'
-        ]);
-
-        $endereco = Endereco::findOrFail($id_endereco);
-        $endereco->numero = $request->input('numero');
-        $endereco->cep = $request->input('cep');
-        $endereco->save();
-
-        return response()->json(['success' => true]);
-    }
-
-    public function destroy($id_endereco)
-    {
-        $endereco = Endereco::findOrFail($id_endereco);
-        $endereco->delete();
-
-        return response()->json(['success' => true]);
-    }
-
-    public function show($id_endereco)
-    {
-        $endereco = Endereco::findOrFail($id_endereco);
-        return view('endereco.show', compact('endereco'));
+        // Apenas usuários autenticados podem criar, atualizar ou deletar
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     public function index()
     {
-        $enderecos = Endereco::all();
-        return view('endereco.index', compact('enderecos'));
+        return response()->json(Endereco::all());
+    }
+
+    public function show($id)
+    {
+        return response()->json(Endereco::findOrFail($id));
+    }
+
+    public function store(Request $request)
+    {
+        $obj = Endereco::create($request->all());
+        return response()->json($obj, 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $obj = Endereco::findOrFail($id);
+        $obj->update($request->all());
+        return response()->json($obj);
+    }
+
+    public function destroy($id)
+    {
+        Endereco::destroy($id);
+        return response()->json(null, 204);
     }
 }

@@ -20,14 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_administrador');
             $table->timestamps();
 
-            $table->foreign('id_endereco')
-                ->references('id_endereco')
-                ->on('enderecos')
-                ->onDelete('cascade'); 
-            $table->foreign('id_administrador')
-                ->references('id')
-                ->on('administradores')
-                ->onDelete('cascade');
+            $table->foreign('id_endereco')->references('id_endereco')->on('enderecos')->onDelete('cascade'); 
+            $table->foreign('id_administrador')->references('id')->on('administradores')->onDelete('cascade');
         });
     }
 

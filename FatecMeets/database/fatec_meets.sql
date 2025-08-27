@@ -191,6 +191,12 @@ CREATE TABLE instituicoes (
     CONSTRAINT fk_instituicoes_administradores FOREIGN KEY (id_administrador)
         REFERENCES administradores(id_administrador)
         ON DELETE CASCADE
+    CONSTRAINT fk_instituicoes_enderecos FOREIGN KEY (id_endereco)
+        REFERENCES enderecos(id_endereco)
+        ON DELETE CASCADE
+    CONSTRAINT fk_instituicoes_telefones FOREIGN KEY (id_telefone)
+        REFERENCES telefones(id_telefone)
+        ON DELETE CASCADE
 );
  
  

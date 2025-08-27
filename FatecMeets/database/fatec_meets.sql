@@ -339,6 +339,25 @@ CREATE TABLE denuncias (
     CONSTRAINT fk_denuncias_arquivos_mortos FOREIGN KEY (arquivo_morto_id)
         REFERENCES arquivos_mortos(id)
         ON DELETE CASCADE
-); , me mande o codigo completo 
+);
+
+-- =====================
+-- TABELA PARTICIPACOES
+-- =====================
+CREATE TABLE participacoes (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    evento_id BIGINT UNSIGNED NOT NULL,
+    usuario_id BIGINT UNSIGNED NOT NULL,
+    atividade_id BIGINT UNSIGNED NULL,
+    status_intencao ENUM('salvo', 'confirmado', 'furou', 'cancelado', 'aberto') DEFAULT 'aberto',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_participacoes_evento FOREIGN KEY (evento_id) REFERENCES eventos(id) ON DELETE CASCADE,
+    CONSTRAINT fk_participacoes_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT fk_participacoes_atividade FOREIGN KEY (atividade_id) REFERENCES atividades(id) ON DELETE SET NULL,
+    CONSTRAINT uq_participacao_usuario_evento UNIQUE (usuario_id, evento_id)
+);
+
 
 

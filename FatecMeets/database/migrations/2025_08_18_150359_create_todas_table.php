@@ -318,6 +318,23 @@ return new class extends Migration {
             $table->foreign('administrador_id')->references('id')->on('administradores')->onDelete('set null');
             $table->foreign('arquivo_morto_id')->references('id')->on('arquivos_mortos')->onDelete('cascade');
         });
+
+        // =====================
+        // TABELA PARTICIPACOES
+        // =====================
+        Schema::create('participacoes', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('evento_id');
+            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('atividade_id');
+            $table->enum('status_intencao', ['salvo', 'confirmado', 'furou', 'cancelado', 'aberto'])->default('aberto');
+            $table->timestamps();
+            $table->unique(['usuario_id', 'evento_id']);
+
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('evento_id')->references('id')->on('eventos')->onDelete('cascade');
+            $table->foreign('atividade_id')->references('id')->on('atividades')->onDelete('cascade');
+        });
     }
 
     public function down(): void
@@ -344,5 +361,6 @@ return new class extends Migration {
         Schema::dropIfExists('conexoes');
         Schema::dropIfExists('administradores');
         Schema::dropIfExists('usuarios');
+        Schema::dropIfExists('participacoes');
     }
 };

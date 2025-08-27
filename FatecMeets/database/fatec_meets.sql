@@ -1,11 +1,11 @@
 -- ==========================================
 -- SCRIPT BANCO DE DADOS FATEC MEETS
 -- ==========================================
-
+ 
 -- =====================
--- TABELA USUARIO
+-- TABELA USUARIOS
 -- =====================
-CREATE TABLE usuario (
+CREATE TABLE usuarios (
     id_usuario BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE usuario (
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL
 );
-
+ 
 -- =====================
 -- TABELA ADMINISTRADORES
 -- =====================
@@ -32,11 +32,11 @@ CREATE TABLE administradores (
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE
 );
-
+ 
 -- =====================
--- TABELA CONEXAO
+-- TABELA CONEXOES
 -- =====================
-CREATE TABLE conexao (
+CREATE TABLE conexoes (
     id_conexao BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_usuario_origem BIGINT UNSIGNED NOT NULL,
     id_usuario_destino BIGINT UNSIGNED NOT NULL,
@@ -51,11 +51,11 @@ CREATE TABLE conexao (
         ON DELETE CASCADE,
     CONSTRAINT uq_conexao UNIQUE (id_usuario_origem, id_usuario_destino)
 );
-
+ 
 -- =====================
--- TABELA GAMEFICACAO
+-- TABELA GAMEFICACOES
 -- =====================
-CREATE TABLE gameficacao (
+CREATE TABLE gameficacoes (
     id_gameficacao BIGINT AUTO_INCREMENT PRIMARY KEY,
     score_total INT DEFAULT 0,
     nickname VARCHAR(100) UNIQUE NULL,
@@ -64,9 +64,9 @@ CREATE TABLE gameficacao (
     updated_at TIMESTAMP NULL,
     CONSTRAINT fk_gameficacao_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
-
+ 
 -- ==========================
--- Tabela: alunos
+-- Tabela: ALUNOS
 -- ==========================
 CREATE TABLE alunos (
     id_aluno BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -79,9 +79,9 @@ CREATE TABLE alunos (
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE
 );
-
+ 
 -- ==========================
--- Tabela: academicos
+-- Tabela: ACADEMICOS
 -- ==========================
 CREATE TABLE academicos (
     id_academico BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -94,21 +94,18 @@ CREATE TABLE academicos (
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE
 );
-
+ 
 -- =====================
--- TABELA ATIVIDADE
+-- TABELA ATIVIDADES
 -- =====================
-CREATE TABLE atividade (
+CREATE TABLE atividades (
     id_atividade BIGINT AUTO_INCREMENT PRIMARY KEY,
     likes INT DEFAULT 0,
-    score INT DEFAULT 0,
     tipo_atividade ENUM('postagem','comentario','evento','participacao') NOT NULL,
-    id_gamificacao BIGINT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
-    CONSTRAINT fk_atividade_gameficacao FOREIGN KEY (id_gamificacao) REFERENCES gameficacao(id_gameficacao)
 );
-
+ 
 -- =====================
 -- TABELA COMENTARIOS
 -- =====================
@@ -123,11 +120,11 @@ CREATE TABLE comentarios (
     CONSTRAINT fk_comentario_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     CONSTRAINT fk_comentario_atividade FOREIGN KEY (id_atividade) REFERENCES atividade(id_atividade)
 );
-
+ 
 -- =====================
--- TABELA TELEFONE
+-- TABELA TELEFONES
 -- =====================
-CREATE TABLE telefone (
+CREATE TABLE telefones (
     id_telefone BIGINT AUTO_INCREMENT PRIMARY KEY,
     numero_telefone VARCHAR(15) NOT NULL,
     ddd VARCHAR(3) NOT NULL,
@@ -135,39 +132,39 @@ CREATE TABLE telefone (
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL
 );
-
+ 
 -- =====================
--- TABELA ENDERECO
+-- TABELA ENDERECOS
 -- =====================
-CREATE TABLE endereco (
+CREATE TABLE enderecos (
     id_endereco BIGINT AUTO_INCREMENT PRIMARY KEY,
     numero VARCHAR(10) NULL,
     cep VARCHAR(10) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL
 );
-
+ 
 -- =====================
--- TABELA COMPLEMENTO
+-- TABELA COMPLEMENTOS
 -- =====================
-CREATE TABLE complemento (
+CREATE TABLE complementos (
     id_complemento BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_endereco BIGINT UNSIGNED NOT NULL,
     nome_complemento VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     CONSTRAINT fk_complemento_endereco FOREIGN KEY (id_endereco)
-        REFERENCES endereco(id_endereco)
+        REFERENCES enderecos(id_endereco)
         ON DELETE CASCADE
 );
-
+ 
 -- =====================
 -- TABELA LUGARES
 -- =====================
 CREATE TABLE lugares (
     id_lugar BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_endereco BIGINT UNSIGNED NOT NULL,
-    nome_lugares VARCHAR(255) NOT NULL,
+    nome_lugar VARCHAR(255) NOT NULL,
     id_administrador BIGINT UNSIGNED NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
@@ -178,23 +175,25 @@ CREATE TABLE lugares (
         REFERENCES administradores(id_administrador)
         ON DELETE SET NULL
 );
-
+ 
 -- =====================
--- TABELA INSTITUICAO
+-- TABELA INSTITUICOES
 -- =====================
 CREATE TABLE instituicoes (
     id_instituicao BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_administrador BIGINT UNSIGNED NOT NULL,
     nome_instituicao VARCHAR(255) NOT NULL,
     codigo_institucional VARCHAR(50) UNIQUE NULL,
+    id_telefone BIGINT UNSIGNED NOT NULL,
+    id_endereco BIGINT UNSIGNED NOT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     CONSTRAINT fk_instituicoes_administradores FOREIGN KEY (id_administrador)
         REFERENCES administradores(id_administrador)
         ON DELETE CASCADE
 );
-
-
+ 
+ 
 -- =====================
 -- TABELA ADICIONAIS
 -- =====================
@@ -211,7 +210,7 @@ CREATE TABLE adicionais (
     CONSTRAINT fk_adicional_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id_endereco),
     CONSTRAINT fk_adicional_instituicao FOREIGN KEY (id_instituicao) REFERENCES instituicao(id_instituicao)
 );
-
+ 
 -- =====================
 -- TABELA REDES
 -- =====================
@@ -224,7 +223,7 @@ CREATE TABLE redes (
     updated_at TIMESTAMP NULL,
     CONSTRAINT fk_redes_adicional FOREIGN KEY (id_adicionais) REFERENCES adicionais(id_adicionais)
 );
-
+ 
 -- =====================
 -- TABELA POSTAGENS
 -- =====================
@@ -241,7 +240,7 @@ CREATE TABLE postagens (
     CONSTRAINT fk_postagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     CONSTRAINT fk_postagem_atividade FOREIGN KEY (id_atividade) REFERENCES atividade(id_atividade)
 );
-
+ 
 -- =====================
 -- TABELA EVENTOS
 -- =====================
@@ -260,11 +259,11 @@ CREATE TABLE eventos (
     CONSTRAINT fk_evento_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     CONSTRAINT fk_evento_atividade FOREIGN KEY (id_atividade) REFERENCES atividade(id_atividade)
 );
-
+ 
 -- =====================
--- TABELA CHAT
+-- TABELA CHATS
 -- =====================
-CREATE TABLE chat (
+CREATE TABLE chats (
     id_chat BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome_chat VARCHAR(255) NOT NULL,
     tipo_chat ENUM('privado','grupo') DEFAULT 'privado',
@@ -273,7 +272,7 @@ CREATE TABLE chat (
     updated_at TIMESTAMP NULL,
     CONSTRAINT fk_chat_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
-
+ 
 -- =====================
 -- TABELA MEMBROS
 -- =====================
@@ -287,7 +286,7 @@ CREATE TABLE membros (
     CONSTRAINT fk_membros_chat FOREIGN KEY (id_chat) REFERENCES chat(id_chat),
     CONSTRAINT fk_membros_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
-
+ 
 -- =====================
 -- TABELA MENSAGENS
 -- =====================
@@ -301,11 +300,11 @@ CREATE TABLE mensagens (
     CONSTRAINT fk_mensagem_chat FOREIGN KEY (id_chat) REFERENCES chat(id_chat),
     CONSTRAINT fk_mensagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
-
+ 
 -- =====================
 -- TABELA DENUNCIAS
 -- =====================
-CREATE TABLE denuncia (
+CREATE TABLE denuncias (
     id_denuncia BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_usuario BIGINT UNSIGNED NOT NULL,
     id_arquivo_morto BIGINT UNSIGNED NOT NULL,
@@ -325,11 +324,11 @@ CREATE TABLE denuncia (
         REFERENCES arquivo_morto(id_arquivo_morto)
         ON DELETE CASCADE
 );
-
+ 
 -- =====================
--- TABELA ARQUIVO_MORTO
+-- TABELA ARQUIVOS_MORTOS
 -- =====================
-CREATE TABLE arquivo_morto (
+CREATE TABLE arquivos_mortos (
     id_arquivo_morto BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_usuario BIGINT UNSIGNED NOT NULL,
     tabela_origem VARCHAR(100) NOT NULL,

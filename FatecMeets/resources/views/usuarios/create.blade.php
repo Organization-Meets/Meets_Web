@@ -114,6 +114,6 @@
 <script src="/js/emailValido.js"></script>
 <script src="/js/senhaSegura.js"></script>
 <script src="/js/confirmarSenha.js"></script>
-<script src="/js/controllers/createUsuarioController.js"></script>
+<script src="/js/controllers/create/UsuarioController.js"></script>
 </body>
 </html>

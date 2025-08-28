@@ -7,3 +7,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::redirect('/inicio', '/')->name('inicio');
+Route::get('/login', function () {
+    return view('componentes.login');
+})->name('login');

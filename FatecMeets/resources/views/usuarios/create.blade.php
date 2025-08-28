@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -6,10 +6,30 @@
     <title>Cadastro</title>
     <link rel="stylesheet" href="/css/estilo-cadastro.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
         .hidden { display: none; }
-        .section { padding: 20px; border: 1px solid #ccc; margin: 10px; }
-        #preview-img { max-width:120px; max-height:120px; border-radius:50%; display:none; margin:0 auto; }
+        .section { 
+            padding: 20px; 
+            border: 1px solid #ccc; 
+            margin: 10px; 
+            border-radius: 8px;
+        }
+        #preview-img { 
+            max-width:120px; 
+            max-height:120px; 
+            border-radius:50%; 
+            display:none; 
+            margin:0 auto; 
+        }
+        .center { text-align: center; }
+        .logo { 
+            width:100px; 
+            display:block; 
+            margin:0 auto 15px auto; 
+        }
+        hr { margin: 15px 0; }
+        button { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -25,16 +45,17 @@
             <input type="password" id="confirmar_password" name="password_confirmation" placeholder="Confirmar Senha" required>
             <input type="file" name="imagem_usuario[]" accept="image/*" id="imagem_usuario">
 
-            <div id="preview-container" style="text-align:center; margin-bottom:10px;">
+            <div id="preview-container" class="center">
                 <img id="preview-img" alt="Prévia da imagem" />
             </div>
 
-            <p style="text-align:center;">Selecione o tipo de usuário:</p>
+            <p class="center">Selecione o tipo de usuário:</p>
             <select name="tipo_usuario" required>
                 <option value="">Selecione</option>
                 <option value="aluno">Aluno</option>
                 <option value="professor">Acadêmico</option>
             </select>
+
             <hr>
             <button type="submit">Cadastrar</button>
         </form>
@@ -44,7 +65,7 @@
     <div id="parte2" class="section hidden">
         <form id="dadosAdicionaisForm">
             @csrf
-            <img src="/imagens/logo.png" alt="Logo" style="width:100px; display:block; margin:0 auto 15px auto;">
+            <img src="/imagens/logo.png" alt="Logo" class="logo">
             
             <select name="tipo_usuario" required>
                 <option value="">Selecione</option>
@@ -63,27 +84,33 @@
             </div>
 
             <input type="text" name="nickname" placeholder="Nome de usuário" readonly>
+
             <hr>
             <button type="submit">Avançar</button>
         </form>
     </div>
 
+    <!-- PARTE 3: Token -->
     <div id="parte3" class="section hidden">
         <form id="tokenForm">
             @csrf
             <h3>Confirmação de E-mail</h3>
             <p>Enviamos um código de verificação para seu e-mail. Digite abaixo:</p>
             <input type="text" name="token" placeholder="Código de verificação" required maxlength="6">
+
             <hr>
             <button type="submit">Confirmar Conta</button>
         </form>
 
         <!-- Botão para reenviar -->
-        <button type="button" id="reenviarBtn" style="margin-top:10px;">Enviar Código</button>
+        <button type="button" id="reenviarBtn">Enviar Código</button>
     </div>
 
-    <a href="/inicio/"><button type="button">Voltar</button></a>
+    <a href="/inicio/">
+        <button type="button">Voltar</button>
+    </a>
 </div>
+
 <script src="/js/emailValido.js"></script>
 <script src="/js/senhaSegura.js"></script>
 <script src="/js/confirmarSenha.js"></script>

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('email_verification_token', 10)->nullable();
             $table->json('imagem')->nullable();
-            $table->enum('status', ['ativo','inativo','suspenso'])->default('ativo');
+            $table->enum('status', ['ativo','inativo','suspenso'])->default('inativo');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

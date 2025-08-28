@@ -28,60 +28,63 @@ class UsuarioController extends Controller
 
     public function store(Request $request)
     {
-        // ✅ Validação dos dados
-        $request->validate([
+        // Validação
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required|min:6',
+            'password' => 'required|string|min:6',
         ]);
 
-        $token = Str::random(6);
-
+        // Criação do usuário
         $usuario = Usuario::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'email_verification_token' => $token,
-            'status' => 'inativo',
+            'nome' => $validated['nome'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'token_verificacao' => Str::random(60), // gera token único
         ]);
-
-        Mail::raw("Seu código de verificação é: {$token}", function ($message) use ($usuario) {
-            $message->to($usuario->email)
-                    ->subject('Confirmação de E-mail - Fatec Meets');
-        });
 
         return response()->json([
-            'success' => true,
-            'message' => 'Usuário criado! Verifique seu e-mail para confirmar a conta.'
-        ]);
+            'message' => 'Usuário criado. Token gerado, mas o e-mail não foi enviado automaticamente.',
+            'usuario' => $usuario,
+        ], 201);
     }
-    public function verifyEmail(Request $request)
+
+    /**
+     * Envia token de verificação por e-mail (chamado separadamente)
+     */
+    public function enviarToken($id)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'token' => 'required|string',
-        ]);
+        $usuario = Usuario::findOrFail($id);
 
-        $usuario = Usuario::where('email', $request->email)
-            ->where('email_verification_token', $request->token)
-            ->first();
-
-        if (!$usuario) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Token inválido ou expirado.'
-            ], 400);
+        if (!$usuario->token_verificacao) {
+            $usuario->token_verificacao = Str::random(60);
+            $usuario->save();
         }
 
-        // Marca o e-mail como verificado
-        $usuario->update([
-            'email_verified_at' => now(),
-            'email_verification_token' => null,
-            'status' => 'ativo',
-        ]);
+        Mail::send('emails.verificacao', ['token' => $usuario->token_verificacao], function ($message) use ($usuario) {
+            $message->to($usuario->email);
+            $message->subject('Confirme sua conta');
+        });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'E-mail confirmado com sucesso!'
-        ]);
+        return response()->json(['message' => 'Token enviado por e-mail.']);
+    }
+
+    /**
+     * Verifica token recebido
+     */
+    public function verifyToken($token)
+    {
+        $usuario = Usuario::where('token_verificacao', $token)->first();
+
+        if (!$usuario) {
+            return response()->json(['message' => 'Token inválido'], 400);
+        }
+
+        $usuario->email_verified_at = now();
+        $usuario->token_verificacao = null;
+        $usuario->save();
+
+        return response()->json(['message' => 'Conta verificada com sucesso!']);
     }
 
     public function update(Request $request, $id)

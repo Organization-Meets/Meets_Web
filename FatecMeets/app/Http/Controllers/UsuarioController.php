@@ -86,6 +86,19 @@ class UsuarioController extends Controller
 
         return response()->json(['message' => 'Conta verificada com sucesso!']);
     }
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['error' => 'Não autorizado'], 401);
+        }
+
+        $token = Auth::user()->createToken('API Token')->accessToken;
+
+        return response()->json(['token' => $token]);
+    }
+
 
     public function update(Request $request, $id)
     {

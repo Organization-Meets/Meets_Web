@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth; // Adicionada a importação da fachada Auth
 
 class UsuarioController extends Controller
 {
@@ -86,19 +87,25 @@ class UsuarioController extends Controller
 
         return response()->json(['message' => 'Conta verificada com sucesso!']);
     }
+
+    /**
+     * Realiza o login e gera o token de autenticação
+     */
     public function login(Request $request)
     {
+        // Validação das credenciais
         $credentials = $request->only('email', 'password');
 
+        // Tenta autenticar o usuário
         if (!Auth::attempt($credentials)) {
             return response()->json(['error' => 'Não autorizado'], 401);
         }
 
+        // Cria um token de acesso usando Passport (ou qualquer outra implementação de API Token)
         $token = Auth::user()->createToken('API Token')->accessToken;
 
         return response()->json(['token' => $token]);
     }
-
 
     public function update(Request $request, $id)
     {

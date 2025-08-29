@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/css/estilo-cadastro.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-</head>
-<body>
-
+<link rel="stylesheet" href="/css/estiloLogin.css">
 <div class="container">
     <h2>Login</h2>
 

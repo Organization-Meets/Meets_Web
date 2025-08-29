@@ -24,11 +24,11 @@
                     <span class="stat-label">Eventos</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-count">0</span>
+                    <span id="stat-seguidores" class="stat-count">0</span>
                     <span class="stat-label">Seguidores</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-count">0</span>
+                    <span id="stat-seguindo" class="stat-count">0</span>
                     <span class="stat-label">Seguindo</span>
                 </div>
             </div>

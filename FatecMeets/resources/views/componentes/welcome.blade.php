@@ -6,5 +6,5 @@
     <p style="text-align:center;" id="msg">Carregando eventos...</p>
 </div>
 
-<script src="/js/welcomeController.js"></script>
+<script src="/js/controllers/componentes/welcomeController.js"></script>
 @include('componentes.footer')

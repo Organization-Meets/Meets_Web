@@ -29,19 +29,17 @@ class UsuarioController extends Controller
 
     public function store(Request $request)
     {
-        // Validação
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:usuarios,email',
             'password' => 'required|string|min:6',
         ]);
 
-        // Criação do usuário
         $usuario = Usuario::create([
             'nome' => $validated['nome'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'token_verificacao' => Str::random(60), // gera token único
+            'token_verificacao' => Str::random(60),
         ]);
 
         return response()->json([
@@ -50,9 +48,6 @@ class UsuarioController extends Controller
         ], 201);
     }
 
-    /**
-     * Envia token de verificação por e-mail (chamado separadamente)
-     */
     public function enviarToken($id)
     {
         $usuario = Usuario::findOrFail($id);
@@ -70,9 +65,6 @@ class UsuarioController extends Controller
         return response()->json(['message' => 'Token enviado por e-mail.']);
     }
 
-    /**
-     * Verifica token recebido
-     */
     public function verifyToken($token)
     {
         $usuario = Usuario::where('token_verificacao', $token)->first();
@@ -88,21 +80,15 @@ class UsuarioController extends Controller
         return response()->json(['message' => 'Conta verificada com sucesso!']);
     }
 
-    /**
-     * Realiza o login e gera o token de autenticação
-     */
     public function login(Request $request)
     {
-        // Validação das credenciais
         $credentials = $request->only('email', 'password');
 
-        // Tenta autenticar o usuário
         if (!Auth::attempt($credentials)) {
             return response()->json(['error' => 'Não autorizado'], 401);
         }
 
-        // Cria um token de acesso usando Passport (ou qualquer outra implementação de API Token)
-        $token = Auth::user()->createToken('API Token')->accessToken;
+        $token = Auth::user()->createToken('token_verificacao')->accessToken;
 
         return response()->json(['token' => $token]);
     }

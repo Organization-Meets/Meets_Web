@@ -8,7 +8,7 @@ return new class extends Migration {
             $table->bigIncrements('id');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('email_verification_token', 10)->nullable();
+            $table->string('email_verification_token', 60)->nullable();
             $table->json('imagem')->nullable();
             $table->enum('status', ['ativo','inativo','suspenso'])->default('inativo');
             $table->timestamp('email_verified_at')->nullable();

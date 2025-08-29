@@ -4,7 +4,6 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Laravel\Passport\Passport;
 /**
  * Provedor de serviços de autenticação e autorização.
  * Responsável por registrar políticas de autorização e outros serviços relacionados.
@@ -33,7 +32,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes();
     }
 }
 

@@ -30,37 +30,6 @@
     <a href="../../"><button type="button">Voltar</button></a>
 </div>
 
-<script>
-document.getElementById("loginForm").addEventListener("submit", async function(e){
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-
-    try {
-        const response = await fetch("/usuarios/login", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: formData
-        });
-
-        const result = await response.json();
-        console.log("Retorno backend:", result);
-
-        if(response.ok && result.success){
-            alert("Login realizado com sucesso!");
-            window.location.href = "/usuarios/perfil";
-        } else {
-            alert("❌ E-mail ou senha incorretos.");
-        }
-
-    } catch(err) {
-        console.error(err);
-        alert("Erro ao tentar logar!");
-    }
-});
-</script>
-
+<script src="js/controllers/componentes/loginController.js"></script>
 </body>
 </html>

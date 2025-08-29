@@ -15,6 +15,6 @@ Route::prefix('usuarios')->group(function () {
     Route::get('/logged', function () {
         return response()->json(['usuario' => Auth::user()]);
     })->middleware('auth');
-
     Route::post('/login', [UsuarioController::class, 'login']);
+    Route::post('/logout', [UsuarioController::class, 'logout'])->middleware('auth');
 });

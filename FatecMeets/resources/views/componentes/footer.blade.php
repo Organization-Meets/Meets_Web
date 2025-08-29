@@ -1,16 +1,16 @@
   <!-- Menu hamburger toggle -->
    <footer class="usuario-footer" style="margin-top: 50px;">
         <div class="social">
-            <a href="#"><img src="/public/assets/images/instagram.png" alt="Instagram"></a>
-            <a href="#"><img src="/public/assets/images/whatsapp.png" alt="WhatsApp"></a>
-            <a href="#"><img src="/public/assets/images/linkedin.png" alt="LinkedIn"></a>
+            <a href="#"><img src="imagens/instagram.png" alt="Instagram"></a>
+            <a href="#"><img src="imagens/whatsapp.png" alt="WhatsApp"></a>
+            <a href="#"><img src="imagens/linkedin.png" alt="LinkedIn"></a>
         </div>
         <div class="links">
             <a href="#">Política de Privacidade</a> |
             <a href="#">Contato</a> |
             <a href="#">Termos de uso</a>
         </div>
-            <p>&copy; <?php echo date('Y'); ?> - Fatec Meets LTDA - Todos os direitos reservados.</P>
+        <p>&copy; <?php echo date('Y'); ?> - Fatec Meets LTDA - Todos os direitos reservados.</p>
     </footer>
   <script src="/js/emailValido.js"></script>
   <script src="/js/senhaSegura.js"></script>
@@ -18,8 +18,8 @@
   <script src="/js/overlayComponentes.js"></script>
   <script src="/js/controllers/componentes/navbarController.js"></script>
   <script src="/js/controllers/componentes/loginController.js"></script>
-  <script src="/js/controllers/create/UsuarioController.js"></script>
-  <script src="/js/controllers/edit/UsuarioController.js"></script>
+  <script src="/js/controllers/create/usuarioController.js"></script>
+  <script src="/js/controllers/edit/usuarioController.js"></script>
   <script>
     const menuToggle = document.querySelector('.menu-toggle');
     const navbarLinks = document.querySelector('.navbar-links');

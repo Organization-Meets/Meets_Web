@@ -5,6 +5,4 @@
 <div class="feed" id="feed">
     <p style="text-align:center;" id="msg">Carregando eventos...</p>
 </div>
-
-<script src="/js/controllers/componentes/welcomeController.js"></script>
 @include('componentes.footer')

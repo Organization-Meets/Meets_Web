@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     // Função para verificar login
     async function verificarLogin() {
         try {
-            const res = await fetch("/usuarios/logged");
+            const res = await fetch("/api/usuarios/logged");
             const data = await res.json();
 
             if (data.logado) {

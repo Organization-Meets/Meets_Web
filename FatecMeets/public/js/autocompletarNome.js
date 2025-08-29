@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Se existir valor do backend, preenche o campo nome
-    if (typeof nomeBackend !== 'undefined' && nomeBackend) {
-        document.getElementById('nome').value = nomeBackend;
+    const nomeInput = document.getElementById('nome');
+
+    if (typeof nomeBackend !== 'undefined' && nomeBackend && nomeInput) {
+        nomeInput.value = nomeBackend;
     }
 
-    // Autocompleta nome pelo email digitado
     const emailInput = document.getElementById('email');
-    const nomeInput = document.getElementById('nome');
-    if (emailInput) {
+    if (emailInput && nomeInput) {
         emailInput.addEventListener('input', function() {
             const email = this.value;
             if (email.includes('@')) {

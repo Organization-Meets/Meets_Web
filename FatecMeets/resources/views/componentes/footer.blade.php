@@ -12,10 +12,19 @@
         </div>
         <p>&copy; <?php echo date('Y'); ?> - Fatec Meets LTDA - Todos os direitos reservados.</p>
     </footer>
+  <script>
+    window.appRoutes = {
+        eventosIndex: "{{ route('eventos.index') }}",
+        usuariosLogged: "{{ route('usuarios.logged') }}",
+        usuariosLogin: "{{ route('usuarios.login') }}",
+        usuariosLogout: "{{ route('usuarios.logout') }}"
+    };
+  </script>
   <script src="/js/emailValido.js"></script>
   <script src="/js/senhaSegura.js"></script>
   <script src="/js/confirmarSenha.js"></script>
   <script src="/js/overlayComponentes.js"></script>
+  <script src="/js/controllers/componentes/welcomeController.js"></script>
   <script src="/js/controllers/componentes/navbarController.js"></script>
   <script src="/js/controllers/componentes/loginController.js"></script>
   <script src="/js/controllers/create/usuarioController.js"></script>

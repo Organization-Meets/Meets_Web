@@ -111,6 +111,15 @@ class UsuarioController extends Controller
         $request->user()->tokens()->delete(); // Revoga todos os tokens do usuário
         return response()->json(['message' => 'Logout realizado com sucesso.']);
     }
+    public function logged()
+    {
+        return response()->json([
+            'logged' => auth()->check(),
+            'user'   => auth()->user()
+        ]);
+    }
+
+
 
     public function update(Request $request, $id)
     {

@@ -1,5 +1,17 @@
-{{-- filepath: /workspaces/Fatec_Meets_Web/FatecMeets/resources/views/componentes/footer.blade.php --}}
   <!-- Menu hamburger toggle -->
+   <footer class="usuario-footer" style="margin-top: 50px;">
+        <div class="social">
+            <a href="#"><img src="/public/assets/images/instagram.png" alt="Instagram"></a>
+            <a href="#"><img src="/public/assets/images/whatsapp.png" alt="WhatsApp"></a>
+            <a href="#"><img src="/public/assets/images/linkedin.png" alt="LinkedIn"></a>
+        </div>
+        <div class="links">
+            <a href="#">Política de Privacidade</a> |
+            <a href="#">Contato</a> |
+            <a href="#">Termos de uso</a>
+        </div>
+            <p>&copy; <?php echo date('Y'); ?> - Fatec Meets LTDA - Todos os direitos reservados.</P>
+    </footer>
   <script>
     const menuToggle = document.querySelector('.menu-toggle');
     const navbarLinks = document.querySelector('.navbar-links');

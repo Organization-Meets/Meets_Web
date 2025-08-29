@@ -26,9 +26,7 @@
             <a href="/usuarios/create/" style="color:#28a745;">Cadastre-se aqui</a>
         </p>
     </form>
-
-    <a href="../../"><button type="button">Voltar</button></a>
-</div>
+    <div class="fechar" id="fecharLogin">Cancelar</div>
 
 <script src="js/controllers/componentes/loginController.js"></script>
 </body>

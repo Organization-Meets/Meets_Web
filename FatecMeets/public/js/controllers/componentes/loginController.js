@@ -1,30 +1,76 @@
-document.getElementById("loginForm").addEventListener("submit", async function(e){
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
+document.addEventListener("DOMContentLoaded", async function() {
+    const profileBtn = document.querySelector(".profile-btn");
+    if (!profileBtn) return;
 
-    try {
-        const response = await fetch("/usuarios/login", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: formData
-        });
+    async function buscarImagem() {
+        try {
+            const response = await fetch("/perfil/imagem");
+            if (!response.ok) throw new Error("Erro ao buscar imagem");
 
-        const result = await response.json();
-        console.log("Retorno backend:", result);
+            const data = await response.json();
 
-        if(response.ok && result.success){
-            // Redireciona para perfil
-            window.location.href = "/usuarios/perfil";
-        } else {
-            // Mostra erro de forma similar ao cadastro
-            alert("❌ E-mail ou senha incorretos.");
+            const img = document.createElement("img");
+            img.src = data.url;
+            img.alt = "Foto de Perfil";
+            img.className = "profile-img-mini";
+            img.style.maxWidth = "300px";
+
+            const container = document.getElementById("img-container");
+            container.innerHTML = "";
+            container.appendChild(img);
+
+        } catch (err) {
+            console.error(err);
         }
+    }
 
-    } catch(err){
-        console.error(err);
-        alert("Erro ao tentar logar!");
+    // Verificar login
+    async function verificarLogin() {
+        try {
+            const res = await fetch("/usuario/logged");
+            const data = await res.json();
+
+            if (data.logado) {
+                profileBtn.textContent = "Logout";
+                await buscarImagem();
+
+                profileBtn.classList.remove("abrirLogin"); // não abre modal se estiver logado
+                profileBtn.onclick = async () => {
+                    await fetch("/usuarios/logout");
+                    window.location.href = "/inicio/";
+                };
+            } else {
+                profileBtn.textContent = "Login";
+                profileBtn.classList.add("abrirLogin"); // garante que vai abrir modal
+                profileBtn.onclick = null; // deixa overlayComponentes.js cuidar
+            }
+        } catch (err) {
+            console.error("Erro ao verificar login:", err);
+        }
+    }
+
+    await verificarLogin();
+
+    // Dark mode toggle
+    const themeSwitch = document.getElementById("theme-switch");
+    const body = document.body;
+    if (themeSwitch && localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        themeSwitch.checked = true;
+    }
+    if (themeSwitch) {
+        themeSwitch.addEventListener("change", () => {
+            body.classList.toggle("dark-mode", themeSwitch.checked);
+            localStorage.setItem("theme", themeSwitch.checked ? "dark" : "light");
+        });
+    }
+
+    // Menu mobile toggle
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navbarLinks = document.querySelector(".navbar-links");
+    if (menuToggle && navbarLinks) {
+        menuToggle.addEventListener("click", () => {
+            navbarLinks.classList.toggle("active");
+        });
     }
 });

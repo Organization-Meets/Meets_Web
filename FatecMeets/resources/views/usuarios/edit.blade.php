@@ -36,4 +36,3 @@
         </form>
     </div>
 </section>
-<script src="/js/controllers/editUsuarioController.js"></script>

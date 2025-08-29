@@ -12,6 +12,14 @@
         </div>
             <p>&copy; <?php echo date('Y'); ?> - Fatec Meets LTDA - Todos os direitos reservados.</P>
     </footer>
+  <script src="/js/emailValido.js"></script>
+  <script src="/js/senhaSegura.js"></script>
+  <script src="/js/confirmarSenha.js"></script>
+  <script src="/js/overlayComponentes.js"></script>
+  <script src="/js/controllers/componentes/navbarController.js"></script>
+  <script src="/js/controllers/componentes/loginController.js"></script>
+  <script src="/js/controllers/create/UsuarioController.js"></script>
+  <script src="/js/controllers/edit/UsuarioController.js"></script>
   <script>
     const menuToggle = document.querySelector('.menu-toggle');
     const navbarLinks = document.querySelector('.navbar-links');

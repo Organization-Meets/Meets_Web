@@ -1,23 +1,22 @@
-<link rel="stylesheet" href="/css/estiloLogin.css">
-<div class="container">
-    <h2>Login</h2>
+<div id="loginOverlay" class="login-overlay">
+    <div class="form-login">
+        <h2>Login</h2>
 
-    <form id="loginForm">
-        @csrf
-        <img src="/imagens/logo.png" alt="Logo" style="width:100px; margin:0 auto 15px; display:block;">
+        <form id="loginForm">
+            @csrf
+            <img src="/imagens/logo.png" alt="Logo" style="width:100px; margin:0 auto 15px; display:block;">
 
-        <input type="email" name="email" placeholder="E-mail" required>
-        <input type="password" name="password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
+            <input type="email" name="email" placeholder="E-mail" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
 
-        <hr>
-        <p style="text-align:center; margin:15px 0; font-size:14px;">
-            Não tem uma conta? 
-            <a href="/usuarios/create/" style="color:#28a745;">Cadastre-se aqui</a>
-        </p>
-    </form>
-    <div class="fechar" id="fecharLogin">Cancelar</div>
+            <hr>
+            <p style="text-align:center; margin:15px 0; font-size:14px;">
+                Não tem uma conta? 
+                <a href="/usuarios/create/" style="color:#28a745;">Cadastre-se aqui</a>
+            </p>
+        </form>
 
-<script src="js/controllers/componentes/loginController.js"></script>
-</body>
-</html>
+        <div class="fechar" id="fecharLogin">Cancelar</div>
+    </div>
+</div>

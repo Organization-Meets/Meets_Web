@@ -1,45 +1,42 @@
-document.getElementById("tokenForm").addEventListener("submit", async function(e) {
+const loginOverlay = document.getElementById('loginOverlay');
+const fecharLogin = document.getElementById('fecharLogin');
+document.querySelectorAll('.abrirLogin').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const usuarioId = window.usuarioId;
-
-        try {
-            const response = await fetch(`/usuarios/${usuarioId}/confirmar-token`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({ token: formData.get("token") })
-            });
-
-            if(!response.ok) throw new Error("Token inválido!");
-            alert("Conta confirmada com sucesso!");
-            window.location.href="/usuarios/loginForm/";
-
-        } catch(err){ 
-            console.error(err); 
-            alert("Erro ao confirmar token!");
+        loginOverlay.style.display = 'flex';
+    });
+});
+if (fecharLogin) {
+    fecharLogin.addEventListener('click', () => {
+        loginOverlay.style.display = 'none';
+    });
+}
+if (loginOverlay) {
+    loginOverlay.addEventListener('click', (e) => {
+        if (e.target === loginOverlay) {
+            loginOverlay.style.display = 'none';
         }
     });
-    // Reenvio do token
-    document.getElementById("reenviarBtn").addEventListener("click", async function() {
-        const usuarioId = window.usuarioId;
+}
 
-        try {
-            const response = await fetch(`/usuarios/${usuarioId}/reenviar-token`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-                }
-            });
-
-            if (!response.ok) throw new Error("Erro ao reenviar código!");
-            alert("Novo código enviado para seu e-mail!");
-
-        } catch(err) {
-            console.error(err);
-            alert("Não foi possível reenviar o código.");
+// === TOKEN ===
+const tokenOverlay = document.getElementById('tokenOverlay');
+const fecharToken = document.getElementById('fecharToken');
+document.querySelectorAll('.abrirToken').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        tokenOverlay.style.display = 'flex';
+    });
+});
+if (fecharToken) {
+    fecharToken.addEventListener('click', () => {
+        tokenOverlay.style.display = 'none';
+    });
+}
+if (tokenOverlay) {
+    tokenOverlay.addEventListener('click', (e) => {
+        if (e.target === tokenOverlay) {
+            tokenOverlay.style.display = 'none';
         }
     });
+}

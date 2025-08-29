@@ -12,5 +12,9 @@ Route::prefix('usuarios')->group(function () {
 
     Route::post('/{id}/enviar-token', [UsuarioController::class, 'enviarToken']);
     Route::post('/verificar/{token}', [UsuarioController::class, 'verifyToken']);
+    Route::get('/logged', function () {
+        return response()->json(['usuario' => Auth::user()]);
+    })->middleware('auth');
+
     Route::post('/login', [UsuarioController::class, 'login']);
 });

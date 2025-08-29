@@ -27,12 +27,12 @@
     <!-- Área do usuário -->
     <div class="navbar-user-area">
       <div id="img-container" class="profile-img-mini"></div>
-      <button class="profile-btn">Login</button>
+      <button class="profile-btn abrirLogin">Login</button>
     </div>
   </div>
 </nav>
 
-<script src="/js/controllers/componentes/navbarController.js"></script>
+
 
 
 <!-- Vlibras -->

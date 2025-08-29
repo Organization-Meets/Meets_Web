@@ -1,5 +1,4 @@
 
-<script>
     const abrirLogin = document.getElementById('abrirLogin');
     const loginOverlay = document.getElementById('loginOverlay');
     const fecharLogin = document.getElementById('fecharLogin');
@@ -11,7 +10,3 @@
     fecharLogin.addEventListener('click', () => {
         loginOverlay.style.display = 'none'; // Esconde o overlay
     });
-</script>
-
-</body>
-</html>

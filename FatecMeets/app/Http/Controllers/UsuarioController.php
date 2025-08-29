@@ -7,13 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth; // Adicionada a importação da fachada Auth
+use Illuminate\Support\Facades\Auth;
 
 class UsuarioController extends Controller
 {
     public function __construct()
     {
-        // Apenas usuários autenticados podem criar, atualizar ou deletar
         $this->middleware('auth')->except(['index', 'show']);
     }
 
@@ -82,19 +81,35 @@ class UsuarioController extends Controller
 
     public function login(Request $request)
     {
-        $validated = $request->validate([
-            'token_verificacao' => 'required|string',
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
         ]);
 
-        $usuario = Usuario::where('token_verificacao', $validated['token_verificacao'])->first();
-
-        if (!$usuario) {
-            return response()->json(['error' => 'Token de verificação inválido'], 401);
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['success' => false, 'message' => 'Credenciais inválidas'], 401);
         }
 
-        $token = $usuario->createToken('API Token')->accessToken;
+        $usuario = Auth::user();
 
-        return response()->json(['token' => $token]);
+        // Verifica se o e-mail foi confirmado, se quiser bloquear login de não verificados
+        if (!$usuario->email_verified_at) {
+            return response()->json(['success' => false, 'message' => 'E-mail não verificado'], 403);
+        }
+
+        // Cria token pessoal com Sanctum
+        $token = $usuario->createToken('token_sanctum')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+            'usuario' => $usuario,
+        ]);
+    }
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete(); // Revoga todos os tokens do usuário
+        return response()->json(['message' => 'Logout realizado com sucesso.']);
     }
 
     public function update(Request $request, $id)

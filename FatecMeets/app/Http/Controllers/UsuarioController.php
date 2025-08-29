@@ -77,18 +77,22 @@ class UsuarioController extends Controller
         $usuario->token_verificacao = null;
         $usuario->save();
 
-        return response()->json(['message' => 'Conta verificada com sucesso!']);
+        return response()->json(['message' => 'Token verificado com sucesso!']);
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $validated = $request->validate([
+            'token_verificacao' => 'required|string',
+        ]);
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Não autorizado'], 401);
+        $usuario = Usuario::where('token_verificacao', $validated['token_verificacao'])->first();
+
+        if (!$usuario) {
+            return response()->json(['error' => 'Token de verificação inválido'], 401);
         }
 
-        $token = Auth::user()->createToken('token_verificacao')->accessToken;
+        $token = $usuario->createToken('API Token')->accessToken;
 
         return response()->json(['token' => $token]);
     }

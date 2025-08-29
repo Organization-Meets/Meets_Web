@@ -32,7 +32,7 @@
   </div>
 </nav>
 
-<script src="/js/navbarController.js"></script>
+<script src="/js/controllers/componentes/navbarController.js"></script>
 
 
 <!-- Vlibras -->

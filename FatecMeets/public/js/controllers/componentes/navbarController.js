@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             } else {
                 profileBtn.textContent = "Login";
                 profileBtn.onclick = () => {
-                    window.location.href = "/usuarios/loginForm/";
+                    window.location.href = "/login/";
                 };
             }
         } catch (err) {

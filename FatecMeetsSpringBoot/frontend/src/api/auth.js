@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api", // backend spring boot
+  baseURL: "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev/api", // backend spring boot
 });
 
 // Cadastro local
@@ -12,5 +12,5 @@ export const login = (data) => api.post("/auth/login", data);
 
 // Login Microsoft (backend redireciona pro Azure)
 export const microsoftLogin = () => {
-  window.location.href = "http://localhost:8080/oauth2/authorization/azure";
+  window.location.href = "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev/oauth2/authorization/azure";
 };

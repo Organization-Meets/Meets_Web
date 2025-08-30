@@ -13,6 +13,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -40,7 +45,7 @@ services:
     build: ./frontend
     container_name: react-frontend
     ports:
-      - "3000:3000"
+      - "3000:5173"
     stdin_open: true
     tty: true
     depends_on:

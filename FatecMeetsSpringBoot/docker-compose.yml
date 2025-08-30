@@ -5,7 +5,7 @@ services:
     container_name: mysql
     restart: always
     environment:
-      MYSQL_DATABASE: fatec_social
+      MYSQL_DATABASE: fatecmeets
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_USER: fatec
       MYSQL_PASSWORD: fatec123
@@ -27,7 +27,7 @@ services:
       - mysql
 
   backend:
-    build: .
+    build: ./backend
     container_name: spring-backend
     ports:
       - "8080:8080"

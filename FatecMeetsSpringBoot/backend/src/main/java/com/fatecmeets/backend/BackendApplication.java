@@ -1,13 +1,13 @@
-package com.app.fatecmeets;
+package com.fatecmeets.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FatecmeetsApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FatecmeetsApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }

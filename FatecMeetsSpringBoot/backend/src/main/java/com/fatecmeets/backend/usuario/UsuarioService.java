@@ -1,7 +1,7 @@
 package com.fatecmeets.backend.usuario;
 
 import com.fatecmeets.backend.auth.EmailService;
-import com.fatecmeets.backend.auth.TokenService;
+import com.fatecmeets.backend.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,14 @@ public class UsuarioService {
         this.emailService = emailService;
     }
 
-    public void cadastrar(String email, String senha) {
+    public Usuario cadastrar(String email, String senha) {
         Usuario u = new Usuario();
         u.setEmail(email);
         u.setSenha(passwordEncoder.encode(senha));
         u.setAtivo(false);
-        usuarioRepo.save(u);
-
-        String token = tokenService.gerarTokenAtivacao(u);
+        Usuario usuarioSalvo = usuarioRepo.save(u);
+        String token = tokenService.gerarTokenAtivacao(usuarioSalvo);
         emailService.enviarToken(email, token, "ATIVACAO");
+        return usuarioSalvo;
     }
 }

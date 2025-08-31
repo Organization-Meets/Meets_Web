@@ -3,6 +3,7 @@ package com.fatecmeets.backend.auth;
 import com.fatecmeets.backend.usuario.Usuario;
 import com.fatecmeets.backend.usuario.UsuarioRepository;
 import com.fatecmeets.backend.usuario.UsuarioService;
+import com.fatecmeets.backend.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +25,24 @@ public class AuthService {
         this.emailService = emailService;
     }
 
-    public void registrarUsuario(String email, String senha) {
-        usuarioService.cadastrar(email, senha);
+    // Cadastro já gera token + envia e-mail pelo UsuarioService
+    public Usuario registrarUsuario(String email, String senha) {
+        return usuarioService.cadastrar(email, senha);
     }
 
     public boolean ativarConta(String token) {
         return tokenService.validarTokenAtivacao(token);
     }
 
-    public void iniciarLogin(String email, String senha) {
-        Usuario usuario = usuarioRepo.findByEmail(email).orElseThrow();
+    public String iniciarLogin(String email, String senha) {
+        Usuario usuario = usuarioRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         if (!usuario.isAtivo() || !passwordEncoder.matches(senha, usuario.getSenha())) {
             throw new RuntimeException("Credenciais inválidas.");
         }
         String token = tokenService.gerarTokenLogin(usuario);
         emailService.enviarToken(email, token, "LOGIN");
+        return token;
     }
 
     public boolean confirmarLogin(String token) {

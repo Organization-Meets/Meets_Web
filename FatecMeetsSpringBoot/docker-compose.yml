@@ -17,7 +17,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -29,17 +29,19 @@ services:
     ports:
       - "8081:80"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   backend:
     build: ./backend
     container_name: spring-backend
     ports:
       - "8080:8080"
-    depends_on:
-      - mysql
     environment:
       SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   frontend:
     build: ./frontend

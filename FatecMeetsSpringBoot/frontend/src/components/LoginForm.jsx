@@ -1,55 +1,46 @@
 import { useState } from "react";
-import { login } from "../api/auth";
+import { login, microsoftLogin } from "../api/auth";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
-  const [remember, setRemember] = useState(false);
+  const [senha, setSenha] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await login({ email, password, token, remember });
-      localStorage.setItem("jwt", res.data.jwt);
-      alert("Login feito com sucesso!");
+      const response = await login({ email, senha });
+      setMessage(response.data); // mensagem do backend: "Verifique seu e-mail..."
     } catch (err) {
-      alert("Erro no login!");
+      setMessage(err.response?.data || "Erro ao fazer login");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <h2>Login Local</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      /><br />
-      <input
-        type="password"
-        placeholder="Senha"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      /><br />
-      <input
-        type="text"
-        placeholder="Token recebido por email"
-        value={token}
-        onChange={(e) => setToken(e.target.value)}
-        required
-      /><br />
-      <label>
-        <input
-          type="checkbox"
-          checked={remember}
-          onChange={(e) => setRemember(e.target.checked)}
-        /> Lembrar-me
-      </label><br />
-      <button type="submit">Entrar</button>
-    </form>
+    <div>
+      <h2>Login</h2>
+      {message && <p>{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Senha:</label>
+          <input
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
 }

@@ -21,19 +21,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // CSRF desabilitado para API REST
-            .csrf(csrf -> csrf.disable())
-
-            // Autorizações
+            .csrf(csrf -> csrf.disable()) // CSRF desabilitado para API REST
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // cadastro/login/ativação
-                .anyRequest().authenticated()            // resto precisa estar logado
+                .requestMatchers("/auth/**").permitAll() // Cadastro/login/ativação liberados
+                .anyRequest().authenticated()           // Restante precisa estar logado
             )
-
-            // Login OAuth2 (Microsoft, Google, etc.)
-            .oauth2Login(Customizer.withDefaults())
-
-            // Remember-me
+            .oauth2Login(Customizer.withDefaults()) // Login OAuth2
             .rememberMe(remember -> remember
                 .key("chave-secreta")
                 .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 dias

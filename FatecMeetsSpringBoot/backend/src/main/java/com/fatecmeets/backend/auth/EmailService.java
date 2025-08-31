@@ -13,15 +13,22 @@ public class EmailService {
     }
 
     public void enviarToken(String to, String token, String tipo) {
-        String assunto = tipo.equals("ATIVACAO") ? "Ative sua conta" : "Confirme seu login";
-        String link = tipo.equals("ATIVACAO")
-            ? "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev/auth/activate?token=" + token
-            : "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev/auth/confirm-login?token=" + token;
+        String assunto;
+        String link;
+
+        if ("ATIVACAO".equals(tipo)) {
+            assunto = "Ative sua conta";
+            link = "http://localhost:8080/auth/activate?token=" + token;
+        } else {
+            assunto = "Confirme seu login";
+            link = "http://localhost:8080/auth/confirm-login?token=" + token;
+        }
 
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);
         msg.setSubject(assunto);
-        msg.setText("Clique no link: " + link);
+        msg.setText("Clique no link para continuar: " + link);
+
         mailSender.send(msg);
     }
 }

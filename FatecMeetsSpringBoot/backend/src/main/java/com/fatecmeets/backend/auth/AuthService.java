@@ -37,9 +37,15 @@ public class AuthService {
     public String iniciarLogin(String email, String senha) {
         Usuario usuario = usuarioRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        if (!usuario.isAtivo() || !passwordEncoder.matches(senha, usuario.getSenha())) {
-            throw new RuntimeException("Credenciais inválidas.");
+        
+        if (!usuario.isAtivo()) {
+            throw new RuntimeException("Conta ainda não ativada.");
         }
+
+        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
+            throw new RuntimeException("Senha incorreta.");
+        }
+
         String token = tokenService.gerarTokenLogin(usuario);
         emailService.enviarToken(email, token, "LOGIN");
         return token;

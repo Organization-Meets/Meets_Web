@@ -9,7 +9,6 @@ import java.util.UUID;
 
 @Service
 public class TokenService {
-
     private final TokenRepository tokenRepository;
 
     public TokenService(TokenRepository tokenRepository) {
@@ -48,7 +47,7 @@ public class TokenService {
         if (opt.isPresent()) {
             Token tv = opt.get();
             if (tv.getTipo().equals(tipo) && tv.getExpiraEm().isAfter(LocalDateTime.now())) {
-                tokenRepository.deleteByToken(token); // invalida após uso
+                tokenRepository.deleteByToken(token); // Invalida após uso
                 return true;
             }
         }

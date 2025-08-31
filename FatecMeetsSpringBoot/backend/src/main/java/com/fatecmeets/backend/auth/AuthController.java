@@ -19,7 +19,7 @@ public class AuthController {
 
     @GetMapping("/confirm-login")
     public String confirmLogin(@RequestParam String token) {
-        return authService.confirmarLogin(token) ? "Login confirmado!" : "Token inválido";
+        return authService.confirmarLogin(token) ? "Login confirmado!" : "Token inválido ou expirado.";
     }
 
     @PostMapping("/register")
@@ -30,6 +30,6 @@ public class AuthController {
 
     @GetMapping("/activate")
     public String activate(@RequestParam String token) {
-        return authService.ativarConta(token) ? "Conta ativada!" : "Token inválido";
+        return authService.ativarConta(token) ? "Conta ativada com sucesso!" : "Token inválido ou expirado.";
     }
 }

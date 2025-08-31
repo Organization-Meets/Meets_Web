@@ -21,13 +21,18 @@ public class Token {
 
     @Column(nullable = false)
     private String tipo;
+
     public Long getId() { return id; }
+
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
+
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
     public LocalDateTime getExpiraEm() { return expiraEm; }
     public void setExpiraEm(LocalDateTime expiraEm) { this.expiraEm = expiraEm; }
+
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 }

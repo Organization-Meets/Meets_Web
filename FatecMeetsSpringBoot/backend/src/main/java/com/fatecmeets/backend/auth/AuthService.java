@@ -30,8 +30,14 @@ public class AuthService {
         return usuarioService.cadastrar(email, senha);
     }
 
+    // ✅ Agora ativa o usuário de verdade
     public boolean ativarConta(String token) {
-        return tokenService.validarTokenAtivacao(token);
+        return tokenService.getUsuarioPorToken(token).map(usuario -> {
+            usuario.setAtivo(true);
+            usuarioRepo.save(usuario);
+            tokenService.invalidarToken(token); // deleta o token usado
+            return true;
+        }).orElse(false);
     }
 
     public String iniciarLogin(String email, String senha) {

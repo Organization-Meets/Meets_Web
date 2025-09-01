@@ -29,15 +29,12 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                // 🔹 libera cadastro e login local
-                .requestMatchers("/auth/**").permitAll()
-                // 🔹 libera endpoints do OAuth2 (se quiser usar Microsoft também)
-                .requestMatchers("/oauth2/**").permitAll()
-                // 🔹 qualquer outra rota precisa de autenticação
+                .requestMatchers("/auth/**").permitAll()   // 🔓 libera tudo dentro de /auth
+                .requestMatchers("/oauth2/**").permitAll() // 🔓 libera OAuth2 também
                 .anyRequest().authenticated()
             )
-            // ❌ Se não quiser login social, comenta esta linha:
-            // .oauth2Login(Customizer.withDefaults())
+            .formLogin(form -> form.disable())   // 🔒 desliga formulário de login padrão
+            .httpBasic(basic -> basic.disable()) // 🔒 desliga auth básica
             .rememberMe(remember -> remember
                 .key("chave-secreta")
                 .tokenValiditySeconds(7 * 24 * 60 * 60)
@@ -46,18 +43,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-
-        // 🌍 Libera localhost e qualquer codespace (*.app.github.dev)
         config.setAllowedOriginPatterns(List.of(
             "http://localhost:*",
             "https://*.app.github.dev"
         ));
-
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
@@ -66,8 +59,6 @@ public class SecurityConfig {
         return source;
     }
 
-
-    // 🔑 Corrige o problema de host/porta no Codespaces (remove o :8080)
     @Bean
     public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
         FilterRegistrationBean<ForwardedHeaderFilter> filterRegBean = new FilterRegistrationBean<>();

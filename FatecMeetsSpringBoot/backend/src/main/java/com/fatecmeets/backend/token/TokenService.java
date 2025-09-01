@@ -47,8 +47,7 @@ public class TokenService {
         if (opt.isPresent()) {
             Token tv = opt.get();
             if (tv.getTipo().equals(tipo) && tv.getExpiraEm().isAfter(LocalDateTime.now())) {
-                tokenRepository.deleteByToken(token); // Invalida após uso
-                return true;
+                return true; // só valida, não deleta aqui
             }
         }
         return false;
@@ -58,5 +57,10 @@ public class TokenService {
         return tokenRepository.findByToken(token)
                 .filter(tv -> tv.getExpiraEm().isAfter(LocalDateTime.now()))
                 .map(Token::getUsuario);
+    }
+
+    // ✅ Novo helper para deletar token após uso
+    public void invalidarToken(String token) {
+        tokenRepository.deleteByToken(token);
     }
 }

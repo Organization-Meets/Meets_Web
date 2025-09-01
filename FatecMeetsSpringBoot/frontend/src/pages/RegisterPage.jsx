@@ -3,7 +3,7 @@ import { register } from "../api/auth";
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
-  const [senha, setsenha] = useState("");
+  const [senha, setSenha] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ export default function RegisterForm() {
         type="password"
         placeholder="Senha"
         value={senha}
-        onChange={(e) => setsenha(e.target.value)}
+        onChange={(e) => setSenha(e.target.value)}
         required
       /><br />
       <button type="submit">Cadastrar</button>

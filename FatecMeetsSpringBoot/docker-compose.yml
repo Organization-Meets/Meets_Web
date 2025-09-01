@@ -48,8 +48,6 @@ services:
     container_name: react-frontend
     ports:
       - "3000:5173"
-    environment:
-      - VITE_API_URL=/api
     depends_on:
       - backend
 

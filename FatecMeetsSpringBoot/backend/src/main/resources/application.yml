@@ -41,6 +41,8 @@ spring:
           auth: true
           starttls:
             enable: true
+    default-encoding: UTF-8
+    protocol: smtp
 
 server:
   # faz o Spring respeitar os headers do proxy (X-Forwarded-Host / Proto)

@@ -29,15 +29,15 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                // libera login/cadastro
-                .requestMatchers("/auth/register", "/auth/login").permitAll()
-                // libera os endpoints do fluxo OAuth2
+                // 🔹 libera cadastro e login local
+                .requestMatchers("/auth/**").permitAll()
+                // 🔹 libera endpoints do OAuth2 (se quiser usar Microsoft também)
                 .requestMatchers("/oauth2/**").permitAll()
-                // qualquer outra rota precisa estar autenticada
+                // 🔹 qualquer outra rota precisa de autenticação
                 .anyRequest().authenticated()
             )
-            // só ativa OAuth2 para quem clicar no "Login Microsoft"
-            .oauth2Login(Customizer.withDefaults())
+            // ❌ Se não quiser login social, comenta esta linha:
+            // .oauth2Login(Customizer.withDefaults())
             .rememberMe(remember -> remember
                 .key("chave-secreta")
                 .tokenValiditySeconds(7 * 24 * 60 * 60)
@@ -45,6 +45,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

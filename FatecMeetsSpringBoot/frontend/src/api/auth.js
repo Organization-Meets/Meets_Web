@@ -1,12 +1,12 @@
 import axios from "axios";
 
-// 🚀 Agora sempre usa o proxy configurado no vite.config.js
+// 🚀 Sempre usa o proxy configurado no vite.config.js
 const api = axios.create({
   baseURL: "/api",
 });
 
 // Cadastro local
-export const register = (data) => api.post("/auth/register", data);
+export const register = (data) => api.post("/auth/register-local", data);
 
 // Login local
 export const login = (data) => api.post("/auth/login", data);

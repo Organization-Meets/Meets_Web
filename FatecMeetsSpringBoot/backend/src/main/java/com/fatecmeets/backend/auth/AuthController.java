@@ -1,5 +1,6 @@
 package com.fatecmeets.backend.auth;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,27 +14,45 @@ public class AuthController {
 
     // 🔹 Login local (via email + senha)
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String senha) {
-        authService.iniciarLogin(email, senha);
-        return "Verifique seu e-mail para confirmar o login.";
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+        try {
+            authService.iniciarLogin(request.email(), request.senha());
+            return ResponseEntity.ok("Verifique seu e-mail para confirmar o login.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // 🔹 Confirmação de login por token (link enviado no email)
+    // 🔹 Registro local
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody AuthRequest request) {
+        try {
+            authService.registrarUsuario(request.email(), request.senha());
+            return ResponseEntity.ok("Verifique seu e-mail para ativar a conta.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // 🔹 Confirmação de login
     @GetMapping("/confirm-login")
-    public String confirmLogin(@RequestParam String token) {
-        return authService.confirmarLogin(token) ? "Login confirmado!" : "Token inválido ou expirado.";
-    }
-
-    // 🔹 Registro local separado de OAuth
-    @PostMapping("/register-local")
-    public String registerLocal(@RequestParam String email, @RequestParam String senha) {
-        authService.registrarUsuario(email, senha);
-        return "Verifique seu e-mail para ativar a conta.";
+    public ResponseEntity<String> confirmLogin(@RequestParam String token) {
+        boolean ok = authService.confirmarLogin(token);
+        if (ok) {
+            return ResponseEntity.ok("Login confirmado!");
+        } else {
+            return ResponseEntity.badRequest().body("Token inválido ou expirado.");
+        }
     }
 
     // 🔹 Ativação de conta local
     @GetMapping("/activate")
-    public String activate(@RequestParam String token) {
-        return authService.ativarConta(token) ? "Conta ativada com sucesso!" : "Token inválido ou expirado.";
+    public ResponseEntity<String> activate(@RequestParam String token) {
+        boolean ok = authService.ativarConta(token);
+        if (ok) {
+            return ResponseEntity.ok("Conta ativada com sucesso!");
+        } else {
+            return ResponseEntity.badRequest().body("Token inválido ou expirado.");
+        }
     }
 }

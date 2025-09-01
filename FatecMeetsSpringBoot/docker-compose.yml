@@ -31,25 +31,25 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: spring-backend
     ports:
       - "8080:8080"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: react-frontend
     ports:
       - "3000:5173"
-    stdin_open: true
-    tty: true
+    environment:
+      - VITE_API_URL=/api
     depends_on:
       - backend
 

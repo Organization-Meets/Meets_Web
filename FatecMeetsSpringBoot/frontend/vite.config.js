@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// 🔗 Usa a URL do backend automaticamente
 const backendUrl =
   process.env.VITE_API_URL ||
   (process.env.CODESPACE_NAME
@@ -13,6 +12,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 5173,
+    strictPort: true,
     proxy: {
       "/api": {
         target: backendUrl,

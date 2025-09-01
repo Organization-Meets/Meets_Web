@@ -12,16 +12,19 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     public void enviarToken(String to, String token, String tipo) {
         String assunto;
         String link;
 
         if ("ATIVACAO".equals(tipo)) {
             assunto = "Ative sua conta";
-            link = "http://localhost:8080/auth/activate?token=" + token;
+            link = baseUrl + "/auth/activate?token=" + token;
         } else {
             assunto = "Confirme seu login";
-            link = "http://localhost:8080/auth/confirm-login?token=" + token;
+            link = baseUrl + "/auth/confirm-login?token=" + token;
         }
 
         SimpleMailMessage msg = new SimpleMailMessage();

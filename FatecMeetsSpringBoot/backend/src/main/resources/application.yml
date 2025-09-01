@@ -43,5 +43,9 @@ spring:
             enable: true
 
 server:
-  # força o Spring a respeitar os headers do proxy (Codespaces) e não duplicar :8080
+  # faz o Spring respeitar os headers do proxy (X-Forwarded-Host / Proto)
   forward-headers-strategy: framework
+
+app:
+  # use essa base URL para montar links em emails e no OAuth2
+  base-url: https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev

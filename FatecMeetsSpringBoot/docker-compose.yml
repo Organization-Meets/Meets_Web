@@ -10,7 +10,7 @@ services:
       MYSQL_USER: fatec
       MYSQL_PASSWORD: fatec123
     ports:
-      - "3306:3306" # expõe a porta para acessar localmente (se quiser usar Workbench)
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -35,14 +35,10 @@ services:
   backend:
     build: ./backend
     container_name: spring-backend
-    restart: always
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fatecmeets
-      SPRING_DATASOURCE_USERNAME: fatec
-      SPRING_DATASOURCE_PASSWORD: fatec123
     depends_on:
       mysql:
         condition: service_healthy
@@ -50,9 +46,8 @@ services:
   frontend:
     build: ./frontend
     container_name: react-frontend
-    restart: always
     ports:
-      - "3000:5173" # Vite normalmente roda em 5173
+      - "3000:5173"
     stdin_open: true
     tty: true
     depends_on:

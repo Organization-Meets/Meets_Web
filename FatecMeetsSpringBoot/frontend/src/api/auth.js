@@ -1,16 +1,17 @@
 import axios from "axios";
 
+// 🚀 Agora sempre usa o proxy configurado no vite.config.js
 const api = axios.create({
-  baseURL: "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev/auth", // backend spring boot
+  baseURL: "/api",
 });
 
 // Cadastro local
-export const register = (data) => api.post("/register", data);
+export const register = (data) => api.post("/auth/register", data);
 
 // Login local
-export const login = (data) => api.post("/login", data);
+export const login = (data) => api.post("/auth/login", data);
 
-// Login Microsoft (backend redireciona pro Azure)
+// Login Microsoft (redireciona pro Azure AD)
 export const microsoftLogin = () => {
-  window.location.href = "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev/oauth2/authorization/azure";
+  window.location.href = "/api/oauth2/authorization/microsoft";
 };

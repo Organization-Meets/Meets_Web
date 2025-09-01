@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -26,19 +25,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // 🔓 Desabilita CSRF porque você está usando API REST
             .csrf(csrf -> csrf.disable())
-            .cors(Customizer.withDefaults())
+            // 🔓 Ativa CORS com configuração customizada (veja bean abaixo)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            // 🔓 Define as regras de autorização
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()   // 🔓 libera tudo dentro de /auth
-                .requestMatchers("/oauth2/**").permitAll() // 🔓 libera OAuth2 também
+                // 🔓 Libera todos os endpoints relacionados a autenticação
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/oauth2/**").permitAll()
+                // 🔒 Qualquer outra rota exige autenticação
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form.disable())   // 🔒 desliga formulário de login padrão
-            .httpBasic(basic -> basic.disable()) // 🔒 desliga auth básica
-            .rememberMe(remember -> remember
-                .key("chave-secreta")
-                .tokenValiditySeconds(7 * 24 * 60 * 60)
-            );
+            // 🔒 Desabilita login padrão do Spring e auth básica
+            .formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
@@ -59,6 +60,7 @@ public class SecurityConfig {
         return source;
     }
 
+    // 🔹 Necessário no GitHub Codespaces para repassar headers corretos (X-Forwarded-For / Proto)
     @Bean
     public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
         FilterRegistrationBean<ForwardedHeaderFilter> filterRegBean = new FilterRegistrationBean<>();

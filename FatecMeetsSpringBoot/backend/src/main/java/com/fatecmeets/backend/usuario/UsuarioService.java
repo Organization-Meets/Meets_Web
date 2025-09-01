@@ -25,9 +25,19 @@ public class UsuarioService {
         u.setEmail(email);
         u.setSenha(passwordEncoder.encode(senha));
         u.setAtivo(false);
+
+        // 🔹 Primeiro salva
         Usuario usuarioSalvo = usuarioRepo.save(u);
-        String token = tokenService.gerarTokenAtivacao(usuarioSalvo);
-        emailService.enviarToken(email, token, "ATIVACAO");
+
+        // 🔹 Depois tenta enviar e-mail (não afeta o commit)
+        try {
+            String token = tokenService.gerarTokenAtivacao(usuarioSalvo);
+            emailService.enviarToken(email, token, "ATIVACAO");
+        } catch (Exception e) {
+            // Apenas loga o erro, não dá rollback
+            System.err.println("Falha ao enviar e-mail: " + e.getMessage());
+        }
+
         return usuarioSalvo;
     }
 }

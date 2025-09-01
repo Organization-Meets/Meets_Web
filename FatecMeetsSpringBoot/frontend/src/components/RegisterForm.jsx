@@ -3,12 +3,12 @@ import { register } from "../api/auth";
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setSenha] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register({ email, password });
+      await register({ email, senha });
       alert("Verifique seu e-mail para confirmar o cadastro!");
     } catch (err) {
       alert("Erro no cadastro!");
@@ -28,8 +28,8 @@ export default function RegisterForm() {
       <input
         type="password"
         placeholder="Senha"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={senha}
+        onChange={(e) => setSenha(e.target.value)}
         required
       /><br />
       <button type="submit">Cadastrar</button>

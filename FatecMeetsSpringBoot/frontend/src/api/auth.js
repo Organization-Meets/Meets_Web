@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 // Cadastro local
-export const register = (data) => api.post("/auth/register-local", data);
+export const register = (data) => api.post("/auth/register", data);
 
 // Login local
 export const login = (data) => api.post("/auth/login", data);

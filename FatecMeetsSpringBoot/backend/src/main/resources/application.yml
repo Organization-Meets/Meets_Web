@@ -15,6 +15,7 @@ spring:
             token-uri: https://login.microsoftonline.com/common/oauth2/v2.0/token
             user-info-uri: https://graph.microsoft.com/oidc/userinfo
             user-name-attribute: preferred_username
+
   datasource:
     url: jdbc:mysql://mysql:3306/fatecmeets
     username: fatec
@@ -40,3 +41,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
+server:
+  # força o Spring a respeitar os headers do proxy (Codespaces) e não duplicar :8080
+  forward-headers-strategy: framework

@@ -10,6 +10,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.ForwardedHeaderFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 import java.util.List;
 
@@ -50,7 +52,9 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
             "http://localhost:3000",
-            "https://urban-garbanzo-jjg995v9jp4q2q9vw-3000.app.github.dev"
+            "http://localhost:8080",
+            "https://urban-garbanzo-jjg995v9jp4q2q9vw-3000.app.github.dev",
+            "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev"
         ));
 
         config.setAllowedHeaders(List.of("*"));
@@ -59,5 +63,14 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    // 🔑 Corrige o problema de host/porta no Codespaces (remove o :8080)
+    @Bean
+    public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
+        FilterRegistrationBean<ForwardedHeaderFilter> filterRegBean = new FilterRegistrationBean<>();
+        filterRegBean.setFilter(new ForwardedHeaderFilter());
+        filterRegBean.setOrder(0);
+        return filterRegBean;
     }
 }

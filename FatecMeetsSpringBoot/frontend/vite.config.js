@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// 🔗 Captura o backend público ou local
+// 🔗 Usa a URL do backend automaticamente
 const backendUrl =
   process.env.VITE_API_URL ||
   (process.env.CODESPACE_NAME

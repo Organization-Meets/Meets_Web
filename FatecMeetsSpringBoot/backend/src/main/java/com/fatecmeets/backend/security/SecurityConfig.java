@@ -52,11 +52,10 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
 
-        config.setAllowedOrigins(List.of(
-            "http://localhost:3000",
-            "http://localhost:8080",
-            "https://urban-garbanzo-jjg995v9jp4q2q9vw-3000.app.github.dev",
-            "https://urban-garbanzo-jjg995v9jp4q2q9vw-8080.app.github.dev"
+        // 🌍 Libera localhost e qualquer codespace (*.app.github.dev)
+        config.setAllowedOriginPatterns(List.of(
+            "http://localhost:*",
+            "https://*.app.github.dev"
         ));
 
         config.setAllowedHeaders(List.of("*"));
@@ -66,6 +65,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 
     // 🔑 Corrige o problema de host/porta no Codespaces (remove o :8080)
     @Bean

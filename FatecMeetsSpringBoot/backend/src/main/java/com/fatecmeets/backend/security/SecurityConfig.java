@@ -26,20 +26,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // desabilita CSRF para API REST
-            .cors(Customizer.withDefaults()) // habilita CORS
+            .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                // libera todos os endpoints de autenticação
-                .requestMatchers("/auth/**").permitAll()
+                // libera login/cadastro
+                .requestMatchers("/auth/register", "/auth/login").permitAll()
+                // libera os endpoints do fluxo OAuth2
                 .requestMatchers("/oauth2/**").permitAll()
-                // qualquer outro endpoint precisa estar autenticado
+                // qualquer outra rota precisa estar autenticada
                 .anyRequest().authenticated()
             )
-            // só ativa OAuth2 para endpoints que realmente precisarem
+            // só ativa OAuth2 para quem clicar no "Login Microsoft"
             .oauth2Login(Customizer.withDefaults())
             .rememberMe(remember -> remember
                 .key("chave-secreta")
-                .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 dias
+                .tokenValiditySeconds(7 * 24 * 60 * 60)
             );
 
         return http.build();

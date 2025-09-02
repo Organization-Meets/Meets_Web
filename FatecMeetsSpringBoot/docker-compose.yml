@@ -43,17 +43,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
-
-  frontend:
-    build:
-      context: ./frontend   # <- Corrigido aqui
-      dockerfile: Dockerfile
-    container_name: react-frontend
-    ports:
-      - "3000:5173"
-    depends_on:
-      - backend
+      mysql:
+        condition: service_healthy
 
 volumes:
   mysql_data:

@@ -7,8 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copia todos os arquivos, incluindo o .env.docker (renomeando para .env)
-COPY . . 
+COPY . .
 RUN cp .env.docker .env
 
 EXPOSE 5173

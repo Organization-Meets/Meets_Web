@@ -34,6 +34,7 @@ public class SecurityConfig {
                 // 🔓 Libera todos os endpoints relacionados a autenticação
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 // 🔒 Qualquer outra rota exige autenticação
                 .anyRequest().authenticated()
             )

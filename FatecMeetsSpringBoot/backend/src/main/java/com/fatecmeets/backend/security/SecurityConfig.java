@@ -31,14 +31,13 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             // 🔓 Define as regras de autorização
             .authorizeHttpRequests(auth -> auth
-                // 🔓 Libera todos os endpoints relacionados a autenticação
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
+                // ✅ agora só libera /api/auth/**
                 .requestMatchers("/api/auth/**").permitAll()
-                // 🔒 Qualquer outra rota exige autenticação
+                .requestMatchers("/oauth2/**").permitAll()
+                // 🔒 qualquer outra rota exige autenticação
                 .anyRequest().authenticated()
             )
-            // 🔒 Desabilita login padrão do Spring e auth básica
+            // 🔒 desabilita login padrão do Spring e auth básica
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable());
 
@@ -61,7 +60,7 @@ public class SecurityConfig {
         return source;
     }
 
-    // 🔹 Necessário no GitHub Codespaces para repassar headers corretos (X-Forwarded-For / Proto)
+    // 🔹 Necessário no GitHub Codespaces para repassar headers corretos
     @Bean
     public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
         FilterRegistrationBean<ForwardedHeaderFilter> filterRegBean = new FilterRegistrationBean<>();

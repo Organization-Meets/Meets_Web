@@ -22,10 +22,10 @@ public class EmailService {
 
         if ("ATIVACAO".equals(tipo)) {
             assunto = "Ative sua conta";
-            link = baseUrl + "/auth/activate?token=" + token;
+            link = baseUrl + "/api/auth/activate?token=" + token; // ✅ atualizado
         } else {
             assunto = "Confirme seu login";
-            link = baseUrl + "/auth/confirm-login?token=" + token;
+            link = baseUrl + "/api/auth/confirm-login?token=" + token; // ✅ atualizado
         }
 
         SimpleMailMessage msg = new SimpleMailMessage();

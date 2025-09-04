@@ -1,5 +1,0 @@
-# User-agent: * 
-# Especifica que esta regra se aplica a todos os robôs de busca (crawlers).
-
-# Disallow:
-# Não há restrições; todos os robôs podem acessar todas as páginas do site.

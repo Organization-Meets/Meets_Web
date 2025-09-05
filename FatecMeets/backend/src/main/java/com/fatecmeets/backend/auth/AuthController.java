@@ -62,7 +62,6 @@ public class AuthController {
     u.setLoginTokenExpiresAt(null);
     users.save(u);
 
-    // TODO: emitir JWT/refresh conforme necessidade
     return ResponseEntity.ok(Map.of(
       "accessToken", "dummy-access-token",
       "refreshToken", req.isRememberMe() ? "dummy-refresh-token" : ""

@@ -22,19 +22,34 @@ public class EmailService {
   @Value("${app.mail.from.name:Fatec Meets}")
   private String fromName;
 
-  public void sendTokenEmail(@NonNull String to, @NonNull String token) {
+  private void sendGeneric(String to, String subject, String body) {
     try {
       SimpleMailMessage msg = new SimpleMailMessage();
       if (StringUtils.hasText(fromAddress)) {
         msg.setFrom(fromName + " <" + fromAddress + ">");
       }
       msg.setTo(to);
-      msg.setSubject("Seu token de login - FatecMeets");
-      msg.setText("Seu token é: " + token);
+      msg.setSubject(subject);
+      msg.setText(body);
       mailSender.send(msg);
-      log.info("Token enviado por e-mail para {}", to);
+      log.info("E-mail '{}' enviado para {}", subject, to);
     } catch (Exception ex) {
-      log.warn("Não foi possível enviar e-mail. Token para {}: {}", to, token);
+      log.warn("Falha envio e-mail '{}'. Conteúdo fallback: {}", subject, body);
     }
+  }
+
+  public void sendVerificationEmail(String to, String token) {
+    sendGeneric(to, "Verificação de e-mail - FatecMeets",
+        "Seu código de verificação é: " + token + "\nExpira em 15 minutos.");
+  }
+
+  public void sendLoginTokenEmail(String to, String token) {
+    sendGeneric(to, "Token de login - FatecMeets",
+        "Seu token de login é: " + token + "\nExpira em 10 minutos.");
+  }
+
+  @Deprecated
+  public void sendTokenEmail(String to, String token) {
+    sendVerificationEmail(to, token);
   }
 }

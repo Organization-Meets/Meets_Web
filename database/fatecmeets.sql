@@ -98,7 +98,7 @@ CREATE TABLE `atividade` (
   `likes` int NOT NULL DEFAULT '0',
   `score` int NOT NULL DEFAULT '0',
   `tipo_atividade` enum('postagem','comentario','evento','participacao') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_gamificacao` bigint UNSIGNED DEFAULT NULL
+  `id_gameficacao` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -610,7 +610,7 @@ ALTER TABLE `aluno`
 --
 ALTER TABLE `atividade`
   ADD PRIMARY KEY (`id_atividade`),
-  ADD KEY `atividade_id_gamificacao_foreign` (`id_gamificacao`);
+  ADD KEY `atividade_id_gameficacao_foreign` (`id_gameficacao`);
 
 --
 -- Índices de tabela `chat`
@@ -1114,7 +1114,7 @@ ALTER TABLE `aluno`
 -- Restrições para tabelas `atividade`
 --
 ALTER TABLE `atividade`
-  ADD CONSTRAINT `atividade_id_gamificacao_foreign` FOREIGN KEY (`id_gamificacao`) REFERENCES `gameficacao` (`id_gameficacao`);
+  ADD CONSTRAINT `atividade_id_gameficacao_foreign` FOREIGN KEY (`id_gameficacao`) REFERENCES `gameficacao` (`id_gameficacao`);
 
 --
 -- Restrições para tabelas `chat_denunciado`
@@ -1271,4 +1271,4 @@ COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */

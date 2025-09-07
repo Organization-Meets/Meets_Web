@@ -1,0 +1,101 @@
+.fm-side {
+    position: fixed;
+    top: 56px; /* abaixo da navbar fixa */
+    left: 0;
+    bottom: 0;
+    width: 64px;
+    background: #FE3632; /* atualizado */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem .4rem .85rem;
+    z-index: 90;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    box-shadow: 2px 0 6px -3px rgba(0,0,0,.5);
+}
+.fm-side .stack {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    width: 100%;
+    align-items: center;
+}
+.fm-side a,
+.fm-side button {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: #d8e3ff;
+    border-radius: 12px;
+    position: relative;
+    transition: background .18s, color .18s;
+    font-size: .75rem;
+    background:#AF221F; /* novo fundo padrão dos ícones */
+}
+.fm-side a.active {
+    background:#911c1a; /* ativo */
+    color:#fff;
+}
+.fm-side a:hover,
+.fm-side button:hover {
+    background:#c22724; /* hover */
+    color:#fff;
+}
+.fm-side .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+.fm-side__nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: .4rem;
+    max-height: none;
+}
+.fm-side__section,
+.fm-side__hint {
+    display: none;
+}
+.fm-side__logout {
+    order: 99;
+}
+
+body {
+    margin-left: 64px;
+    padding-top: 56px;
+    background:#DD3532; /* alterar fundo geral da tela */
+    color: #fff;
+}
+
+.fm-icon {
+    width:24px;
+    height:24px;
+    object-fit:contain;
+    pointer-events:none;
+    filter:brightness(0) invert(1); /* se quiser forçar branco; remova se não necessário */
+}
+
+@media (max-width: 900px) {
+    .fm-side {
+        flex-direction: row;
+        width: 100%;
+        height: 56px;
+        top: 56px;
+        padding: .4rem .7rem;
+    }
+    .fm-side .stack {
+        flex-direction: row;
+        gap: .5rem;
+    }
+    .fm-side .bottom {
+        flex-direction: row;
+    }
+    body {
+        margin-left: 0;
+    }
+}

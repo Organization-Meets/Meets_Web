@@ -1,0 +1,143 @@
+.topbar {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:56px;
+  background:#FE3632; /* atualizado */
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 1rem;
+  z-index:120;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  box-shadow:0 2px 5px -2px rgba(0,0,0,.5);
+}
+.topbar a { color:#fff; text-decoration:none; }
+.brand { font-weight:600; font-size:1.05rem; letter-spacing:.5px; user-select:none; }
+.brand-logo {
+  height:34px;
+  display:block;
+}
+.brand a { display:inline-flex; align-items:center; }
+
+.profile-menu { position:relative; display:flex; align-items:center; }
+.avatar-btn {
+  width:40px; height:40px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; border:0; background:#1f2d49; color:#fff;
+  cursor:pointer; font-size:1.1rem; transition:background .2s;
+}
+.avatar-btn:hover { background:#264067; }
+
+.dropdown {
+  position:absolute; top:110%; right:0;
+  background:#1f2d49; border-radius:10px; padding:.5rem;
+  min-width:160px; box-shadow:0 10px 28px -8px rgba(0,0,0,.55);
+  display:flex; flex-direction:column; gap:.35rem;
+  animation:fade .18s ease;
+}
+.dropdown a, .dropdown button {
+  background:none; border:0; color:#fff; text-align:left;
+  padding:.5rem .6rem; font-size:.85rem; border-radius:6px;
+  cursor:pointer; text-decoration:none; transition:background .17s;
+}
+.dropdown a:hover, .dropdown button:hover { background:rgba(255,255,255,.14); }
+
+@keyframes fade {
+  from {opacity:0; transform:translateY(-4px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+/* Overlay Auth */
+.auth-overlay { position:fixed; inset:0; z-index:300; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.auth-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(3px); pointer-events:auto; }
+.auth-box {
+  position:relative; background:#14213d; color:#fff; border-radius:14px;
+  padding:1.2rem 1.3rem 1.4rem; width:min(420px,92%); z-index:310;
+  box-shadow:0 15px 40px -10px rgba(0,0,0,.6); pointer-events:auto;
+  max-height:85vh; overflow:auto;
+}
+.close-auth {
+  position:absolute; top:.4rem; right:.55rem; width:34px; height:34px;
+  border:0; background:#1f2d49; color:#fff; border-radius:50%;
+  font-size:1.2rem; cursor:pointer; line-height:0;
+}
+.close-auth:hover { background:#263d63; }
+
+.dropdown a,
+.dropdown button {
+    background: none;
+    border: 0;
+    color: #fff;
+    text-align: left;
+    padding: .5rem .6rem;
+    font-size: .85rem;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .17s;
+}
+
+.dropdown a:hover,
+.dropdown button:hover {
+    background: rgba(255,255,255,.14);
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(-4px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* Overlay Auth */
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.auth-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(3px);
+    pointer-events: auto;
+}
+
+.auth-box {
+    position: relative;
+    background: #14213d;
+    color: #fff;
+    border-radius: 14px;
+    padding: 1.2rem 1.3rem 1.4rem;
+    width: min(420px,92%);
+    z-index: 310;
+    box-shadow: 0 15px 40px -10px rgba(0,0,0,.6);
+    pointer-events: auto;
+    max-height: 85vh;
+    overflow: auto;
+}
+
+.close-auth {
+    position: absolute;
+    top: .4rem;
+    right: .55rem;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: #1f2d49;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.close-auth:hover {
+    background: #263d63;
+}

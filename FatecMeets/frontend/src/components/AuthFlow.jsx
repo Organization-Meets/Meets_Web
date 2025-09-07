@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { apiFetch } from '../api/client';
 
-export function AuthFlow({ onSuccess }) {
-  const [view, setView] = useState('login');
+export function AuthFlow({ onSuccess, initialView = 'login' }) {
+  const [view, setView] = useState(initialView);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [verificationToken, setVerificationToken] = useState('');
@@ -51,6 +51,8 @@ export function AuthFlow({ onSuccess }) {
   };
 
   const loginMicrosoft = () => window.location.href = '/oauth2/authorization/azure';
+
+  useEffect(()=> { setView(initialView); }, [initialView]);
 
   return (
     <div className="auth">

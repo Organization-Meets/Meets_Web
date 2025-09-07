@@ -24,10 +24,12 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* display: flex; */
+  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
+  background: #DD3532; /* novo fundo */
+  color: #fff;
 }
 
 h1 {

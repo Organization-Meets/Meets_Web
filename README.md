@@ -59,3 +59,12 @@ Acesso:
 Observações:
 - Testes em andamento.
 - Documentação da API será atualizada.
+
+## Navbar (Frontend SPA)
+Itens: Home, Buscar (Usuários, Postagens, Lugares, Eventos, Instituições), Criar (Postagem, Evento), Eventos, Perfil.
+
+Instalação:
+npm install react-router-dom
+
+Build docker:
+docker compose -f FatecMeets/backend/compose.yaml up -d --build

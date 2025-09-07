@@ -14,8 +14,10 @@ public class Gamificacao extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private Integer scoreTotal = 0;
 
+    @Column(length = 100, unique = true)
     private String nickname;
 
     @ManyToOne(optional = false) @JoinColumn(name = "usuario_id")

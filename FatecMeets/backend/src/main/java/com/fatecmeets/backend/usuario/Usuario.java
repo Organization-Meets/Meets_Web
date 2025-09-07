@@ -34,4 +34,19 @@ public class Usuario extends Auditable {
 
     @Column(name = "remember_token", length = 100)
     private String rememberToken;
+
+    @Column(name = "login_token", length = 12)
+    private String loginToken;
+
+    private java.time.Instant loginTokenExpiresAt;
+
+    @Builder.Default
+    private Integer loginTokenAttempts = 0;
+
+    private java.time.Instant lastLoginTokenSentAt;
+
+    // Conveniência para reutilizar lógica antiga de verificação
+    public boolean isVerified() {
+        return this.status == UsuarioStatus.ativo;
+    }
 }

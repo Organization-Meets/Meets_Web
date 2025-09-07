@@ -1,6 +1,5 @@
 package com.fatecmeets.backend.token;
 
-import com.fatecmeets.backend.user.User;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +25,13 @@ public class TokenService {
         return HEX.formatHex(b).toUpperCase();
     }
 
-    public Map<String,String> issueLoginTokens(User user, boolean longLived) {
+    public Map<String,String> issueLoginTokens(Long usuarioId, boolean longLived) {
         // access ~15m
         Token access = Token.builder()
                 .token(randomToken(16))
                 .type(TokenType.ACCESS)
                 .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
-                .user(user)
+                .userId(usuarioId)
                 .build();
         // refresh ~7d ou 30d
         int days = longLived ? 30 : 7;
@@ -40,17 +39,17 @@ public class TokenService {
                 .token(randomToken(32))
                 .type(TokenType.REFRESH)
                 .expiresAt(Instant.now().plus(days, ChronoUnit.DAYS))
-                .user(user)
+                .userId(usuarioId)
                 .build();
         repo.save(access);
         repo.save(refresh);
-        log.debug("Tokens emitidos para user {}", user.getId());
+        log.debug("Tokens emitidos para user {}", usuarioId);
         return Map.of("accessToken", access.getToken(), "refreshToken", refresh.getToken());
     }
 
-    public void revokeUserSessionTokens(User user) {
-        repo.findByUserAndType(user, TokenType.ACCESS).forEach(t -> t.setRevoked(true));
-        repo.findByUserAndType(user, TokenType.REFRESH).forEach(t -> t.setRevoked(true));
+    public void revokeUserSessionTokens(Long usuarioId) {
+        repo.findByUserIdAndType(usuarioId, TokenType.ACCESS).forEach(t -> t.setRevoked(true));
+        repo.findByUserIdAndType(usuarioId, TokenType.REFRESH).forEach(t -> t.setRevoked(true));
     }
 
     public String rotateAccess(String refreshToken) {
@@ -67,7 +66,7 @@ public class TokenService {
                 .token(randomToken(16))
                 .type(TokenType.ACCESS)
                 .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
-                .user(r.getUser())
+                .userId(r.getUserId())
                 .build();
         repo.save(access);
         return access.getToken();

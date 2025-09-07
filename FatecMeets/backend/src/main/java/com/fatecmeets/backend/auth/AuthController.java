@@ -19,9 +19,6 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
-import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,7 +32,6 @@ public class AuthController {
   private final TokenService tokenService;
 
   private static final SecureRandom RNG = new SecureRandom();
-  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
   private static final int LOGIN_TOKEN_MAX_ATTEMPTS = 5;
   private static final int LOGIN_TOKEN_MIN_INTERVAL_SECONDS = 30;
@@ -220,14 +216,6 @@ public class AuthController {
     private String password;
   }
 
-  @Data
-  public static class LoginRequest {
-    private String email;
-    private String password;
-    private String token;
-    private boolean rememberMe;
-  }
-}
   @Data
   public static class LoginRequest {
     private String email;

@@ -26,30 +26,28 @@ public class TokenService {
     }
 
     public Map<String,String> issueLoginTokens(Long usuarioId, boolean longLived) {
-        // access ~15m
         Token access = Token.builder()
-                .token(randomToken(16))
-                .type(TokenType.ACCESS)
-                .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
-                .userId(usuarioId)
-                .build();
-        // refresh ~7d ou 30d
+            .token(randomToken(16))
+            .type(TokenType.ACCESS)
+            .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
+            .usuarioId(usuarioId)
+            .build();
         int days = longLived ? 30 : 7;
         Token refresh = Token.builder()
-                .token(randomToken(32))
-                .type(TokenType.REFRESH)
-                .expiresAt(Instant.now().plus(days, ChronoUnit.DAYS))
-                .userId(usuarioId)
-                .build();
+            .token(randomToken(32))
+            .type(TokenType.REFRESH)
+            .expiresAt(Instant.now().plus(days, ChronoUnit.DAYS))
+            .usuarioId(usuarioId)
+            .build();
         repo.save(access);
         repo.save(refresh);
-        log.debug("Tokens emitidos para user {}", usuarioId);
+        log.debug("Tokens emitidos para usuario {}", usuarioId);
         return Map.of("accessToken", access.getToken(), "refreshToken", refresh.getToken());
     }
 
     public void revokeUserSessionTokens(Long usuarioId) {
-        repo.findByUserIdAndType(usuarioId, TokenType.ACCESS).forEach(t -> t.setRevoked(true));
-        repo.findByUserIdAndType(usuarioId, TokenType.REFRESH).forEach(t -> t.setRevoked(true));
+        repo.findByUsuarioIdAndType(usuarioId, TokenType.ACCESS).forEach(t -> t.setRevoked(true));
+        repo.findByUsuarioIdAndType(usuarioId, TokenType.REFRESH).forEach(t -> t.setRevoked(true));
     }
 
     public String rotateAccess(String refreshToken) {
@@ -61,13 +59,12 @@ public class TokenService {
             repo.save(r);
             return null;
         }
-        // gera novo access
         Token access = Token.builder()
-                .token(randomToken(16))
-                .type(TokenType.ACCESS)
-                .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
-                .userId(r.getUserId())
-                .build();
+            .token(randomToken(16))
+            .type(TokenType.ACCESS)
+            .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
+            .usuarioId(r.getUsuarioId())
+            .build();
         repo.save(access);
         return access.getToken();
     }

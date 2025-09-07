@@ -73,4 +73,13 @@ public class TokenService {
         repo.findByTokenAndTypeAndRevokedFalse(refreshToken, TokenType.REFRESH)
                 .ifPresent(t -> { t.setRevoked(true); repo.save(t); });
     }
+
+    public Long extractUsuarioId(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
+        String token = authHeader.substring(7);
+        // Busca token ACCESS
+        return repo.findByTokenAndTypeAndRevokedFalse(token, TokenType.ACCESS)
+                .map(Token::getUsuarioId)
+                .orElse(null);
+    }
 }

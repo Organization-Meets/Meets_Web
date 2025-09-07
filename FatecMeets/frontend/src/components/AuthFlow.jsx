@@ -9,6 +9,8 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
   const [loginToken, setLoginToken] = useState('');
   const [remember, setRemember] = useState(false);
   const [msg, setMsg] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const clear = () => setMsg('');
 
@@ -17,9 +19,18 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
     return apiFetch(path, { method:'POST', body: JSON.stringify(body) });
   };
 
+  const fileToBase64 = (file) => new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+
   const register = async () => {
     try {
-      await fetchJson('/auth/register-local', { email, password });
+      let imagemBase64 = null;
+      if (imageFile) imagemBase64 = await fileToBase64(imageFile);
+      await fetchJson('/auth/register-local', { email, password, confirmPassword, imagemBase64 });
       setMsg('Cadastro ok. Verifique email.');
       setView('verificar');
     } catch(e){ setMsg(e.message); }
@@ -46,6 +57,11 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
       const r = await fetchJson('/auth/login-local', { email, password, token: loginToken, rememberMe: remember });
       sessionStorage.setItem('accessToken', r.accessToken);
       if (remember && r.refreshToken) localStorage.setItem('refreshToken', r.refreshToken);
+      const rolesResp = await fetch('/api/auth/me/roles', { headers:{ Authorization: 'Bearer '+ r.accessToken }});
+      if (rolesResp.ok) {
+        const rolesJson = await rolesResp.json();
+        sessionStorage.setItem('roles', JSON.stringify(rolesJson.roles||[]));
+      }
       onSuccess();
     } catch(e){ setMsg(e.message); }
   };
@@ -67,6 +83,8 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
           <h2>Cadastro</h2>
           <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
           <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
+          <input placeholder="confirmar senha" type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} />
+          <input type="file" accept="image/*" onChange={e=>setImageFile(e.target.files?.[0]||null)} />
           <button onClick={register}>Cadastrar</button>
           <button onClick={loginMicrosoft}>Microsoft</button>
         </div>
@@ -85,7 +103,9 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
           <h2>Login passo 1</h2>
           <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
           <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-          <label><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)} /> Lembrar-me</label>
+          <label>
+            <input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)} /> Lembrar-me
+          </label>
           <button onClick={requestToken}>Gerar token</button>
           <button onClick={loginMicrosoft}>Microsoft</button>
         </div>

@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import './Navbar.css';
 import logo from '../assets/logo.png';
+import denunciaIcon from '../assets/denuncia.png';
 
 export default function Navbar({ logged, onLogout, onOpenLogin, onOpenRegister }) {
   const [openProfile, setOpenProfile] = useState(false);
@@ -15,6 +16,21 @@ export default function Navbar({ logged, onLogout, onOpenLogin, onOpenRegister }
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const roles = (()=> {
+    try { return JSON.parse(sessionStorage.getItem('roles')||'[]'); } catch { return []; }
+  })();
+  const isAdmin = roles.includes('administrador');
+
+  // Obtém imagem de perfil (salve após login em sessionStorage.setItem('userImage', urlDaImagem))
+  const userImage = (() => {
+    const keys = ['userImage','profileImage','foto','avatar'];
+    for (const k of keys) {
+      const v = sessionStorage.getItem(k) || localStorage.getItem(k);
+      if (v) return v;
+    }
+    return null;
+  })();
+
   return (
     <header className="topbar">
       <div className="brand">
@@ -22,6 +38,11 @@ export default function Navbar({ logged, onLogout, onOpenLogin, onOpenRegister }
           <img src={logo} alt="FatecMeets" className="brand-logo" />
         </NavLink>
       </div>
+      {isAdmin && (
+        <NavLink to="/denuncias" className="admin-denuncia-link" title="Denúncias">
+          <img src={denunciaIcon} alt="Denúncias" style={{height:28}} />
+        </NavLink>
+      )}
       <div className="profile-menu" ref={ref}>
         <button
           className="avatar-btn"
@@ -29,7 +50,9 @@ export default function Navbar({ logged, onLogout, onOpenLogin, onOpenRegister }
           aria-haspopup="true"
           aria-expanded={openProfile}
         >
-          <span className="avatar-icon" aria-hidden="true">👤</span>
+          {userImage
+            ? <img src={userImage} alt="Perfil" className="avatar-img" />
+            : <span className="avatar-icon" aria-hidden="true">👤</span>}
         </button>
         {openProfile && (
           <div className="dropdown">

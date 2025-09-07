@@ -7,6 +7,10 @@ import com.fatecmeets.backend.usuario.UsuarioRepository;
 import com.fatecmeets.backend.usuario.UsuarioStatus;
 import com.fatecmeets.backend.gamificacao.Gamificacao;
 import com.fatecmeets.backend.gamificacao.GamificacaoRepository;
+import com.fatecmeets.backend.aluno.AlunoRepository;
+import com.fatecmeets.backend.academico.AcademicoRepository;
+import com.fatecmeets.backend.administrador.AdministradorRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +34,9 @@ public class AuthController {
   private final PasswordEncoder encoder;
   private final EmailService emailService;
   private final TokenService tokenService;
+  private final AlunoRepository alunos;
+  private final AcademicoRepository academicos;
+  private final AdministradorRepository administradores;
 
   private static final SecureRandom RNG = new SecureRandom();
 
@@ -57,32 +64,36 @@ public class AuthController {
     if (!StringUtils.hasText(rawEmail) || !StringUtils.hasText(req.getPassword()) || !emailValido(rawEmail)) {
       return ResponseEntity.badRequest().body(Map.of("error", "email e senha válidos são obrigatórios"));
     }
+    if (!req.getPassword().equals(req.getConfirmPassword())) {
+      return ResponseEntity.badRequest().body(Map.of("error","senhas não conferem"));
+    }
     if (usuarios.existsByEmail(rawEmail)) {
       return ResponseEntity.status(409).body(Map.of("error","email já cadastrado"));
     }
     String local = rawEmail.substring(0, rawEmail.indexOf('@') > 0 ? rawEmail.indexOf('@') : rawEmail.length());
-    String defaultName = Character.toUpperCase(local.charAt(0)) + local.substring(1);
     String verification = randomCode(6);
+
+    String imagemJson = null;
+    if (StringUtils.hasText(req.getImagemBase64())) {
+      // Armazena como JSON simples {"base64":"..."}
+      imagemJson = "{\"base64\":\"" + req.getImagemBase64().replace("\"","") + "\"}";
+    }
 
     Usuario u = Usuario.builder()
       .email(rawEmail)
       .password(encoder.encode(req.getPassword()))
-      .status(UsuarioStatus.inativo)           // aguardando verificação
+      .status(UsuarioStatus.inativo)
       .emailVerificationToken(verification)
+      .imagem(imagemJson)
       .build();
     usuarios.save(u);
 
-    // Gamificação automática
+    // Gamificação automática (nickname único)
     String baseNick = local.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
     String nick = baseNick;
     int c = 1;
-    while (gamificacoes.existsByNickname(nick)) {
-      nick = baseNick + c++;
-    }
-    gamificacoes.save(Gamificacao.builder()
-        .usuario(u)
-        .nickname(nick)
-        .build());
+    while (gamificacoes.existsByNickname(nick)) nick = baseNick + c++;
+    gamificacoes.save(Gamificacao.builder().usuario(u).nickname(nick).build());
 
     emailService.sendVerificationEmail(u.getEmail(), verification);
     return ResponseEntity.ok(Map.of("message","Usuário criado. Verifique seu e-mail com o código enviado."));
@@ -210,10 +221,24 @@ public class AuthController {
     return ResponseEntity.ok(Map.of("message","logout efetuado"));
   }
 
+  @GetMapping("/me/roles")
+  public ResponseEntity<?> meRoles(@RequestHeader("Authorization") String authHeader) {
+    // Expectativa: tokenService consiga extrair usuarioId (implementar se ainda não houver)
+    Long usuarioId = tokenService.extractUsuarioId(authHeader);
+    if (usuarioId == null) return ResponseEntity.status(401).body(Map.of("error","token inválido"));
+    var roles = new java.util.ArrayList<String>();
+    if (administradores.existsByUsuarioId(usuarioId)) roles.add("administrador");
+    if (alunos.existsByUsuarioId(usuarioId)) roles.add("aluno");
+    if (academicos.existsByUsuarioId(usuarioId)) roles.add("academico");
+    return ResponseEntity.ok(Map.of("roles", roles));
+  }
+
   @Data
   public static class RegisterRequest {
     private String email;
     private String password;
+    private String confirmPassword;
+    private String imagemBase64; // opcional
   }
 
   @Data

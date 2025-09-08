@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function UpgradeRoleForm({ initialTipo='aluno', onSuccess }) {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const dark = theme === 'escuro';
   const [tipoLocal, setTipoLocal] = useState(initialTipo); // aluno | academico
   const [nome, setNome] = useState('');
@@ -27,6 +29,7 @@ export default function UpgradeRoleForm({ initialTipo='aluno', onSuccess }) {
       sessionStorage.setItem('roles', JSON.stringify(roles));
       onSuccess && onSuccess(tipoLocal);
       setMsg('Cadastro concluído.');
+      setTimeout(()=>navigate('/'), 800); // redireciona
     } catch(e){ setMsg(e.message); } finally { setLoading(false); }
   };
 

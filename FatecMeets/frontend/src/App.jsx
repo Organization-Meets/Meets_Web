@@ -7,6 +7,8 @@ import Navbar from './components/Navbar';
 import { ThemeProvider } from './context/ThemeContext';
 import Configuracoes from './pages/Configuracoes';
 import UpgradeRoleForm from './components/UpgradeRoleForm';
+import Perfil from './pages/Perfil';
+import Criar from './pages/Criar';
 
 // Placeholders simples
 const Page = ({ titulo }) => (
@@ -104,17 +106,17 @@ function App() {
             } />
             <Route path="/criar/postagem" element={
               <Protected logged={logged} onSuccess={()=>{setLogged(true); closeAuth();}}>
-                {roleGuard(['aluno','academico','administrador'], <Page titulo="Criar Postagem" />, openAuth)}
+                {roleGuard(['aluno','academico','administrador'], <Criar />, openAuth)}
               </Protected>
             } />
             <Route path="/criar/evento" element={
               <Protected logged={logged} onSuccess={()=>{setLogged(true); closeAuth();}}>
-                {roleGuard(['aluno','academico','administrador'], <Page titulo="Criar Evento" />, openAuth)}
+                {roleGuard(['aluno','academico','administrador'], <Criar />, openAuth)}
               </Protected>
             } />
             <Route path="/perfil" element={
               <Protected logged={logged} onSuccess={()=>{setLogged(true); closeAuth();}}>
-                {roleGuard(['aluno','academico','administrador'], <Page titulo="Perfil" />, openAuth)}
+                {roleGuard(['aluno','academico','administrador'], <Perfil />, openAuth)}
               </Protected>
             } />
             <Route path="/configuracoes" element={

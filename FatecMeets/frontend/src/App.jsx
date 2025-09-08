@@ -9,6 +9,7 @@ import Configuracoes from './pages/Configuracoes';
 import UpgradeRoleForm from './components/UpgradeRoleForm';
 import Perfil from './pages/Perfil';
 import Criar from './pages/Criar';
+import AdminInvite from './pages/AdminInvite';
 
 // Placeholders simples
 const Page = ({ titulo }) => (
@@ -124,6 +125,7 @@ function App() {
                 <Configuracoes />
               </Protected>
             } />
+            <Route path="/admin-invite/:token" element={<AdminInvite />} />
             <Route path="*" element={<Page titulo="Não encontrado" />} />
           </Routes>
         </main>

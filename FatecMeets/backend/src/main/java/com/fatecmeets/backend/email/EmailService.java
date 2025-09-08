@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class EmailService {
       mailSender.send(msg);
       log.info("E-mail '{}' enviado para {}", subject, to);
     } catch (Exception ex) {
-      log.warn("Falha envio e-mail '{}'. Conteúdo fallback: {}", subject, body);
+      log.warn("Falha envio e-mail '{}'. Conteúdo fallback: {} - erro: {}", subject, body, ex.getMessage());
     }
   }
 
@@ -51,5 +50,17 @@ public class EmailService {
   @Deprecated
   public void sendTokenEmail(String to, String token) {
     sendVerificationEmail(to, token);
+  }
+
+  // ==== NOVOS MÉTODOS ====
+  public void sendPlain(String to, String subject, String body) {
+    sendGeneric(to, subject, body);
+  }
+
+  public void sendAdminInviteEmail(String to, String link) {
+    String body = "Você recebeu um convite para se tornar Administrador no FatecMeets.\n\n" +
+        "Acesse o link único (válido por 24h):\n" + link + "\n\n" +
+        "Se você não solicitou este convite, ignore este e-mail.";
+    sendGeneric(to, "Convite Administrador - FatecMeets", body);
   }
 }

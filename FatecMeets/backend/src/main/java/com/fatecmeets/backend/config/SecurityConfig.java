@@ -29,7 +29,8 @@ public class SecurityConfig {
           "/oauth2/**",
           "/login/**",
           "/api/roles/**",
-          "/api/profile/**" // novo
+          "/api/profile/**",
+          "/api/admin-invite/**" // liberado
         ).permitAll()
         .anyRequest().authenticated()
       );

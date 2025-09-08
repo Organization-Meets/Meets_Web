@@ -6,6 +6,7 @@ import { Sidebar } from './components/Sidebar';
 import Navbar from './components/Navbar';
 import { ThemeProvider } from './context/ThemeContext';
 import Configuracoes from './pages/Configuracoes';
+import UpgradeRoleForm from './components/UpgradeRoleForm';
 
 // Placeholders simples
 const Page = ({ titulo }) => (
@@ -45,11 +46,10 @@ function App() {
   const roleGuard = (rolesNeeded, content, openAuth) => {
     const roles = (()=>{ try { return JSON.parse(sessionStorage.getItem('roles')||'[]'); } catch { return []; } })();
     if (!rolesNeeded.some(r=>roles.includes(r))) {
+      const [tipo] = ['aluno'];
       return (
         <div style={{padding:'1.5rem'}}>
-          <h2>Completar Cadastro</h2>
-          <p>Você precisa concluir seu cadastro como aluno ou acadêmico para acessar este recurso.</p>
-          <button onClick={()=>openAuth('login')} style={{marginTop:'1rem'}}>Abrir Login/Cadastro</button>
+          <UpgradeRoleForm initialTipo={tipo} onSuccess={()=>{}} />
         </div>
       );
     }

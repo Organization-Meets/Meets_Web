@@ -27,7 +27,8 @@ public class SecurityConfig {
           "/api/auth/**",
           "/error",
           "/oauth2/**",
-          "/login/**"
+          "/login/**",
+          "/api/roles/**"
         ).permitAll()
         .anyRequest().authenticated()
       );

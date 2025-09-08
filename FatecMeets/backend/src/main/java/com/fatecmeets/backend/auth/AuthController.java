@@ -8,7 +8,9 @@ import com.fatecmeets.backend.usuario.UsuarioStatus;
 import com.fatecmeets.backend.gamificacao.Gamificacao;
 import com.fatecmeets.backend.gamificacao.GamificacaoRepository;
 import com.fatecmeets.backend.aluno.AlunoRepository;
+import com.fatecmeets.backend.aluno.Aluno;
 import com.fatecmeets.backend.academico.AcademicoRepository;
+import com.fatecmeets.backend.academico.Academico;
 import com.fatecmeets.backend.administrador.AdministradorRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import lombok.Data;
@@ -247,6 +249,75 @@ public class AuthController {
       ));
   }
 
+  @PostMapping("/register-aluno")
+  public ResponseEntity<?> registerAluno(@RequestBody RegisterAlunoRequest req) {
+      String rawEmail = normalizeEmail(req.getEmail());
+      if (!StringUtils.hasText(rawEmail) || !StringUtils.hasText(req.getPassword()) || !StringUtils.hasText(req.getRa()) || !StringUtils.hasText(req.getNome())) {
+          return ResponseEntity.badRequest().body(Map.of("error","email, senha, nome e RA são obrigatórios"));
+      }
+      if (!req.getPassword().equals(req.getConfirmPassword())) {
+          return ResponseEntity.badRequest().body(Map.of("error","senhas não conferem"));
+      }
+      if (usuarios.existsByEmail(rawEmail)) {
+          return ResponseEntity.status(409).body(Map.of("error","email já cadastrado"));
+      }
+      if (alunos.findByRa(req.getRa()).isPresent() || academicos.findByRa(req.getRa()).isPresent()) {
+          return ResponseEntity.status(409).body(Map.of("error","RA já cadastrado"));
+      }
+      String imagemJson = null;
+      if (StringUtils.hasText(req.getImagemBase64())) {
+          imagemJson = "{\"base64\":\"" + req.getImagemBase64().replace("\"", "") + "\"}";
+      }
+      Usuario u = Usuario.builder()
+              .email(rawEmail)
+              .password(encoder.encode(req.getPassword()))
+              .status(UsuarioStatus.ativo) // direto ativo
+              .imagem(imagemJson)
+              .build();
+      usuarios.save(u);
+      alunos.save(Aluno.builder().usuario(u).nome(req.getNome()).ra(req.getRa()).build());
+      // Gamificação automática
+      String baseNick = req.getNome().replaceAll("[^a-zA-Z0-9]"," ").trim().replaceAll(" +"," ").replace(" ", "-").toLowerCase();
+      if (!StringUtils.hasText(baseNick)) baseNick = rawEmail.split("@")[0];
+      String nick = baseNick; int c=1; while (gamificacoes.existsByNickname(nick)) nick = baseNick + c++;
+      gamificacoes.save(Gamificacao.builder().usuario(u).nickname(nick).scoreTotal(0).build());
+      return ResponseEntity.ok(Map.of("message","Aluno cadastrado com sucesso"));
+  }
+
+  @PostMapping("/register-academico")
+  public ResponseEntity<?> registerAcademico(@RequestBody RegisterAlunoRequest req) { // reutiliza mesmo DTO (nome, ra, imagem, senha)
+      String rawEmail = normalizeEmail(req.getEmail());
+      if (!StringUtils.hasText(rawEmail) || !StringUtils.hasText(req.getPassword()) || !StringUtils.hasText(req.getRa()) || !StringUtils.hasText(req.getNome())) {
+          return ResponseEntity.badRequest().body(Map.of("error","email, senha, nome e RA são obrigatórios"));
+      }
+      if (!req.getPassword().equals(req.getConfirmPassword())) {
+          return ResponseEntity.badRequest().body(Map.of("error","senhas não conferem"));
+      }
+      if (usuarios.existsByEmail(rawEmail)) {
+          return ResponseEntity.status(409).body(Map.of("error","email já cadastrado"));
+      }
+      if (alunos.findByRa(req.getRa()).isPresent() || academicos.findByRa(req.getRa()).isPresent()) {
+          return ResponseEntity.status(409).body(Map.of("error","RA já cadastrado"));
+      }
+      String imagemJson = null;
+      if (StringUtils.hasText(req.getImagemBase64())) {
+          imagemJson = "{\"base64\":\"" + req.getImagemBase64().replace("\"", "") + "\"}";
+      }
+      Usuario u = Usuario.builder()
+              .email(rawEmail)
+              .password(encoder.encode(req.getPassword()))
+              .status(UsuarioStatus.ativo)
+              .imagem(imagemJson)
+              .build();
+      usuarios.save(u);
+      academicos.save(Academico.builder().usuario(u).nome(req.getNome()).ra(req.getRa()).build());
+      String baseNick = req.getNome().replaceAll("[^a-zA-Z0-9]"," ").trim().replaceAll(" +"," ").replace(" ", "-").toLowerCase();
+      if (!StringUtils.hasText(baseNick)) baseNick = rawEmail.split("@")[0];
+      String nick = baseNick; int c=1; while (gamificacoes.existsByNickname(nick)) nick = baseNick + c++;
+      gamificacoes.save(Gamificacao.builder().usuario(u).nickname(nick).scoreTotal(0).build());
+      return ResponseEntity.ok(Map.of("message","Acadêmico cadastrado com sucesso"));
+  }
+
   @Data
   public static class RegisterRequest {
     private String email;
@@ -261,5 +332,15 @@ public class AuthController {
     private String password;
     private String token;
     private boolean rememberMe;
+  }
+
+  @Data
+  public static class RegisterAlunoRequest {
+      private String email;
+      private String password;
+      private String confirmPassword;
+      private String nome;
+      private String ra;
+      private String imagemBase64;
   }
 }

@@ -28,7 +28,8 @@ public class SecurityConfig {
           "/error",
           "/oauth2/**",
           "/login/**",
-          "/api/roles/**"
+          "/api/roles/**",
+          "/api/profile/**" // novo
         ).permitAll()
         .anyRequest().authenticated()
       );

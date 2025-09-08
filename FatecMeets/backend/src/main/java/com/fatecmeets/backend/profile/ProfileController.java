@@ -33,6 +33,9 @@ public class ProfileController {
         var roles = new ArrayList<String>();
         if (alunos.existsByUsuarioId(uid)) roles.add("aluno");
         if (academicos.existsByUsuarioId(uid)) roles.add("academico");
+        var aluno = alunos.findFirstByUsuarioId(uid).orElse(null);
+        var academico = academicos.findFirstByUsuarioId(uid).orElse(null);
+        String nome = aluno != null ? aluno.getNome() : academico != null ? academico.getNome() : null;
         Map<String,Object> body = new LinkedHashMap<>();
         body.put("id", usuario.getId());
         body.put("email", usuario.getEmail());
@@ -40,6 +43,7 @@ public class ProfileController {
         body.put("nickname", gam != null ? gam.getNickname() : null);
         body.put("scoreTotal", gam != null ? gam.getScoreTotal() : 0);
         body.put("roles", roles);
+        body.put("nome", nome);
         body.put("postagens", List.of()); // placeholder
         body.put("eventos", List.of()); // placeholder
         return ResponseEntity.ok(body);

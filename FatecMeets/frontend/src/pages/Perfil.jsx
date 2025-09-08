@@ -27,7 +27,13 @@ export default function Perfil() {
   if (!data) return null;
 
   return (
-    <div style={{padding:'1rem 1.25rem'}}>
+    <div style={{
+      padding:'1rem 1.25rem',
+      background: (document.documentElement.getAttribute('data-theme')==='escuro') ? '#0f0f0f' : '#fff',
+      color: (document.documentElement.getAttribute('data-theme')==='escuro') ? '#f5f5f5' : '#111',
+      borderRadius:12,
+      boxShadow: (document.documentElement.getAttribute('data-theme')==='escuro') ? '0 4px 14px -6px rgba(0,0,0,.6)' : '0 4px 14px -6px rgba(0,0,0,.25)'
+    }}>
       <div style={{display:'flex', gap:'1.25rem', alignItems:'center', flexWrap:'wrap'}}>
         <div style={{width:120, height:120, borderRadius:'50%', overflow:'hidden', background:'#222'}}>
           {data.imagemUrl ? <img src={data.imagemUrl} alt="perfil" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',color:'#888'}}>Sem foto</div>}

@@ -31,7 +31,14 @@ export default function Criar() {
   };
 
   return (
-    <div style={{padding:'1rem 1.25rem', display:'grid', gap:'2rem', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))'}}>
+    <div style={{
+      padding:'1rem 1.25rem',
+      background: (document.documentElement.getAttribute('data-theme')==='escuro') ? '#0f0f0f' : '#fff',
+      color: (document.documentElement.getAttribute('data-theme')==='escuro') ? '#f5f5f5' : '#111',
+      borderRadius:12,
+      boxShadow: (document.documentElement.getAttribute('data-theme')==='escuro') ? '0 4px 14px -6px rgba(0,0,0,.6)' : '0 4px 14px -6px rgba(0,0,0,.25)',
+      display:'grid', gap:'2rem', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))'
+    }}>
       <section style={cardStyle}>
         <h2 style={{marginTop:0}}>Criar Postagem</h2>
         <input placeholder="Título" value={pTitulo} onChange={e=>setPTitulo(e.target.value)} style={inp} />

@@ -8,4 +8,6 @@ public interface AcademicoRepository extends JpaRepository<Academico, Long> {
     Optional<Academico> findByRa(String ra);
 
     boolean existsByUsuarioId(Long usuarioId);
+
+    Optional<Academico> findFirstByUsuarioId(Long usuarioId);
 }

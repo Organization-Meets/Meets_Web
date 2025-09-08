@@ -11,6 +11,8 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
   const [msg, setMsg] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [imageFile, setImageFile] = useState(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const [upgradeTipo, setUpgradeTipo] = useState('aluno');
 
   const clear = () => setMsg('');
 
@@ -56,11 +58,18 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
     try {
       const r = await fetchJson('/auth/login-local', { email, password, token: loginToken, rememberMe: remember });
       sessionStorage.setItem('accessToken', r.accessToken);
-      if (remember && r.refreshToken) localStorage.setItem('refreshToken', r.refreshToken);
-      const rolesResp = await fetch('/api/auth/me/roles', { headers:{ Authorization: 'Bearer '+ r.accessToken }});
+      localStorage.setItem('refreshToken', r.refreshToken);
+      // roles
+      const rolesResp = await fetch('/api/auth/me/roles', { headers:{ Authorization:'Bearer '+ r.accessToken }});
       if (rolesResp.ok) {
-        const rolesJson = await rolesResp.json();
-        sessionStorage.setItem('roles', JSON.stringify(rolesJson.roles||[]));
+        const jr = await rolesResp.json();
+        sessionStorage.setItem('roles', JSON.stringify(jr.roles||[]));
+      }
+      // dados usuário (imagem)
+      const meResp = await fetch('/api/auth/me', { headers:{ Authorization:'Bearer '+ r.accessToken }});
+      if (meResp.ok) {
+        const me = await meResp.json();
+        try { if (me.imagem) { const parsed = typeof me.imagem === 'string' ? JSON.parse(me.imagem) : me.imagem; if (parsed.base64) sessionStorage.setItem('userImage', 'data:image/*;base64,'+parsed.base64); } } catch {}
       }
       onSuccess();
     } catch(e){ setMsg(e.message); }
@@ -71,55 +80,67 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
   useEffect(()=> { setView(initialView); }, [initialView]);
 
   return (
-    <div className="auth">
-      <h1>FatecMeets</h1>
-      <nav className="tabs">
-        <button disabled={view==='login' || view==='loginToken'} onClick={()=>setView('login')}>Login</button>
-        <button disabled={view==='cadastro'} onClick={()=>setView('cadastro')}>Cadastro</button>
-      </nav>
+    <div>
+      <div className="auth">
+        <h1>FatecMeets</h1>
+        <nav className="tabs">
+          <button disabled={view==='login' || view==='loginToken'} onClick={()=>setView('login')}>Login</button>
+          <button disabled={view==='cadastro'} onClick={()=>setView('cadastro')}>Cadastro</button>
+        </nav>
 
-      {view === 'cadastro' && (
-        <div className="card">
-          <h2>Cadastro</h2>
-          <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
-          <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-          <input placeholder="confirmar senha" type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} />
-          <input type="file" accept="image/*" onChange={e=>setImageFile(e.target.files?.[0]||null)} />
-          <button onClick={register}>Cadastrar</button>
-          <button onClick={loginMicrosoft}>Microsoft</button>
+        {view === 'cadastro' && (
+          <div className="card">
+            <h2>Cadastro</h2>
+            <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
+            <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
+            <input placeholder="confirmar senha" type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} />
+            <input type="file" accept="image/*" onChange={e=>setImageFile(e.target.files?.[0]||null)} />
+            <button onClick={register}>Cadastrar</button>
+            <button onClick={loginMicrosoft}>Microsoft</button>
+          </div>
+        )}
+
+        {view === 'verificar' && (
+          <div className="card">
+            <h2>Verificar E-mail</h2>
+              <input placeholder="código" value={verificationToken} onChange={e=>setVerificationToken(e.target.value)} />
+              <button onClick={verify}>Verificar</button>
+          </div>
+        )}
+
+        {view === 'login' && (
+          <div className="card">
+            <h2>Login passo 1</h2>
+            <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
+            <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
+            <label>
+              <input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)} /> Lembrar-me
+            </label>
+            <button onClick={requestToken}>Gerar token</button>
+            <button onClick={loginMicrosoft}>Microsoft</button>
+          </div>
+        )}
+
+        {view === 'loginToken' && (
+          <div className="card">
+            <h2>Login passo 2</h2>
+            <input placeholder="token" value={loginToken} onChange={e=>setLoginToken(e.target.value)} />
+            <button onClick={doLogin}>Entrar</button>
+          </div>
+        )}
+
+        {msg && <p className="msg">{msg}</p>}
+      </div>
+
+      {showUpgrade && (
+        <div className="card" style={{marginTop:'1rem'}}>
+          <h2>Completar Cadastro ({upgradeTipo})</h2>
+          <p style={{fontSize:'.85rem'}}>Informe os dados necessários para se tornar {upgradeTipo}.</p>
+          <input placeholder={upgradeTipo==='aluno' ? 'RA' : 'Identificador Acadêmico'} />
+          <button>Enviar</button>
+          <button onClick={()=>setShowUpgrade(false)} style={{background:'transparent',color:'#fff'}}>Cancelar</button>
         </div>
       )}
-
-      {view === 'verificar' && (
-        <div className="card">
-          <h2>Verificar E-mail</h2>
-            <input placeholder="código" value={verificationToken} onChange={e=>setVerificationToken(e.target.value)} />
-            <button onClick={verify}>Verificar</button>
-        </div>
-      )}
-
-      {view === 'login' && (
-        <div className="card">
-          <h2>Login passo 1</h2>
-          <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
-          <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-          <label>
-            <input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)} /> Lembrar-me
-          </label>
-          <button onClick={requestToken}>Gerar token</button>
-          <button onClick={loginMicrosoft}>Microsoft</button>
-        </div>
-      )}
-
-      {view === 'loginToken' && (
-        <div className="card">
-          <h2>Login passo 2</h2>
-          <input placeholder="token" value={loginToken} onChange={e=>setLoginToken(e.target.value)} />
-          <button onClick={doLogin}>Entrar</button>
-        </div>
-      )}
-
-      {msg && <p className="msg">{msg}</p>}
     </div>
   );
 }

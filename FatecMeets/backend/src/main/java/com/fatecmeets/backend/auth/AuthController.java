@@ -233,6 +233,20 @@ public class AuthController {
     return ResponseEntity.ok(Map.of("roles", roles));
   }
 
+  @GetMapping("/me")
+  public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String auth) {
+      Long usuarioId = tokenService.extractUsuarioId(auth);
+      if (usuarioId == null) return ResponseEntity.status(401).body(Map.of("error","token inválido"));
+      var opt = usuarios.findById(usuarioId);
+      if (opt.isEmpty()) return ResponseEntity.status(404).body(Map.of("error","não encontrado"));
+      var u = opt.get();
+      return ResponseEntity.ok(Map.of(
+              "id", u.getId(),
+              "email", u.getEmail(),
+              "imagem", u.getImagem()
+      ));
+  }
+
   @Data
   public static class RegisterRequest {
     private String email;

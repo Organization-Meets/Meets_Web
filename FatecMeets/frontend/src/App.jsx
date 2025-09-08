@@ -42,6 +42,20 @@ function App() {
     setLogged(false);
   };
 
+  const roleGuard = (rolesNeeded, content, openAuth) => {
+    const roles = (()=>{ try { return JSON.parse(sessionStorage.getItem('roles')||'[]'); } catch { return []; } })();
+    if (!rolesNeeded.some(r=>roles.includes(r))) {
+      return (
+        <div style={{padding:'1.5rem'}}>
+          <h2>Completar Cadastro</h2>
+          <p>Você precisa concluir seu cadastro como aluno ou acadêmico para acessar este recurso.</p>
+          <button onClick={()=>openAuth('login')} style={{marginTop:'1rem'}}>Abrir Login/Cadastro</button>
+        </div>
+      );
+    }
+    return content;
+  };
+
   return (
     <ThemeProvider>
       <BrowserRouter>
@@ -90,17 +104,17 @@ function App() {
             } />
             <Route path="/criar/postagem" element={
               <Protected logged={logged} onSuccess={()=>{setLogged(true); closeAuth();}}>
-                <Page titulo="Criar Postagem" />
+                {roleGuard(['aluno','academico','administrador'], <Page titulo="Criar Postagem" />, openAuth)}
               </Protected>
             } />
             <Route path="/criar/evento" element={
               <Protected logged={logged} onSuccess={()=>{setLogged(true); closeAuth();}}>
-                <Page titulo="Criar Evento" />
+                {roleGuard(['aluno','academico','administrador'], <Page titulo="Criar Evento" />, openAuth)}
               </Protected>
             } />
             <Route path="/perfil" element={
               <Protected logged={logged} onSuccess={()=>{setLogged(true); closeAuth();}}>
-                <Page titulo="Perfil" />
+                {roleGuard(['aluno','academico','administrador'], <Page titulo="Perfil" />, openAuth)}
               </Protected>
             } />
             <Route path="/configuracoes" element={

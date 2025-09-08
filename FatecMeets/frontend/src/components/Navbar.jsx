@@ -2,9 +2,13 @@ import { NavLink } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import './Navbar.css';
 import logo from '../assets/logo.png';
+import logoLight from '../assets/logo-light.png';
+import logoDark from '../assets/logo-dark.png';
 import denunciaIcon from '../assets/denuncia.png';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar({ logged, onLogout, onOpenLogin, onOpenRegister }) {
+  const { theme } = useTheme();
   const [openProfile, setOpenProfile] = useState(false);
   const ref = useRef(null);
 
@@ -31,11 +35,13 @@ export default function Navbar({ logged, onLogout, onOpenLogin, onOpenRegister }
     return null;
   })();
 
+  const logoSrc = theme === 'claro' ? logoLight : theme === 'escuro' ? logoDark : logo;
+
   return (
     <header className="topbar">
       <div className="brand">
         <NavLink to="/">
-          <img src={logo} alt="FatecMeets" className="brand-logo" />
+          <img src={logoSrc} alt="FatecMeets" className="brand-logo" />
         </NavLink>
       </div>
       {isAdmin && (

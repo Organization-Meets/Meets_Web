@@ -70,78 +70,18 @@
 }
 .close-auth:hover { background:#263d63; }
 
-.dropdown a,
-.dropdown button {
-    background: none;
-    border: 0;
-    color: #fff;
-    text-align: left;
-    padding: .5rem .6rem;
-    font-size: .85rem;
-    border-radius: 6px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background .17s;
-}
+:root[data-theme='claro'] .topbar { background:#ffffff; color:#111; }
+:root[data-theme='claro'] .topbar a { color:#111; }
+:root[data-theme='escuro'] .topbar { background:#000000; }
+/* Remover filtros diretos no body que podem impactar percepção; aplicar só ao conteúdo principal */
+body.cb-deuteranopia .app { filter: hue-rotate(-10deg) saturate(.9) brightness(1.05); }
+body.cb-protanopia .app { filter: hue-rotate(-15deg) saturate(.9) brightness(1.05); }
+body.cb-tritanopia .app { filter: hue-rotate(35deg) saturate(.85) brightness(1.05); }
+/* Manter alto contraste separado */
+body.high-contrast .app { filter: contrast(1.25) saturate(1.1); }
 
-.dropdown a:hover,
-.dropdown button:hover {
-    background: rgba(255,255,255,.14);
-}
-
-@keyframes fade {
-    from { opacity: 0; transform: translateY(-4px);}
-    to { opacity: 1; transform: translateY(0);}
-}
-
-/* Overlay Auth */
-.auth-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 300;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
-
-.auth-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,.55);
-    backdrop-filter: blur(3px);
-    pointer-events: auto;
-}
-
-.auth-box {
-    position: relative;
-    background: #14213d;
-    color: #fff;
-    border-radius: 14px;
-    padding: 1.2rem 1.3rem 1.4rem;
-    width: min(420px,92%);
-    z-index: 310;
-    box-shadow: 0 15px 40px -10px rgba(0,0,0,.6);
-    pointer-events: auto;
-    max-height: 85vh;
-    overflow: auto;
-}
-
-.close-auth {
-    position: absolute;
-    top: .4rem;
-    right: .55rem;
-    width: 34px;
-    height: 34px;
-    border: 0;
-    background: #1f2d49;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-    line-height: 0;
-}
-
-.close-auth:hover {
-    background: #263d63;
-}
+/* Ajustes para avatar em temas claros */
+:root[data-theme='claro'] .avatar-btn { background:#f0f3f8; color:#111; }
+:root[data-theme='claro'] .dropdown { background:#f5f7fa; color:#111; }
+:root[data-theme='claro'] .dropdown a, :root[data-theme='claro'] .dropdown button { color:#111; }
+:root[data-theme='claro'] .dropdown a:hover, :root[data-theme='claro'] .dropdown button:hover { background:#e2e8f0; }

@@ -80,22 +80,28 @@ body {
     filter:brightness(0) invert(1); /* se quiser forçar branco; remova se não necessário */
 }
 
+:root[data-theme='claro'] .fm-side { background:#ffffff; }
+:root[data-theme='escuro'] .fm-side { background:#000000; }
+/* Garantir que filtros não afetem dimensões */
+.fm-side, .topbar { will-change: background-color; }
+/* Reset de filtros no container fixo para evitar herança que cause "encolher" percepção */
+body.cb-deuteranopia .fm-side,
+body.cb-protanopia .fm-side,
+body.cb-tritanopia .fm-side,
+body.high-contrast .fm-side { filter:none !important; }
+
 @media (max-width: 900px) {
-    .fm-side {
-        flex-direction: row;
-        width: 100%;
-        height: 56px;
-        top: 56px;
-        padding: .4rem .7rem;
-    }
-    .fm-side .stack {
-        flex-direction: row;
-        gap: .5rem;
-    }
-    .fm-side .bottom {
-        flex-direction: row;
-    }
-    body {
-        margin-left: 0;
-    }
+  .fm-side {
+    position:fixed;
+    top:auto; /* remove topo */
+    bottom:0;
+    left:0; right:0;
+    height:56px;
+    width:100%;
+    flex-direction:row;
+    padding:.4rem .7rem;
+  }
+  .fm-side .stack { flex-direction:row; gap:.5rem; }
+  .fm-side .bottom { flex-direction:row; }
+  body { margin-left:0; padding-bottom:56px; }
 }

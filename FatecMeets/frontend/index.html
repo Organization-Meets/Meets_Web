@@ -2,9 +2,18 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- Favicon atualizado -->
+    <link rel="icon" type="image/png" href="/src/assets/icon.png" />
+    <link rel="apple-touch-icon" href="/src/assets/icon.png" />
+    <meta name="theme-color" content="#ff4d3d" />
+    <!-- Para navegadores que suportam mask-icon (Safari Pinned Tab) -->
+    <link rel="mask-icon" href="/src/assets/icon.svg" color="#ff4d3d" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FatecMeets</title>
+    <style>
+      /* Favicons são imagens; garantir bordas arredondadas quando embutidas como img (fallback) */
+      link[rel='icon'] { border-radius:50%; overflow:hidden; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

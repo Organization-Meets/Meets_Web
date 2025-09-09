@@ -21,6 +21,7 @@ export default function Perfil() {
   };
 
   useEffect(()=>{ load(); }, []);
+  useEffect(()=>{ if (sessionStorage.getItem('refreshProfile')) { sessionStorage.removeItem('refreshProfile'); load(); } }, []);
 
   if (loading) return <div style={{padding:'1.25rem'}}>Carregando...</div>;
   if (erro) return <div style={{padding:'1.25rem'}}>Erro: {erro}</div>;

@@ -5,6 +5,7 @@ import com.fatecmeets.backend.usuario.UsuarioRepository;
 import com.fatecmeets.backend.gamificacao.GamificacaoRepository;
 import com.fatecmeets.backend.aluno.AlunoRepository;
 import com.fatecmeets.backend.academico.AcademicoRepository;
+import com.fatecmeets.backend.administrador.AdministradorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class ProfileController {
     private final GamificacaoRepository gamificacoes;
     private final AlunoRepository alunos;
     private final AcademicoRepository academicos;
+    private final AdministradorRepository administradores;
 
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String auth) {
@@ -35,7 +37,9 @@ public class ProfileController {
         if (academicos.existsByUsuarioId(uid)) roles.add("academico");
         var aluno = alunos.findFirstByUsuarioId(uid).orElse(null);
         var academico = academicos.findFirstByUsuarioId(uid).orElse(null);
-        String nome = aluno != null ? aluno.getNome() : academico != null ? academico.getNome() : null;
+        var admin = administradores.findFirstByUsuarioId(uid).orElse(null);
+        if (admin != null) roles.add("administrador");
+        String nome = aluno != null ? aluno.getNome() : academico != null ? academico.getNome() : admin != null ? admin.getNome() : null;
         Map<String,Object> body = new LinkedHashMap<>();
         body.put("id", usuario.getId());
         body.put("email", usuario.getEmail());

@@ -13,6 +13,9 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
   const [imageFile, setImageFile] = useState(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [upgradeTipo, setUpgradeTipo] = useState('aluno');
+  const [nickname, setNickname] = useState('');
+  const [nicknameStatus, setNicknameStatus] = useState(null);
+  const [nickTimer, setNickTimer] = useState(null);
 
   const clear = () => setMsg('');
 
@@ -32,7 +35,7 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
     try {
       let imagemBase64 = null;
       if (imageFile) imagemBase64 = await fileToBase64(imageFile);
-      await fetchJson('/auth/register-local', { email, password, confirmPassword, imagemBase64 });
+      await fetchJson('/auth/register-local', { email, password, confirmPassword, imagemBase64, nickname });
       setMsg('Cadastro ok. Verifique email.');
       setView('verificar');
     } catch(e){ setMsg(e.message); }
@@ -94,6 +97,20 @@ export function AuthFlow({ onSuccess, initialView = 'login' }) {
             <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
             <input placeholder="senha" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
             <input placeholder="confirmar senha" type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} />
+            <input placeholder="nickname (comece com @)" value={nickname} onChange={e=>{
+              const v = e.target.value; setNickname(v); setNicknameStatus(null);
+              if (nickTimer) clearTimeout(nickTimer);
+              const t = setTimeout(async ()=>{
+                if (!v) return;
+                try { const r = await fetch(`/api/nickname/check?value=${encodeURIComponent(v)}`); const j = await r.json(); setNicknameStatus(j); } catch { setNicknameStatus({available:false, format:false, message:'erro'}); }
+              }, 400);
+              setNickTimer(t);
+            }} />
+            {nicknameStatus && (
+              <div style={{fontSize:'.7rem', marginTop:4, color: nicknameStatus.available ? '#42c07b':'#ff6767'}}>
+                {nicknameStatus.message}
+              </div>
+            )}
             <input type="file" accept="image/*" onChange={e=>setImageFile(e.target.files?.[0]||null)} />
             <button onClick={register}>Cadastrar</button>
             <button onClick={loginMicrosoft}>Microsoft</button>

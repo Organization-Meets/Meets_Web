@@ -311,11 +311,19 @@ public class AuthController {
               .build();
       usuarios.save(u);
       academicos.save(Academico.builder().usuario(u).nome(req.getNome()).ra(req.getRa()).build());
-      String baseNick = req.getNome().replaceAll("[^a-zA-Z0-9]"," ").trim().replaceAll(" +"," ").replace(" ", "-").toLowerCase();
-      if (!StringUtils.hasText(baseNick)) baseNick = rawEmail.split("@")[0];
-      String nick = baseNick; int c=1; while (gamificacoes.existsByNickname(nick)) nick = baseNick + c++;
-      gamificacoes.save(Gamificacao.builder().usuario(u).nickname(nick).scoreTotal(0).build());
+      String nickname2 = validateAndNormalizeNickname(req.getNickname());
+      gamificacoes.save(Gamificacao.builder().usuario(u).nickname(nickname2).scoreTotal(0).build());
       return ResponseEntity.ok(Map.of("message","Acadêmico cadastrado com sucesso"));
+  }
+
+  private String validateAndNormalizeNickname(String nick) {
+      if (!StringUtils.hasText(nick)) throw new IllegalArgumentException("nickname obrigatório");
+      nick = nick.trim();
+      if (!nick.startsWith("@")) throw new IllegalArgumentException("nickname deve começar com @");
+      if (nick.contains(" ")) throw new IllegalArgumentException("nickname não pode ter espaços");
+      if (nick.length() < 3) throw new IllegalArgumentException("nickname muito curto");
+      if (gamificacoes.existsByNickname(nick.toLowerCase())) throw new IllegalArgumentException("nickname já em uso");
+      return nick.toLowerCase();
   }
 
   @Data
@@ -342,5 +350,6 @@ public class AuthController {
       private String nome;
       private String ra;
       private String imagemBase64;
+      private String nickname; // novo
   }
 }

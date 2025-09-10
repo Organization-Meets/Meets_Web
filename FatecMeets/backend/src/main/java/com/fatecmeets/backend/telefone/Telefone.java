@@ -5,18 +5,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "telefones")
+@Table(name = "telefones", indexes = {
+        @Index(name = "idx_telefones_tipo", columnList = "tipo")
+})
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Telefone extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 15)
-    private String numero;
+    @Column(length = 20)
+    private String tipo; // ex: fixo, celular
 
-    @Column(nullable = false, length = 3)
+    @Column(length = 4)
     private String ddd;
 
-    @Column(length = 15)
-    private String tipo;
+    @Column(length = 20, nullable = false)
+    private String numero;
 }

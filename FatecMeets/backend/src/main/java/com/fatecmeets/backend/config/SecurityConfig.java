@@ -31,7 +31,8 @@ public class SecurityConfig {
           "/api/roles/**",
           "/api/profile/**",
           "/api/admin-invite/**", // liberado
-          "/api/nickname/**" // liberado
+          "/api/nickname/**", // liberado
+          "/api/admin/**" // liberado em dev
         ).permitAll()
         .anyRequest().authenticated()
       );

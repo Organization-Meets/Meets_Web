@@ -16,16 +16,18 @@ public class Instituicao extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 20, unique = true, nullable = false)
+    private String codigo;
+
+    @Column(length = 150, nullable = false)
+    private String nome;
+
     @ManyToOne(optional = false) @JoinColumn(name = "administrador_id")
     private Administrador administrador;
 
-    private String nome;
-
-    private String codigo;
+    @ManyToOne(optional = false) @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
 
     @ManyToOne(optional = false) @JoinColumn(name = "telefone_id")
     private Telefone telefone;
-
-    @ManyToOne(optional = false) @JoinColumn(name = "endereco_id")
-    private Endereco endereco;
 }

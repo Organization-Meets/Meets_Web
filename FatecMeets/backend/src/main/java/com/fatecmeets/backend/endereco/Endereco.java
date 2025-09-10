@@ -11,8 +11,9 @@ public class Endereco extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String numero;
-
-    @Column(nullable = false, length = 10)
+    @Column(length = 15)
     private String cep;
+
+    @Column(length = 20)
+    private String numero;
 }

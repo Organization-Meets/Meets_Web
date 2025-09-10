@@ -47,6 +47,13 @@ export default function Criar() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteToken, setInviteToken] = useState('');
 
+  // Novos estados para criação de Lugar
+  const [lgNome, setLgNome] = useState('');
+  const [lgEnderecoId, setLgEnderecoId] = useState('');
+  const [lgCep, setLgCep] = useState('');
+  const [lgNumero, setLgNumero] = useState('');
+  const [lgCriado, setLgCriado] = useState(null);
+
   // Helpers
   const carregarEnderecos = async () => {
     try { const r = await fetch('/api/admin/enderecos',{ headers:{ Authorization:'Bearer '+token }}); if(r.ok) setEnderecos(await r.json()); } catch {}
@@ -143,6 +150,26 @@ export default function Criar() {
     } catch(e){ alert(e.message); }
   };
 
+  // Criar lugar completo (novo endereço ou existente)
+  const criarLugarFull = async () => {
+    try {
+      let enderecoId = lgEnderecoId ? Number(lgEnderecoId) : null;
+      if (!enderecoId) {
+        if (!lgCep || !lgNumero) return alert('Informe CEP e Número');
+        const rEnd = await fetch('/api/admin/enderecos', { method:'POST', headers: authHeaders(), body: JSON.stringify({ cep: lgCep, numero: lgNumero }) });
+        const jEnd = await rEnd.json(); if (!rEnd.ok) throw new Error(jEnd.error || 'Erro criando endereço');
+        enderecoId = jEnd.id;
+        setEnderecos(v => [...v, jEnd]);
+      }
+      if (!lgNome) return alert('Informe o nome do lugar');
+      const r = await fetch('/api/admin/lugares', { method:'POST', headers: authHeaders(), body: JSON.stringify({ nome: lgNome, enderecoId }) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || 'Erro criando lugar');
+      setLgCriado(j);
+      setLgNome(''); setLgEnderecoId(''); setLgCep(''); setLgNumero('');
+      setLugares(v=>[...v, j]);
+    } catch (e) { alert(e.message); }
+  };
+
   return (
     <div style={{
       padding:'1rem 1.25rem',
@@ -235,6 +262,31 @@ export default function Criar() {
                   Token: {inviteToken}
                   <br />
                   Link: {window.location.origin}/admin-invite/{inviteToken}
+                </div>
+              )}
+            </section>
+
+            <section style={cardStyle}>
+              <h3 style={{marginTop:0}}>Lugar</h3>
+              {lgCriado ? (
+                <div>
+                  <p style={{margin:0}}><strong>Nome:</strong> {lgCriado.nome}</p>
+                  <p style={{margin:'4px 0 0'}}><strong>Endereço:</strong> ID {lgCriado.endereco?.id}</p>
+                </div>
+              ) : (
+                <div style={{display:'flex', flexDirection:'column', gap:'.55rem'}}>
+                  <input placeholder="Nome do Lugar" value={lgNome} onChange={e=>setLgNome(e.target.value)} style={inp} />
+                  <select value={lgEnderecoId} onChange={e=>setLgEnderecoId(e.target.value)} style={inp}>
+                    <option value="">Novo endereço</option>
+                    {enderecos.map(e=> <option key={e.id} value={e.id}>{e.id} - {e.cep} Nº{e.numero}</option>)}
+                  </select>
+                  {!lgEnderecoId && (
+                    <div style={{display:'flex', gap:8}}>
+                      <input placeholder="CEP" value={lgCep} onChange={e=>setLgCep(e.target.value)} style={{...inp, flex:1}} />
+                      <input placeholder="Número" value={lgNumero} onChange={e=>setLgNumero(e.target.value)} style={{...inp, flex:1}} />
+                    </div>
+                  )}
+                  <button onClick={criarLugarFull} style={btn} disabled={!lgNome || (!lgEnderecoId && (!lgCep || !lgNumero))}>Criar Lugar</button>
                 </div>
               )}
             </section>

@@ -1,52 +1,30 @@
 package com.fatecmeets.backend.usuario;
-
-import com.fatecmeets.backend.common.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "usuarios", indexes = {
-        @Index(name = "uk_usuarios_email", columnList = "email", unique = true)
-})
+@Table(name="", indexes={@Index(name="idx_usuario_email", columnList="email", unique=true)})
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Usuario extends Auditable {
+public class Usuario {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255, unique = true)
+    @Column(nullable=false, length=120, unique=false)
+    private String nome;
+
+    @Column(nullable=false, length=255, unique=true)
     private String email;
+    
+    @Column(nullable=false, length=255, unique=false)
+    private String senha;
 
-    @Column(nullable = false, length = 255)
-    private String password;
-
-    @Column(name = "email_verification_token", length = 10)
-    private String emailVerificationToken;
-
-    @Column(columnDefinition = "JSON")
-    private String imagem;
-
-    @Enumerated(EnumType.STRING)
-    private UsuarioStatus status = UsuarioStatus.ativo;
-
-    @Column(name = "email_verified_at")
-    private java.time.Instant emailVerifiedAt;
-
-    @Column(name = "remember_token", length = 100)
-    private String rememberToken;
-
-    @Column(name = "login_token", length = 12)
-    private String loginToken;
-
-    private java.time.Instant loginTokenExpiresAt;
-
-    @Builder.Default
-    private Integer loginTokenAttempts = 0;
-
-    private java.time.Instant lastLoginTokenSentAt;
-
-    // Conveniência para reutilizar lógica antiga de verificação
-    public boolean isVerified() {
-        return this.status == UsuarioStatus.ativo;
-    }
+    private Enum status;
 }
+//     id_user        BIGINT AUTO_INCREMENT PRIMARY KEY,
+//     nome_usuario   VARCHAR(120) NOT NULL,
+//     email          VARCHAR(255) NOT NULL UNIQUE,
+//     senha          VARCHAR(255) NOT NULL,
+//     user_status    VARCHAR(40),
+//     user_img       TEXT,
+//     score          INT DEFAULT 0

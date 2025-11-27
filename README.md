@@ -1,2 +1,2 @@
-# Fatec-Meets-Colin
+# Meets
 Projeto Integrador

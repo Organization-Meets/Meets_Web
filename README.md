@@ -7,7 +7,7 @@ http://meets.rf.gd/
 
 *INSTALAÇÃO*
 
-1.Para instalar e testar o projeto de forma local basta possuir o XAMPP ou WAMP instalado em sua maquina,
+1.Para instalar e testar o projeto de forma local basta possuir o XAMPP ou WAMP instalado em sua maquina
 2.extraia o arquivo zip dentro da pasta htdocs do xampp (ou correlata do wamp)
 3.ligue o apache e Mysql no xampp
 4.No phpmyadmin adicione o arquivo SQL "if0_38701439_fatecmeets.sql" que esta na pasta off

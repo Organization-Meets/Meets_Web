@@ -14,6 +14,13 @@ http://meets.rf.gd/
 5.Na barra de pesquisa superior do navegador digite "localhost/Meets_Web"
 6.Testar o Projeto
 
+O projeto se trata de uma rede social para alunos, então explicando de uma forma técnica e direta o funcionamento do projeto,
+como é focado aos alunos de uma instituição, estes são os princípais atores, e eles vão criar a maioria dos posts e dos eventos presentes na rede social,
+permitindo a adição de imagens, comentários e curtidas nessas publicações, sendo também possível realizar denuncias caso houver algum tipo de conteúdo impróprio 
+publicado dentro da rede(como se trata de uma versão bem inicial, a maioria destas funções não vão estar funcionando)
+
+O sistema também irá possuir uma area de administrador para cadastrar e gerenciar a instituição e cadastrar seus alunos, para que os alunos sejam associados a suas devidas instituições.
+
 Integrantes:
 
 Nicolas Felipe de Carvalho

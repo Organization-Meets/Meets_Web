@@ -20,9 +20,3 @@ permitindo a adição de imagens, comentários e curtidas nessas publicações, 
 publicado dentro da rede(como se trata de uma versão bem inicial, a maioria destas funções não vão estar funcionando)
 
 O sistema também irá possuir uma area de administrador para cadastrar e gerenciar a instituição e cadastrar seus alunos, para que os alunos sejam associados a suas devidas instituições.
-
-Integrantes:
-
-Nicolas Felipe de Carvalho
-Matheus Albuquerque Marinho
-Gabriel Da Silva Rodrigues
